@@ -6,4 +6,4 @@ ant clean
 
 ant debug && \
 ant installd && \
-adb shell am start -n nomilous.gimbal/.MainActivity
+adb shell am start -n nomilous.gimbal/.Gimbal
