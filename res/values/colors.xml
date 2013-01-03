@@ -3,4 +3,7 @@
     <color name="background">#ff101510</color>
     <color name="border">#ff107010</color>
     <color name="viewports">#ff101210</color>
+
+    <color name="instruction">#ff109910</color>
+    
 </resources>
