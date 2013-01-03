@@ -1,0 +1,9 @@
+#!/bin/bash
+
+
+ant uninstall
+ant clean
+
+ant debug && \
+ant installd && \
+adb shell am start -n nomilous.gimbal/.MainActivity
