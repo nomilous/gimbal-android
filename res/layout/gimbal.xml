@@ -1,8 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+
+<FrameLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
-</LinearLayout>
+    android:background="@color/background"
+    android:padding="@dimen/outer_padding">
 
+    <LinearLayout 
+        android:id="@+id/border"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/border"
+        android:visibility="visible"
+        android:baselineAligned="false"
+        android:padding="@dimen/border_padding">
+
+        <LinearLayout 
+            android:id="@+id/viewports"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/viewports"
+            android:visibility="visible"
+            android:baselineAligned="false">
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <color name="background">#ff101510</color>
+    <color name="border">#ff107010</color>
+    <color name="viewports">#ff101210</color>
+</resources>
