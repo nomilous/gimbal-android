@@ -13,7 +13,7 @@ public class GimbalController {
     private final SocketIOClient client;
     private boolean assigned = false;
 
-    public GimbalController( final String uri, final String viewportID ) {
+    public GimbalController( final GimbalEventHandler handler, final String uri, final String viewportID ) {
 
         Util.info( String.format("Init controller with %s %s", uri, viewportID ));
 
@@ -27,18 +27,21 @@ public class GimbalController {
                 public void onConnect() { /* BROKEN */ }
 
                 @Override
-                public void on(String event, JSONArray arguments) {
+                public void on(String event, JSONArray payload) {
 
-                    Util.info(String.format("Got event %s: %s", event, arguments.toString()));
+                    Util.info(String.format("Got event %s: %s", event, payload.toString()));
 
-                    if( event.equals("event:client:start") ) 
+                    if( event.equals( GimbalEventHandler.CONTROLLER_CONNECTED ) ) {
 
                         registerController( viewportID );
 
-                    else if( event.equals("event:register:controller:ok") ) 
+                    } else if( event.equals( GimbalEventHandler.ASSIGN_PRIMARY_VIEWPORT ) ) {
 
-                        assignController( viewportID );
+                        assignPrimaryViewport( handler, viewportID );
 
+                    }
+
+                    handler.gimbalEvent( event, payload );
 
                 }
 
@@ -76,10 +79,9 @@ public class GimbalController {
 
     }
 
-    private void assignController( String viewportID ) {
+    private void assignPrimaryViewport( GimbalEventHandler handler, String viewportID ) {
 
         Util.info( "Assign controller to viewport:" + viewportID );
-
         assigned = true;
 
     }

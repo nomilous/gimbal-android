@@ -7,16 +7,18 @@ import android.widget.LinearLayout;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.content.Intent;
-
 import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import nomilous.gimbal.client.GimbalController;
+import nomilous.gimbal.client.GimbalEventHandler;
+import nomilous.Util;
 
 
-public class Gimbal extends Activity {
+public class Gimbal extends Activity 
+    implements GimbalEventHandler {
 
     private LinearLayout viewports;
     private TextView instruction;
@@ -58,6 +60,7 @@ public class Gimbal extends Activity {
 
             gimbal = new GimbalController( 
 
+                this,
                 viewportAddressParts[0],
                 viewportAddressParts[1]
 
@@ -67,6 +70,27 @@ public class Gimbal extends Activity {
 
         }
   
+    }
+
+    @Override
+    public void gimbalEvent( String event, Object payload ) {
+
+        Util.info( 
+
+            String.format( "GimbalEvent %s: %s", event, payload.toString() ) 
+
+        );
+
+        if( event.equals( GimbalEventHandler.CONTROLLER_CONNECTED ) ) {
+
+            instruction.setText("connected");
+
+        } else if( event.equals( GimbalEventHandler.ASSIGN_PRIMARY_VIEWPORT ) ) {
+
+            instruction.setText("controlling viewport " + payload.toString() );
+
+        }
+
     }
 
 }
