@@ -31,7 +31,6 @@ public class Gimbal extends Activity {
         final Activity scanResultHandler = this;
 
         viewports = (LinearLayout) findViewById(R.id.viewports);
-        
         instruction = (TextView) findViewById(R.id.instruction);
         instruction.setText("touch to grab viewport");
 
@@ -46,13 +45,6 @@ public class Gimbal extends Activity {
             }
 
         });
-
-    }
-
-    @Override
-    public void onResume() {
-
-        super.onResume();
 
     }
 

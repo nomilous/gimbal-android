@@ -11,6 +11,7 @@ import nomilous.Util;
 public class GimbalController {
 
     private final SocketIOClient client;
+    private boolean assigned = false;
 
     public GimbalController( final String uri, final String viewportID ) {
 
@@ -29,12 +30,14 @@ public class GimbalController {
                 public void on(String event, JSONArray arguments) {
 
                     Util.info(String.format("Got event %s: %s", event, arguments.toString()));
-                    
-                    if( event.equals("event:client:start") ) {
+
+                    if( event.equals("event:client:start") ) 
 
                         registerController( viewportID );
 
-                    }
+                    else if( event.equals("event:register:controller:ok") ) 
+
+                        assignController( viewportID );
 
 
                 }
@@ -51,7 +54,13 @@ public class GimbalController {
 
     }
 
-    public void registerController( String viewportID ) {
+    public void connect() {
+
+        client.connect();
+
+    }
+
+    private void registerController( String viewportID ) {
 
         Util.info( "Register controller for viewport:" + viewportID );
 
@@ -67,10 +76,13 @@ public class GimbalController {
 
     }
 
-    public void connect() {
+    private void assignController( String viewportID ) {
 
-        client.connect();
+        Util.info( "Assign controller to viewport:" + viewportID );
+
+        assigned = true;
 
     }
+
 
 }
