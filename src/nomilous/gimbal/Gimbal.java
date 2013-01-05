@@ -13,11 +13,14 @@ import android.widget.TextView;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import nomilous.gimbal.client.GimbalController;
+
 
 public class Gimbal extends Activity {
 
     private LinearLayout viewports;
     private TextView instruction;
+    private GimbalController gimbal;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,8 +54,15 @@ public class Gimbal extends Activity {
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         
         if (scanResult != null) {
-            
-            instruction.setText(scanResult.getContents());
+
+            String viewportAddressParts[] = scanResult.getContents().split(" ");
+
+            gimbal = new GimbalController( 
+
+                viewportAddressParts[0],
+                viewportAddressParts[1]
+
+            );
 
         }
   
