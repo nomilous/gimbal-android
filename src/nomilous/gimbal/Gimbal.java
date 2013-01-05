@@ -73,7 +73,7 @@ public class Gimbal extends Activity
     }
 
     @Override
-    public void gimbalEvent( String event, Object payload ) {
+    public void gimbalEvent( final String event, final Object payload ) {
 
         Util.info( 
 
@@ -81,15 +81,29 @@ public class Gimbal extends Activity
 
         );
 
-        if( event.equals( GimbalEventHandler.CONTROLLER_CONNECTED ) ) {
+        //
+        // explicitly run on UIthread because the 'websocket' 
+        // client making this call is on another, and so
+        // not allowed to manipulate view stuff
+        // 
 
-            instruction.setText("connected");
+        runOnUiThread(new Runnable() {
 
-        } else if( event.equals( GimbalEventHandler.ASSIGN_PRIMARY_VIEWPORT ) ) {
+            @Override
+            public void run() {
 
-            instruction.setText("controlling viewport " + payload.toString() );
+                if( event.equals( GimbalEventHandler.CONTROLLER_CONNECTED ) ) {
 
-        }
+                    instruction.setText("connected");
+
+                } else if( event.equals( GimbalEventHandler.ASSIGN_PRIMARY_VIEWPORT ) ) {
+
+                    instruction.setText("controlling viewport " + payload.toString() );
+
+                }
+
+            }
+        });
 
     }
 
