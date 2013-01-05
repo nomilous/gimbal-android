@@ -12,7 +12,7 @@ public class GimbalController {
 
     private final SocketIOClient client;
 
-    public GimbalController( String uri, String viewportID ) {
+    public GimbalController( final String uri, final String viewportID ) {
 
         Util.info( String.format("Init controller with %s %s", uri, viewportID ));
 
@@ -27,7 +27,16 @@ public class GimbalController {
 
                 @Override
                 public void on(String event, JSONArray arguments) {
+
                     Util.info(String.format("Got event %s: %s", event, arguments.toString()));
+                    
+                    if( event.equals("event:client:start") ) {
+
+                        registerController( viewportID );
+
+                    }
+
+
                 }
 
                 @Override
@@ -39,6 +48,26 @@ public class GimbalController {
             }
 
         );
+
+    }
+
+    public void registerController( String viewportID ) {
+
+        Util.info( "Register controller for viewport:" + viewportID );
+
+        try {
+
+            JSONArray message = new JSONArray();
+            message.put( viewportID );
+            client.emit( "event:register:controller", message );
+
+        } 
+
+        catch( Exception e ) {}
+
+    }
+
+    public void connect() {
 
         client.connect();
 

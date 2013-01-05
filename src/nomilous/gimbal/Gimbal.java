@@ -49,6 +49,13 @@ public class Gimbal extends Activity {
 
     }
 
+    @Override
+    public void onResume() {
+
+        super.onResume();
+
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
   
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
@@ -63,6 +70,8 @@ public class Gimbal extends Activity {
                 viewportAddressParts[1]
 
             );
+
+            gimbal.connect();
 
         }
   
