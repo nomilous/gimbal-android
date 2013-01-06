@@ -24,13 +24,29 @@
             android:visibility="visible"
             android:baselineAligned="false"
             android:clickable="true"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <TextView android:id="@+id/instruction"
+            <TextView android:id="@+id/primary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:typeface="monospace"
-                    android:textColor="@color/instruction"/>
+                    android:textColor="@color/menu"
+                    android:padding="@dimen/menu_padding"/>
+
+            <TextView android:id="@+id/disconnect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:typeface="monospace"
+                    android:textColor="@color/menu"
+                    android:padding="@dimen/menu_padding"/>
+
+            <TextView android:id="@+id/exit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:typeface="monospace"
+                    android:textColor="@color/menu"
+                    android:padding="@dimen/menu_padding"/>
 
         </LinearLayout>
 

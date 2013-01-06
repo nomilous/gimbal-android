@@ -21,11 +21,15 @@ public class Gimbal extends Activity
     implements GimbalEventHandler {
 
     //private LinearLayout viewports;
-    private TextView instruction;
+    private TextView primary;
+    private TextView disconnect;
+    private TextView exit;
     private OnClickListener textClickListener;
     private GimbalController gimbal;
 
-    private final String SCAN_TAG = "touch to grab viewport";
+    private final String SCAN_TAG = "connect viewport";
+    private final String RELEASE_VIEWPORTS = "disconnect";
+    private final String EXIT = "exit";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,9 +39,17 @@ public class Gimbal extends Activity
 
         textClickListener = initTextClickListener();
 
-        instruction = (TextView) findViewById(R.id.instruction);
-        instruction.setText( SCAN_TAG );
-        instruction.setOnClickListener( textClickListener );
+        primary = (TextView) findViewById(R.id.primary);
+        primary.setText( SCAN_TAG );
+        primary.setOnClickListener( textClickListener );
+
+        disconnect = (TextView) findViewById(R.id.disconnect);
+        disconnect.setText( RELEASE_VIEWPORTS );
+        disconnect.setOnClickListener( textClickListener );
+
+        exit = (TextView) findViewById(R.id.exit);
+        exit.setText( EXIT );
+        exit.setOnClickListener( textClickListener );
 
         //viewports = (LinearLayout) findViewById(R.id.viewports);
 
@@ -88,11 +100,11 @@ public class Gimbal extends Activity
 
                 if( event.equals( GimbalEventHandler.CONTROLLER_CONNECTED ) ) {
 
-                    instruction.setText("connected");
+                    primary.setText("connected");
 
                 } else if( event.equals( GimbalEventHandler.ASSIGN_PRIMARY_VIEWPORT ) ) {
 
-                    instruction.setText("controlling viewport " + payload.toString() );
+                    primary.setText("controlling viewport " + payload.toString() );
 
                 }
 
@@ -122,6 +134,10 @@ public class Gimbal extends Activity
 
                 if( text.equals( SCAN_TAG ) ) scanTag(); 
 
+                else if ( text.equals( RELEASE_VIEWPORTS ) ) releaseViewports(); 
+
+                else if ( text.equals( EXIT ) ) exit(); 
+
                 else Util.warn( "Huh?" ); 
 
             }
@@ -132,6 +148,16 @@ public class Gimbal extends Activity
         final Activity scanResultHandler = this;
         IntentIntegrator qrScan = new IntentIntegrator(scanResultHandler);
         qrScan.initiateScan();
+    }
+
+    private void releaseViewports() {
+
+
+    }
+
+    private void exit() {
+
+        
     }
 
 }
