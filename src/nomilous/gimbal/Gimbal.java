@@ -37,6 +37,15 @@ public class Gimbal extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gimbal);
 
+        gimbal = new GimbalController( getApplicationContext(), this );
+
+    }
+
+    @Override
+    public void onStart() {
+
+        super.onStart();
+
         textClickListener = initTextClickListener();
 
         primary = (TextView) findViewById(R.id.primary);
@@ -51,9 +60,20 @@ public class Gimbal extends Activity
         exit.setText( EXIT );
         exit.setOnClickListener( textClickListener );
 
+        
         //viewports = (LinearLayout) findViewById(R.id.viewports);
 
-        gimbal = new GimbalController( getApplicationContext(), this );
+    }
+
+    @Override
+    public void onStop() {
+
+        //
+        // App backgrounded, home button or something
+        //
+
+        super.onStop();
+        releaseViewports();
 
     }
 

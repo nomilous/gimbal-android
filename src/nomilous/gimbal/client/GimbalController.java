@@ -209,7 +209,16 @@ public class GimbalController implements SensorSubscriber {
 
         } 
 
-        catch( org.json.JSONException e ) {}
+        catch( org.json.JSONException e ) {
+
+            Util.error( e.toString() );
+
+        }
+        catch( java.lang.NullPointerException e ) {
+
+            Util.error( e.toString() );
+            
+        }
 
 
     }
