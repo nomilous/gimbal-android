@@ -26,27 +26,59 @@ public class LocationServer  {
     private SensorSubscriber subscriber;
 
     private static LocationManager locationManager = null;
+    private Context appContext;
+    private boolean active = false;
     
     public LocationServer( Context appContext, Object subscriber ) {
 
         this.subscriber = (SensorSubscriber) subscriber;
-
-        reInitialize( appContext );
+        this.appContext = appContext;
 
     }
 
-
-    public void reInitialize( Context appContext ) {
+    public void startServer() {
 
         getLocationManager( appContext );
 
         if( ! ensureGPSEnabled() ) {
 
             Util.messageUser( appContext, "no GPS or not enabled" );
+            return;
 
         }
 
-        start();
+        //
+        // send last known location 
+        //
+        // updateLocation( 
+        //     locationManager.getLastKnownLocation( LocationManager.GPS_PROVIDER )
+        // );
+
+        //
+        // register listener for location updates
+        //
+
+        locationManager.requestLocationUpdates( 
+
+            LocationManager.GPS_PROVIDER,
+            10000,  // Every 10 seconds
+            10,     // Or every 10 meters 
+            listener
+
+        );
+
+        active = true;
+
+    }
+
+    public void stopServer() {
+
+        if( !active ) return;
+
+        getLocationManager( appContext );
+        locationManager.removeUpdates( listener );
+
+        active = false;
 
     }
 
@@ -136,32 +168,5 @@ public class LocationServer  {
         }
 
     };
-
-    private void start() {
-
-        //
-        // send last known location 
-        //
-
-        updateLocation( 
-
-            locationManager.getLastKnownLocation( LocationManager.GPS_PROVIDER )
-
-        );
-
-        //
-        // register listener for location updates
-        //
-
-        locationManager.requestLocationUpdates( 
-
-            LocationManager.GPS_PROVIDER,
-            10000,  // Every 10 seconds
-            10,     // Or every 10 meters 
-            listener
-
-        );
-
-    }
 
 }

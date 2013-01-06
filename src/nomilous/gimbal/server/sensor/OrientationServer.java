@@ -13,10 +13,17 @@ import android.hardware.SensorEvent;
 public class OrientationServer  {
 
     private SensorSubscriber subscriber;
+    private Context appContext;
+    private boolean active = false;
 
     public OrientationServer( Context appContext, Object subscriber ) {
 
         this.subscriber = (SensorSubscriber) subscriber;
+        this.appContext = appContext;
+
+    }
+
+    public void startServer() {
 
         sensorManager = (SensorManager) appContext.getSystemService( 
 
@@ -46,6 +53,19 @@ public class OrientationServer  {
             SensorManager.SENSOR_DELAY_GAME
 
         );
+
+        active = true;
+
+    }
+
+    public void stopServer() {
+   
+        if( !active ) return;
+
+        sensorManager = (SensorManager) appContext.getSystemService( Context.SENSOR_SERVICE );
+        sensorManager.unregisterListener(listener);
+
+        active = false;
 
     }
 

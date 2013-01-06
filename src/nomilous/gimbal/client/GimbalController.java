@@ -10,6 +10,9 @@ import org.json.JSONObject;
 import com.codebutler.android_websockets.SocketIOClient;
 
 import nomilous.gimbal.client.SensorSubscriber;
+import nomilous.gimbal.server.sensor.OrientationServer;
+import nomilous.gimbal.server.sensor.LocationServer;
+
 import nomilous.Util;
 
 public class GimbalController implements SensorSubscriber {
@@ -23,6 +26,9 @@ public class GimbalController implements SensorSubscriber {
     private boolean assigned = false;  // in control of at least 1 viewport
     private boolean active = false;    // sensors are active
     private boolean exitting = false;  // set on destroy
+
+    private OrientationServer orientationServer;
+    private LocationServer locationServer;
     
 
     public GimbalController( Context context, Object handler ) {
@@ -30,6 +36,9 @@ public class GimbalController implements SensorSubscriber {
         this.context = context;
         this.handler = (GimbalEventHandler) handler;
         this.activity = (Activity) handler;
+
+        orientationServer = new OrientationServer(context, this);
+        locationServer = new LocationServer(context, this);
 
     }
 
@@ -202,21 +211,9 @@ public class GimbalController implements SensorSubscriber {
 
     }
 
-    public void sensorSubscribe( int eventCode ) {
-
-        Util.info("Activate sensors");
-
-    }
-
-    public void sensorUnSubscribe( int eventCode ) {
-
-        Util.info("Terminate sensors");
-
-    }
-
     public void onSensorEvent( int eventCode, Object payload ) {
 
-        Util.info("SENSOR EVENT");
+        Util.info("SENSOR EVENT" + eventCode + " " + payload.toString());
 
     }
 
@@ -239,23 +236,28 @@ public class GimbalController implements SensorSubscriber {
 
     private void activateSensors( GimbalEventHandler handler, String viewportID ) {
 
-        sensorSubscribe( SensorSubscriber.ROTATION_UPDATE );
-        active = true;
+        Util.info("Activate sensors");
 
-        // activity.runOnUiThread(new Runnable() {
-        //     @Override
-        //     public void run() {
-        //         SensorSubscriber.subscribe( context, SensorSubscriber.ROTATION_UPDATE, this ); 
-        //     }
-        // });
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                
+                orientationServer.startServer();
+                locationServer.startServer();
+                active = true;
 
-        
+            }
+        });
 
     }
 
     private void deActivateSensors() {
 
-        sensorUnSubscribe( SensorSubscriber.ROTATION_UPDATE );
+        Util.info("Terminate sensors");
+
+        orientationServer.stopServer();
+        locationServer.stopServer();
+
         active = false;
 
     }
