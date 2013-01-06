@@ -57,6 +57,14 @@ public class Gimbal extends Activity
 
     }
 
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
+        android.os.Debug.stopMethodTracing();  // dunno... (manual said so)
+
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
   
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
@@ -119,9 +127,14 @@ public class Gimbal extends Activity
                     primary.setText( SCAN_TAG );
                     disconnect.setVisibility(View.INVISIBLE);
 
-                } 
+                } else if( event.equals("EXIT") ) {
+
+                    finish();
+
+                }
 
             }
+
         });
 
     }
@@ -171,6 +184,7 @@ public class Gimbal extends Activity
 
     private void exit() {
 
+        gimbal.destroy();
 
     }
 

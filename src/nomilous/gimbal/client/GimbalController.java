@@ -22,7 +22,9 @@ public class GimbalController {
 
     private SocketIOClient client;
     private boolean connected = false;
-    private boolean assigned = false;
+    private boolean assigned = false;  // in control of at least 1 viewport
+    private boolean active = false;    // sensors are active
+    private boolean exitting = false;  // set on destroy
     
 
     public GimbalController( Context context, Object handler ) {
@@ -30,6 +32,7 @@ public class GimbalController {
         this.context = context;
         this.handler = (GimbalEventHandler) handler;
         this.activity = (Activity) handler;
+
     }
 
     public void connect( final String uri, final String viewportID ) {
@@ -72,8 +75,27 @@ public class GimbalController {
                         // Server has released resources associated to this controller
                         //
 
-                        assigned = false;
+                        assigned = false;       //
+                        connected = false;      // BUT:
+                                                //
+                                                // - The socket is still connected (See issue below)
+                                                // 
+                                                // - A new socket will be created 
+                                                //   when a call is made to connect.
+                                                //
                         deActivateSensors();
+
+                        if( exitting ) 
+
+                            //
+                            // Notify activity (handler) can now destroy
+                            //
+
+                            handler.gimbalEvent( "EXIT", payload );
+
+
+
+
 
                         // 
                         // GRUMBLES!!!
@@ -122,6 +144,7 @@ public class GimbalController {
                         //////// SOCKET STAYS CONNECTED...
                         //////// DISCONNECTED ONLY ON APPLICATION LAYER
                         //////// ie. unassociated to viewports
+
 
                     }
 
@@ -187,6 +210,29 @@ public class GimbalController {
 
     }
 
+    public void destroy() {
+
+        Util.info("Starting exit sequence");
+        exitting = true;
+
+        if( connected ) 
+
+            //
+            // Have a connection to viewport, disconnect
+            //
+
+            disconnect();
+
+
+        else {
+
+            deActivateSensors(); // just incase
+            handler.gimbalEvent( "EXIT", "" );
+
+        }
+
+    }
+
     public void disconnect() {
 
         Util.info("Disconnecting controller");
@@ -222,11 +268,19 @@ public class GimbalController {
 
         Util.info( "Activating sensors" ); 
 
+        //
+
+        active = true;
+
     }
 
     private void deActivateSensors() {
 
         Util.info( "De activating sensors" );
+
+        //
+
+        active = false;
 
     }
 
