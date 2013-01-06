@@ -1,129 +1,164 @@
-package nomilous.gimbal.server;
+// package nomilous.gimbal.server;
 
-import nomilous.gimbal.client.Subscriber;
-import nomilous.gimbal.server.sensor.*;
+// import nomilous.gimbal.client.Subscriber;
+// import nomilous.gimbal.server.sensor.*;
 
-import android.os.Handler;
-import android.content.Context;
-import java.util.ArrayList;
-
-
-
-class Messenger implements Subscriber {
-
-    public void subscribe( Context appContext, int eventFlags, Subscriber newSubscriber ) {
-
-        initSubscribersArray();
-
-        //
-        // TODO: only start as necessary
-        //
-
-        initServer( appContext );
-
-        //
-        // TODO: check handler not already registered... 
-        // 
+// import android.os.Handler;
+// import android.content.Context;
+// import java.util.ArrayList;
 
 
-        //
-        // Bitwise 'and' (masks to detect each flag)
-        //
 
-        int enableLocation      = ( eventFlags & Updates.GPS_LOCATION_UPDATE );
-        int enableAcceleration  = ( eventFlags & Updates.ACCELERATION_UPDATE );
-        int enableMagneticField = ( eventFlags & Updates.MAGNETIC_FIELD_UPDATE );
-        int enableRotation      = ( eventFlags & Updates.ROTATION_UPDATE );
+// class Messenger implements Subscriber {
 
-        if( enableLocation == Updates.GPS_LOCATION_UPDATE ) addSubscriber( 
-            Updates.GPS_LOCATION_UPDATE, newSubscriber
-        );
+//     public void subscribe( Context appContext, int eventFlags, Subscriber newSubscriber ) {
 
-        if( enableAcceleration == Updates.ACCELERATION_UPDATE ) addSubscriber( 
-            Updates.ACCELERATION_UPDATE, newSubscriber
-        );
+//         initSubscribersArray();
 
-        if( enableMagneticField == Updates.MAGNETIC_FIELD_UPDATE ) addSubscriber( 
-            Updates.MAGNETIC_FIELD_UPDATE, newSubscriber
-        );
+//         //
+//         // TODO: only start as necessary
+//         //
 
-        if( enableRotation == Updates.ROTATION_UPDATE ) addSubscriber( 
-            Updates.ROTATION_UPDATE, newSubscriber
-        );
+//         initServer( appContext );
 
-    }
+//         //
+//         // TODO: check handler not already registered... 
+//         // 
 
-    //
-    // private
-    //
 
-    @Override
-    public void onMessage( int eventCode, Object payload ) {
+//         //
+//         // Bitwise 'and' (masks to detect each flag)
+//         //
 
-        ArrayList<Subscriber> subscriberList = 
+//         int enableLocation      = ( eventFlags & Updates.GPS_LOCATION_UPDATE );
+//         int enableAcceleration  = ( eventFlags & Updates.ACCELERATION_UPDATE );
+//         int enableMagneticField = ( eventFlags & Updates.MAGNETIC_FIELD_UPDATE );
+//         int enableRotation      = ( eventFlags & Updates.ROTATION_UPDATE );
 
-            (ArrayList<Subscriber>) this.subscribers.get( eventCode );
+//         if( enableLocation == Updates.GPS_LOCATION_UPDATE ) addSubscriber( 
+//             Updates.GPS_LOCATION_UPDATE, newSubscriber
+//         );
 
-        for( Subscriber subscriber : subscriberList )
+//         if( enableAcceleration == Updates.ACCELERATION_UPDATE ) addSubscriber( 
+//             Updates.ACCELERATION_UPDATE, newSubscriber
+//         );
 
-            subscriber.onMessage( eventCode, payload );
+//         if( enableMagneticField == Updates.MAGNETIC_FIELD_UPDATE ) addSubscriber( 
+//             Updates.MAGNETIC_FIELD_UPDATE, newSubscriber
+//         );
 
-    }
+//         if( enableRotation == Updates.ROTATION_UPDATE ) addSubscriber( 
+//             Updates.ROTATION_UPDATE, newSubscriber
+//         );
 
-    private ArrayList<Object> servers = null;
+//     }
 
-    private void initServer( Context appContext ) {
+//     public void unsubscribe( Context appContext, int eventFlags, Subscriber subscriber ) {
 
-        if( this.servers == null ) {
+//         int enableLocation      = ( eventFlags & Updates.GPS_LOCATION_UPDATE );
+//         int enableAcceleration  = ( eventFlags & Updates.ACCELERATION_UPDATE );
+//         int enableMagneticField = ( eventFlags & Updates.MAGNETIC_FIELD_UPDATE );
+//         int enableRotation      = ( eventFlags & Updates.ROTATION_UPDATE );
 
-            this.servers = new ArrayList<Object>();
+//         if( enableLocation == Updates.GPS_LOCATION_UPDATE ) removeSubscriber( 
+//             Updates.GPS_LOCATION_UPDATE, subscriber
+//         );
 
-            this.servers.add( new LocationServer( appContext, this ) );
-            this.servers.add( new OrientationServer( appContext, this ) );
+//         if( enableAcceleration == Updates.ACCELERATION_UPDATE ) removeSubscriber( 
+//             Updates.ACCELERATION_UPDATE, subscriber
+//         );
 
-        }
+//         if( enableMagneticField == Updates.MAGNETIC_FIELD_UPDATE ) removeSubscriber( 
+//             Updates.MAGNETIC_FIELD_UPDATE, subscriber
+//         );
 
-    }
+//         if( enableRotation == Updates.ROTATION_UPDATE ) removeSubscriber( 
+//             Updates.ROTATION_UPDATE, subscriber
+//         );
 
-    // private void initOrientationServer( Context appContext ) {
+//     }
 
-    //     //
-    //     // OrientationServer provides 3 separate events
-    //     // Only maintain one instance
-    //     //
+//     //
+//     // private
+//     //
 
-    //     OrientationServer s = new OrientationServer( appContext, this );
+//     @Override
+//     public void onMessage( int eventCode, Object payload ) {
 
-    //     this.servers.set( Updates.ACCELERATION_UPDATE, s );
-    //     this.servers.set( Updates.MAGNETIC_FIELD_UPDATE, s );
-    //     this.servers.set( Updates.ROTATION_UPDATE, s );
+//         ArrayList<Subscriber> subscriberList = 
 
-    // }
+//             (ArrayList<Subscriber>) this.subscribers.get( eventCode );
 
-    private ArrayList<Object> subscribers = null;
+//         for( Subscriber subscriber : subscriberList )
 
-    private void initSubscribersArray() {
+//             subscriber.onMessage( eventCode, payload );
 
-        if( this.subscribers != null ) return;
+//     }
 
-        this.subscribers = new ArrayList<Object>();
+//     private ArrayList<Object> servers = null;
 
-        for( int i = 0; i < Updates.HIGHEST_EVENT_CODE; i++ ) {
+//     private void initServer( Context appContext ) {
 
-            this.subscribers.add( new ArrayList<Object>() );
+//         if( this.servers == null ) {
 
-        }
+//             this.servers = new ArrayList<Object>();
 
-    }
+//             this.servers.add( new LocationServer( appContext, this ) );
+//             this.servers.add( new OrientationServer( appContext, this ) );
 
-    private void addSubscriber( int eventCode, Subscriber newSubscriber ) {
+//         }
 
-        ((ArrayList)
+//     }
+
+//     // private void initOrientationServer( Context appContext ) {
+
+//     //     //
+//     //     // OrientationServer provides 3 separate events
+//     //     // Only maintain one instance
+//     //     //
+
+//     //     OrientationServer s = new OrientationServer( appContext, this );
+
+//     //     this.servers.set( Updates.ACCELERATION_UPDATE, s );
+//     //     this.servers.set( Updates.MAGNETIC_FIELD_UPDATE, s );
+//     //     this.servers.set( Updates.ROTATION_UPDATE, s );
+
+//     // }
+
+//     private ArrayList<Object> subscribers = null;
+
+//     private void initSubscribersArray() {
+
+//         if( this.subscribers != null ) return;
+
+//         this.subscribers = new ArrayList<Object>();
+
+//         for( int i = 0; i < Updates.HIGHEST_EVENT_CODE; i++ ) {
+
+//             this.subscribers.add( new ArrayList<Object>() );
+
+//         }
+
+//     }
+
+//     private void addSubscriber( int eventCode, Subscriber newSubscriber ) {
+
+//         ((ArrayList)
             
-             this.subscribers.get( eventCode ) 
+//              this.subscribers.get( eventCode ) 
 
-        ).add( newSubscriber );
+//         ).add( newSubscriber );
 
-    }
+//     }
 
-}
+//     private void removeSubscriber( int eventCode, Subscriber newSubscriber ) {
+
+//         ((ArrayList)
+            
+//              this.subscribers.get( eventCode ) 
+
+//         ).add( newSubscriber );
+
+//     }
+
+// }

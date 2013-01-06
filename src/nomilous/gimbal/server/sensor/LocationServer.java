@@ -1,8 +1,7 @@
 package nomilous.gimbal.server.sensor;
 
 import nomilous.Util;
-import nomilous.gimbal.server.Updates;
-import nomilous.gimbal.client.Subscriber;
+import nomilous.gimbal.client.SensorSubscriber;
 
 /*
  * 
@@ -23,14 +22,14 @@ import android.location.Location;
 
 public class LocationServer  {
 
-    private final int eventCode = Updates.GPS_LOCATION_UPDATE;
-    private Subscriber subscriber;
+    private final int eventCode = SensorSubscriber.GPS_LOCATION_UPDATE;
+    private SensorSubscriber subscriber;
 
     private static LocationManager locationManager = null;
     
-    public LocationServer( Context appContext, Object caller ) {
+    public LocationServer( Context appContext, Object subscriber ) {
 
-        this.subscriber = (Subscriber) caller;
+        this.subscriber = (SensorSubscriber) subscriber;
 
         reInitialize( appContext );
 
@@ -80,9 +79,9 @@ public class LocationServer  {
 
     private void updateLocation( Location location ) {
 
-        this.subscriber.onMessage( 
+        this.subscriber.onSensorEvent( 
 
-            Updates.GPS_LOCATION_UPDATE, 
+            SensorSubscriber.GPS_LOCATION_UPDATE, 
             location 
 
         );

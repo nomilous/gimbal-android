@@ -87,12 +87,6 @@ public class Gimbal extends Activity
     @Override
     public void gimbalEvent( final String event, final Object payload ) {
 
-        Util.info( 
-
-            String.format( "GimbalEvent %s: %s", event, payload.toString() ) 
-
-        );
-
         //
         // explicitly run on UIthread because the 'websocket' 
         // client making this call is on another, and so

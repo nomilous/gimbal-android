@@ -9,17 +9,14 @@ import org.json.JSONObject;
 
 import com.codebutler.android_websockets.SocketIOClient;
 
-import nomilous.gimbal.server.Updates;
-import nomilous.gimbal.client.Subscriber;
+import nomilous.gimbal.client.SensorSubscriber;
 import nomilous.Util;
 
-public class GimbalController {
-
+public class GimbalController implements SensorSubscriber {
 
     private Context context;
     private Activity activity;
     private GimbalEventHandler handler;
-    private Subscriber subscriber;
 
     private SocketIOClient client;
     private boolean connected = false;
@@ -32,7 +29,6 @@ public class GimbalController {
 
         this.context = context;
         this.handler = (GimbalEventHandler) handler;
-        subscriber = initSensorSubscriber();
         this.activity = (Activity) handler;
 
     }
@@ -51,7 +47,7 @@ public class GimbalController {
                 @Override
                 public void on(String event, JSONArray payload) {
 
-                    Util.info(String.format("Got event %s: %s", event, payload.toString()));
+                    Util.info(String.format("RECEIVED %s: %s", event, payload.toString()));
 
                     if( event.equals( GimbalEventHandler.CONTROLLER_CONNECTED ) ) {
 
@@ -206,6 +202,25 @@ public class GimbalController {
 
     }
 
+    public void sensorSubscribe( int eventCode ) {
+
+        Util.info("Activate sensors");
+
+    }
+
+    public void sensorUnSubscribe( int eventCode ) {
+
+        Util.info("Terminate sensors");
+
+    }
+
+    public void onSensorEvent( int eventCode, Object payload ) {
+
+        Util.info("SENSOR EVENT");
+
+    }
+
+
     private void initializeController( String primaryViewportID ) {
 
         Util.info( "Register controller with primary viewport: " + primaryViewportID );
@@ -224,33 +239,23 @@ public class GimbalController {
 
     private void activateSensors( GimbalEventHandler handler, String viewportID ) {
 
-        Util.info( "Activating sensors" ); 
-
-        //
-        // Call to subscribe needs to run on UI thread.
-        //
-
-        activity.runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-
-                Updates.subscribe( context, Updates.ROTATION_UPDATE, subscriber ); 
-
-            }
-
-        });
-
+        sensorSubscribe( SensorSubscriber.ROTATION_UPDATE );
         active = true;
+
+        // activity.runOnUiThread(new Runnable() {
+        //     @Override
+        //     public void run() {
+        //         SensorSubscriber.subscribe( context, SensorSubscriber.ROTATION_UPDATE, this ); 
+        //     }
+        // });
+
+        
 
     }
 
     private void deActivateSensors() {
 
-        Util.info( "De activating sensors" );
-
-        //
-
+        sensorUnSubscribe( SensorSubscriber.ROTATION_UPDATE );
         active = false;
 
     }
@@ -269,45 +274,45 @@ public class GimbalController {
 
     }
 
-    private Subscriber initSensorSubscriber() {
+    // private Subscriber initSensorSubscriber() {
 
-        return new Subscriber() {
+    //     return new Subscriber() {
 
-            @Override
-            public void onMessage( int sensorEvent, Object payload ) {
+    //         @Override
+    //         public void onMessage( int sensorEvent, Object payload ) {
 
-                switch( sensorEvent ) {
+    //             switch( sensorEvent ) {
 
-                    case Updates.ROTATION_UPDATE:
+    //                 case Updates.ROTATION_UPDATE:
 
-                        float[] orient = (float[]) payload;
+    //                     float[] orient = (float[]) payload;
 
-                        try {
+    //                     try {
 
-                            JSONArray xyz = new JSONArray();
-                            xyz.put( orient[0] );
-                            xyz.put( orient[1] );
-                            xyz.put( orient[2] );
+    //                         JSONArray xyz = new JSONArray();
+    //                         xyz.put( orient[0] );
+    //                         xyz.put( orient[1] );
+    //                         xyz.put( orient[2] );
 
-                            JSONObject orientation = new JSONObject();
-                            orientation.put( "event:orient", xyz );
+    //                         JSONObject orientation = new JSONObject();
+    //                         orientation.put( "event:orient", xyz );
 
-                            JSONArray message = new JSONArray();
-                            message.put( orientation );
+    //                         JSONArray message = new JSONArray();
+    //                         message.put( orientation );
 
-                            client.emit( GimbalEventHandler.UPDATE_VIEWPORTS, message );
+    //                         client.emit( GimbalEventHandler.UPDATE_VIEWPORTS, message );
 
-                        } 
+    //                     } 
 
-                        catch( Exception x ) {} 
-                        break;
+    //                     catch( Exception x ) {} 
+    //                     break;
 
-                }
+    //             }
 
-            }
+    //         }
 
-        };
+    //     };
 
-    }
+    // }
 
 }

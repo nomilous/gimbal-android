@@ -1,8 +1,7 @@
 package nomilous.gimbal.server.sensor;
 
 import nomilous.Util;
-import nomilous.gimbal.server.Updates;
-import nomilous.gimbal.client.Subscriber;
+import nomilous.gimbal.client.SensorSubscriber;
 
 import java.util.List;
 import android.content.Context;
@@ -13,11 +12,11 @@ import android.hardware.SensorEvent;
 
 public class OrientationServer  {
 
-    private Subscriber subscriber;
+    private SensorSubscriber subscriber;
 
-    public OrientationServer( Context appContext, Object caller ) {
+    public OrientationServer( Context appContext, Object subscriber ) {
 
-        this.subscriber = (Subscriber) caller;
+        this.subscriber = (SensorSubscriber) subscriber;
 
         sensorManager = (SensorManager) appContext.getSystemService( 
 
@@ -66,12 +65,12 @@ public class OrientationServer  {
 
             case Sensor.TYPE_ACCELEROMETER:
                 System.arraycopy( event.values, 0, accelerationVector, 0, 3 );
-                this.subscriber.onMessage( Updates.ACCELERATION_UPDATE, accelerationVector);
+                this.subscriber.onSensorEvent( SensorSubscriber.ACCELERATION_UPDATE, accelerationVector);
                 break;
 
             case Sensor.TYPE_MAGNETIC_FIELD:
                 System.arraycopy(event.values, 0, magneticFieldVector, 0, 3);
-                this.subscriber.onMessage( Updates.MAGNETIC_FIELD_UPDATE, magneticFieldVector);
+                this.subscriber.onSensorEvent( SensorSubscriber.MAGNETIC_FIELD_UPDATE, magneticFieldVector);
                 break;
 
             default:
@@ -113,7 +112,7 @@ public class OrientationServer  {
 
             );
 
-            this.subscriber.onMessage( Updates.ROTATION_UPDATE, orientationVector);
+            this.subscriber.onSensorEvent( SensorSubscriber.ROTATION_UPDATE, orientationVector);
 
         }
 
