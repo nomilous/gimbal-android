@@ -3,7 +3,7 @@ package nomilous.gimbal;
 import android.app.Activity;
 import android.os.Bundle;
 
-import android.widget.LinearLayout;
+//import android.widget.LinearLayout;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.content.Intent;
@@ -20,9 +20,12 @@ import nomilous.Util;
 public class Gimbal extends Activity 
     implements GimbalEventHandler {
 
-    private LinearLayout viewports;
+    //private LinearLayout viewports;
     private TextView instruction;
+    private OnClickListener textClickListener;
     private GimbalController gimbal;
+
+    private final String SCAN_TAG = "touch to grab viewport";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,23 +33,13 @@ public class Gimbal extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gimbal);
 
-        final Activity scanResultHandler = this;
+        textClickListener = initTextClickListener();
 
-        viewports = (LinearLayout) findViewById(R.id.viewports);
         instruction = (TextView) findViewById(R.id.instruction);
-        instruction.setText("touch to grab viewport");
+        instruction.setText( SCAN_TAG );
+        instruction.setOnClickListener( textClickListener );
 
-        viewports.setOnClickListener( new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                IntentIntegrator qrScan = new IntentIntegrator(scanResultHandler);
-                qrScan.initiateScan();
-
-            }
-
-        });
+        //viewports = (LinearLayout) findViewById(R.id.viewports);
 
     }
 
@@ -106,6 +99,39 @@ public class Gimbal extends Activity
             }
         });
 
+    }
+
+
+    private OnClickListener initTextClickListener() {
+        return new OnClickListener() {
+            @Override
+            public void onClick(View v) { 
+
+                String text = "";
+                try {
+
+                    text = ((TextView)v).getText().toString();
+                    Util.info( "Clicked on textview with text: " + text );
+
+                } catch (Exception e) {
+
+                    Util.error(e.toString());
+                    return;
+
+                }
+
+                if( text.equals( SCAN_TAG ) ) scanTag(); 
+
+                else Util.warn( "Huh?" ); 
+
+            }
+        };
+    }
+
+    private void scanTag() {
+        final Activity scanResultHandler = this;
+        IntentIntegrator qrScan = new IntentIntegrator(scanResultHandler);
+        qrScan.initiateScan();
     }
 
 }
