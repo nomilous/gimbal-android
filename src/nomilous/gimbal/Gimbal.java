@@ -67,6 +67,9 @@ public class Gimbal extends Activity
             String uri = viewportAddressParts[0];
             String viewportID = viewportAddressParts[1];
 
+            disconnect.setText( "...attempting connect..." );
+            disconnect.setVisibility(View.VISIBLE);
+
             gimbal.connect( uri, viewportID );
 
         }
@@ -96,6 +99,8 @@ public class Gimbal extends Activity
                 if( event.equals( GimbalEventHandler.CONTROLLER_CONNECTED ) ) {
 
                     primary.setText("connected");
+                    disconnect.setText( RELEASE_VIEWPORTS );
+                    disconnect.setVisibility(View.VISIBLE);
 
                 } else if( event.equals( GimbalEventHandler.ASSIGN_PRIMARY_VIEWPORT ) ) {
 
@@ -147,6 +152,7 @@ public class Gimbal extends Activity
 
     private void releaseViewports() {
 
+        gimbal.disconnect();
 
     }
 

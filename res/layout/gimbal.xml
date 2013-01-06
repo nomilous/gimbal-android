@@ -39,6 +39,7 @@
                     android:layout_height="wrap_content"
                     android:typeface="monospace"
                     android:textColor="@color/menu"
+                    android:visibility="gone"
                     android:padding="@dimen/menu_padding"/>
 
             <TextView android:id="@+id/exit"

@@ -1,5 +1,6 @@
 package nomilous.gimbal.client;
 
+import android.app.Activity;
 import android.content.Context;
 
 import java.net.URI;
@@ -16,6 +17,7 @@ public class GimbalController {
 
 
     private Context context;
+    private Activity activity;
     private GimbalEventHandler handler;
 
     private SocketIOClient client;
@@ -23,10 +25,11 @@ public class GimbalController {
     private boolean assigned = false;
     
 
-    public GimbalController( Context context, final GimbalEventHandler handler ) {
+    public GimbalController( Context context, Object handler ) {
 
         this.context = context;
-        this.handler = handler;
+        this.handler = (GimbalEventHandler) handler;
+        this.activity = (Activity) handler;
     }
 
     public void connect( final String uri, final String viewportID ) {
@@ -62,6 +65,55 @@ public class GimbalController {
 
                         assigned = true;
                         activateSensors( handler, viewportID );
+
+                    } else if( event.equals( GimbalEventHandler.DISCONNECT_OK ) ) {
+
+                        //
+                        // Server has released resources associated to this controller
+                        //
+
+                        assigned = false;
+                        deActivateSensors();
+
+                        // 
+                        // GRUMBLES!!!
+                        // 
+                        // Can't initiate a clean disconnect from the clientside...
+                        // 
+                        // 
+                        // E/AndroidRuntime(  530): FATAL EXCEPTION: Thread-12
+                        // E/AndroidRuntime(  530): java.lang.NullPointerException
+                        // E/AndroidRuntime(  530):    at com.codebutler.android_websockets.SocketIOClient.cleanup(SocketIOClient.java:183)
+                        // E/AndroidRuntime(  530):    at com.codebutler.android_websockets.SocketIOClient.access$000(SocketIOClient.java:22)
+                        // E/AndroidRuntime(  530):    at com.codebutler.android_websockets.SocketIOClient$2.onError(SocketIOClient.java:152)
+                        // E/AndroidRuntime(  530):    at com.codebutler.android_websockets.WebSocketClient$1.run(WebSocketClient.java:132)
+                        // E/AndroidRuntime(  530):    at java.lang.Thread.run(Thread.java:1019)
+                        //
+                        // I tried to catch that null pointer inside com.codebutler.android_websockets.WebSocketClient$1.run(WebSocketClient.java:132)
+                        // 
+                        // no luck...
+                        // 
+                        // 
+
+                        // activity.runOnUiThread(new Runnable() {
+                        //     @Override
+                        //     public void run() {
+
+
+                                // try {
+                                //     client.disconnect();
+                                // } catch( java.io.IOException e ) { }
+
+
+
+                        //     }
+                        // });
+
+                        // 
+                        // ask server to initiate disconnect
+                        // 
+
+                        requestDisconnect();
 
                     }
 
@@ -127,6 +179,21 @@ public class GimbalController {
 
     }
 
+    public void disconnect() {
+
+        Util.info("Disconnecting controller");
+
+        try {
+
+            client.emit( "event:release:controller", new JSONArray() );
+
+        } 
+
+        catch( org.json.JSONException e ) {}
+
+
+    }
+
     private void initializeController( String primaryViewportID ) {
 
         Util.info( "Register controller with primary viewport: " + primaryViewportID );
@@ -139,16 +206,32 @@ public class GimbalController {
 
         } 
 
-        catch( Exception e ) {}
+        catch( org.json.JSONException e ) {}
 
     }
 
     private void activateSensors( GimbalEventHandler handler, String viewportID ) {
 
-        Util.info( "Activating sensors" );
-        
+        Util.info( "Activating sensors" ); 
 
     }
 
+    private void deActivateSensors() {
+
+        Util.info( "De activating sensors" );
+
+    }
+
+    private void requestDisconnect() {
+
+        try {
+
+            client.emit( "request:socket:disconnect", new JSONArray() );
+
+        }
+
+        catch( org.json.JSONException e ) {}
+
+    }
 
 }
