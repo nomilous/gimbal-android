@@ -213,7 +213,33 @@ public class GimbalController implements SensorSubscriber {
 
     public void onSensorEvent( int eventCode, Object payload ) {
 
-        Util.info("SENSOR EVENT" + eventCode + " " + payload.toString());
+        switch( eventCode ) {
+
+            case SensorSubscriber.ROTATION_UPDATE:
+
+                float[] orient = (float[]) payload;
+
+                try {
+
+                    JSONArray xyz = new JSONArray();
+                    xyz.put( orient[0] );
+                    xyz.put( orient[1] );
+                    xyz.put( orient[2] );
+
+                    JSONObject orientation = new JSONObject();
+                    orientation.put( "event:orient", xyz );
+
+                    JSONArray message = new JSONArray();
+                    message.put( orientation );
+
+                    client.emit( GimbalEventHandler.UPDATE_VIEWPORTS, message );
+
+                } 
+
+                catch( Exception x ) {} 
+                break;
+
+        }
 
     }
 
@@ -275,46 +301,5 @@ public class GimbalController implements SensorSubscriber {
         catch( org.json.JSONException e ) {}
 
     }
-
-    // private Subscriber initSensorSubscriber() {
-
-    //     return new Subscriber() {
-
-    //         @Override
-    //         public void onMessage( int sensorEvent, Object payload ) {
-
-    //             switch( sensorEvent ) {
-
-    //                 case Updates.ROTATION_UPDATE:
-
-    //                     float[] orient = (float[]) payload;
-
-    //                     try {
-
-    //                         JSONArray xyz = new JSONArray();
-    //                         xyz.put( orient[0] );
-    //                         xyz.put( orient[1] );
-    //                         xyz.put( orient[2] );
-
-    //                         JSONObject orientation = new JSONObject();
-    //                         orientation.put( "event:orient", xyz );
-
-    //                         JSONArray message = new JSONArray();
-    //                         message.put( orientation );
-
-    //                         client.emit( GimbalEventHandler.UPDATE_VIEWPORTS, message );
-
-    //                     } 
-
-    //                     catch( Exception x ) {} 
-    //                     break;
-
-    //             }
-
-    //         }
-
-    //     };
-
-    // }
 
 }
