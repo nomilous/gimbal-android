@@ -14,15 +14,22 @@ import nomilous.Util;
 
 public class GimbalController {
 
-    private final SocketIOClient client;
-    private boolean assigned = false;
+
     private Context context;
+    private GimbalEventHandler handler;
 
-    public GimbalController( Context context, final GimbalEventHandler handler, final String uri, final String viewportID ) {
+    private SocketIOClient client;
+    private boolean connected = false;
+    private boolean assigned = false;
+    
 
-        Util.info( String.format("Init controller with %s %s", uri, viewportID ));
+    public GimbalController( Context context, final GimbalEventHandler handler ) {
 
         this.context = context;
+        this.handler = handler;
+    }
+
+    public void connect( final String uri, final String viewportID ) {
 
         client = new SocketIOClient(
 
@@ -40,11 +47,21 @@ public class GimbalController {
 
                     if( event.equals( GimbalEventHandler.CONTROLLER_CONNECTED ) ) {
 
-                        registerController( viewportID );
+                        //
+                        // Have established connection to server
+                        //
+
+                        connected = true;
+                        initializeController( viewportID );
 
                     } else if( event.equals( GimbalEventHandler.ASSIGN_PRIMARY_VIEWPORT ) ) {
 
-                        assignPrimaryViewport( handler, viewportID );
+                        //
+                        // Have got primary viewport
+                        //
+
+                        assigned = true;
+                        activateSensors( handler, viewportID );
 
                     }
 
@@ -62,67 +79,62 @@ public class GimbalController {
 
         );
 
-
-
-        Updates.subscribe( context, 
-
-            Updates.ROTATION_UPDATE,
-
-            new Subscriber() {
-
-                @Override
-                public void onMessage( int sensorEvent, Object payload ) {
-
-                    switch( sensorEvent ) {
-
-                        case Updates.ROTATION_UPDATE:
-
-                            float[] orient = (float[]) payload;
-
-                            try {
-
-                                JSONArray xyz = new JSONArray();
-                                xyz.put( orient[0] );
-                                xyz.put( orient[1] );
-                                xyz.put( orient[2] );
-
-                                JSONObject orientation = new JSONObject();
-                                orientation.put( "event:orient", xyz );
-
-                                JSONArray message = new JSONArray();
-                                message.put( orientation );
-
-                                client.emit( GimbalEventHandler.UPDATE_VIEWPORTS, message );
-
-                            } 
-
-                            catch( Exception x ) {} 
-                            break;
-
-                    }
-
-                }
-
-            }
-
-        );
-
-    }
-
-    public void connect() {
-
         client.connect();
 
+        // Updates.subscribe( context, 
+
+        //     Updates.ROTATION_UPDATE,
+
+        //     new Subscriber() {
+
+        //         @Override
+        //         public void onMessage( int sensorEvent, Object payload ) {
+
+        //             switch( sensorEvent ) {
+
+        //                 case Updates.ROTATION_UPDATE:
+
+        //                     float[] orient = (float[]) payload;
+
+        //                     try {
+
+        //                         JSONArray xyz = new JSONArray();
+        //                         xyz.put( orient[0] );
+        //                         xyz.put( orient[1] );
+        //                         xyz.put( orient[2] );
+
+        //                         JSONObject orientation = new JSONObject();
+        //                         orientation.put( "event:orient", xyz );
+
+        //                         JSONArray message = new JSONArray();
+        //                         message.put( orientation );
+
+        //                         client.emit( GimbalEventHandler.UPDATE_VIEWPORTS, message );
+
+        //                     } 
+
+        //                     catch( Exception x ) {} 
+        //                     break;
+
+        //             }
+
+        //         }
+
+        //     }
+
+        // );
+
+
     }
 
-    private void registerController( String viewportID ) {
+    private void initializeController( String primaryViewportID ) {
 
-        Util.info( "Register controller for viewport:" + viewportID );
+        Util.info( "Register controller with primary viewport: " + primaryViewportID );
 
         try {
 
             JSONArray message = new JSONArray();
-            message.put( viewportID );
+            message.put( primaryViewportID );
             client.emit( "event:register:controller", message );
 
         } 
@@ -131,10 +143,10 @@ public class GimbalController {
 
     }
 
-    private void assignPrimaryViewport( GimbalEventHandler handler, String viewportID ) {
+    private void activateSensors( GimbalEventHandler handler, String viewportID ) {
 
-        Util.info( "Assign controller to viewport:" + viewportID );
-        assigned = true;
+        Util.info( "Activating sensors" );
+        
 
     }
 

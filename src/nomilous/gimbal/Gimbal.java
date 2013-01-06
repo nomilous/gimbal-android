@@ -53,6 +53,8 @@ public class Gimbal extends Activity
 
         //viewports = (LinearLayout) findViewById(R.id.viewports);
 
+        gimbal = new GimbalController( getApplicationContext(), this );
+
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -62,17 +64,10 @@ public class Gimbal extends Activity
         if (scanResult != null) {
 
             String viewportAddressParts[] = scanResult.getContents().split(" ");
+            String uri = viewportAddressParts[0];
+            String viewportID = viewportAddressParts[1];
 
-            gimbal = new GimbalController( 
-
-                getApplicationContext(),
-                this,
-                viewportAddressParts[0],
-                viewportAddressParts[1]
-
-            );
-
-            gimbal.connect();
+            gimbal.connect( uri, viewportID );
 
         }
   
@@ -157,7 +152,7 @@ public class Gimbal extends Activity
 
     private void exit() {
 
-        
+
     }
 
 }
