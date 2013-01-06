@@ -60,6 +60,7 @@ public class Gimbal extends Activity
 
             gimbal = new GimbalController( 
 
+                getApplicationContext(),
                 this,
                 viewportAddressParts[0],
                 viewportAddressParts[1]
