@@ -217,14 +217,14 @@ public class GimbalController implements SensorSubscriber {
 
             case SensorSubscriber.ROTATION_UPDATE:
 
-                float[] orient = (float[]) payload;
+                //float[] orient = (float[]) payload;
 
                 try {
 
                     JSONArray xyz = new JSONArray();
-                    xyz.put( orient[0] );
-                    xyz.put( orient[1] );
-                    xyz.put( orient[2] );
+                    xyz.put( ((float[])payload)[0] );
+                    xyz.put( ((float[])payload)[1] );
+                    xyz.put( ((float[])payload)[2] );
 
                     JSONObject orientation = new JSONObject();
                     orientation.put( "event:orient", xyz );
