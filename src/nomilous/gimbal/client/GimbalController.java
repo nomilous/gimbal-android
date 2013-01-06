@@ -29,6 +29,7 @@ public class GimbalController implements SensorSubscriber {
 
     private OrientationServer orientationServer;
     private LocationServer locationServer;
+    private SensorTranslator translator;
     
 
     public GimbalController( Context context, Object handler ) {
@@ -39,6 +40,7 @@ public class GimbalController implements SensorSubscriber {
 
         orientationServer = new OrientationServer(context, this);
         locationServer = new LocationServer(context, this);
+        translator = new SensorTranslator();
 
     }
 
@@ -74,6 +76,7 @@ public class GimbalController implements SensorSubscriber {
                         //
 
                         assigned = true;
+                        translator.configure( client, payload );
                         activateSensors( handler, viewportID );
 
                     } else if( event.equals( GimbalEventHandler.DISCONNECT_OK ) ) {
@@ -213,33 +216,7 @@ public class GimbalController implements SensorSubscriber {
 
     public void onSensorEvent( int eventCode, Object payload ) {
 
-        switch( eventCode ) {
-
-            case SensorSubscriber.ROTATION_UPDATE:
-
-                //float[] orient = (float[]) payload;
-
-                try {
-
-                    JSONArray xyz = new JSONArray();
-                    xyz.put( ((float[])payload)[0] );
-                    xyz.put( ((float[])payload)[1] );
-                    xyz.put( ((float[])payload)[2] );
-
-                    JSONObject orientation = new JSONObject();
-                    orientation.put( "event:orient", xyz );
-
-                    JSONArray message = new JSONArray();
-                    message.put( orientation );
-
-                    client.emit( GimbalEventHandler.UPDATE_VIEWPORTS, message );
-
-                } 
-
-                catch( Exception x ) {} 
-                break;
-
-        }
+        translator.handleSensorEvent( eventCode, payload );
 
     }
 
