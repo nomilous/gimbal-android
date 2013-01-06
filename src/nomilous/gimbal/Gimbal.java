@@ -98,6 +98,10 @@ public class Gimbal extends Activity
 
                 if( event.equals( GimbalEventHandler.CONTROLLER_CONNECTED ) ) {
 
+                    //
+                    // activate disconnect menu item
+                    // 
+
                     primary.setText("connected");
                     disconnect.setText( RELEASE_VIEWPORTS );
                     disconnect.setVisibility(View.VISIBLE);
@@ -106,7 +110,16 @@ public class Gimbal extends Activity
 
                     primary.setText("controlling viewport " + payload.toString() );
 
-                }
+                } else if( event.equals( GimbalEventHandler.DISCONNECT_OK ) ) {
+
+                    //
+                    // RE-activate scan tag menu item
+                    // 
+
+                    primary.setText( SCAN_TAG );
+                    disconnect.setVisibility(View.INVISIBLE);
+
+                } 
 
             }
         });

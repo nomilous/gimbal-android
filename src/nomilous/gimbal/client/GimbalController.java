@@ -113,7 +113,15 @@ public class GimbalController {
                         // ask server to initiate disconnect
                         // 
 
-                        requestDisconnect();
+                        // requestDisconnect();
+
+                        //
+                        // same problem when server disconnectes... 
+                        //
+
+                        //////// SOCKET STAYS CONNECTED...
+                        //////// DISCONNECTED ONLY ON APPLICATION LAYER
+                        //////// ie. unassociated to viewports
 
                     }
 
@@ -223,6 +231,8 @@ public class GimbalController {
     }
 
     private void requestDisconnect() {
+
+        // unused function
 
         try {
 
