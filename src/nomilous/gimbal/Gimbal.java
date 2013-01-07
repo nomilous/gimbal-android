@@ -3,7 +3,7 @@ package nomilous.gimbal;
 import android.app.Activity;
 import android.os.Bundle;
 
-//import android.widget.LinearLayout;
+import android.widget.LinearLayout;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.content.Intent;
@@ -20,7 +20,7 @@ import nomilous.Util;
 public class Gimbal extends Activity 
     implements GimbalEventHandler {
 
-    //private LinearLayout viewports;
+    private LinearLayout view;
     private TextView primary;
     private TextView disconnect;
     private TextView exit;
@@ -37,7 +37,8 @@ public class Gimbal extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gimbal);
 
-        gimbal = new GimbalController( getApplicationContext(), this );
+        view = (LinearLayout) findViewById(R.id.viewports);
+        gimbal = new GimbalController( getApplicationContext(), this, view );
 
     }
 
@@ -59,9 +60,6 @@ public class Gimbal extends Activity
         exit = (TextView) findViewById(R.id.exit);
         exit.setText( EXIT );
         exit.setOnClickListener( textClickListener );
-
-        
-        //viewports = (LinearLayout) findViewById(R.id.viewports);
 
     }
 

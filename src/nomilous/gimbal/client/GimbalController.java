@@ -2,6 +2,7 @@ package nomilous.gimbal.client;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.View;
 
 import java.net.URI;
 import org.json.JSONArray;
@@ -12,6 +13,7 @@ import com.codebutler.android_websockets.SocketIOClient;
 import nomilous.gimbal.client.SensorSubscriber;
 import nomilous.gimbal.server.sensor.OrientationServer;
 import nomilous.gimbal.server.sensor.LocationServer;
+import nomilous.gimbal.server.sensor.TouchServer;
 
 import nomilous.Util;
 
@@ -29,10 +31,11 @@ public class GimbalController implements SensorSubscriber {
 
     private OrientationServer orientationServer;
     private LocationServer locationServer;
+    private TouchServer touchServer;
     private SensorTranslator translator;
     
 
-    public GimbalController( Context context, Object handler ) {
+    public GimbalController( Context context, Object handler, View v ) {
 
         this.context = context;
         this.handler = (GimbalEventHandler) handler;
@@ -40,6 +43,8 @@ public class GimbalController implements SensorSubscriber {
 
         orientationServer = new OrientationServer(context, this);
         locationServer = new LocationServer(context, this);
+        touchServer = new TouchServer(context, this, v);
+
         translator = new SensorTranslator();
 
     }
@@ -256,6 +261,7 @@ public class GimbalController implements SensorSubscriber {
                 
                 orientationServer.startServer();
                 locationServer.startServer();
+                touchServer.startServer();
                 active = true;
 
             }
@@ -269,6 +275,7 @@ public class GimbalController implements SensorSubscriber {
 
         orientationServer.stopServer();
         locationServer.stopServer();
+        touchServer.stopServer();
 
         active = false;
 

@@ -4,6 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import com.codebutler.android_websockets.SocketIOClient;
 
+import android.view.MotionEvent;
+
 public class SensorTranslator {
 
 
@@ -47,22 +49,46 @@ public class SensorTranslator {
 
             case SensorSubscriber.ROTATION_UPDATE:
 
+                // try {
+
+                //     JSONArray xyz = new JSONArray();
+                //     xyz.put( ((float[])payload)[0] );
+                //     xyz.put( ((float[])payload)[1] );
+                //     xyz.put( ((float[])payload)[2] );
+
+                //     JSONObject orientation = new JSONObject();
+                //     orientation.put( "event:orient", xyz );
+
+                //     JSONArray message = new JSONArray();
+                //     message.put( orientation );
+
+                //     client.emit( GimbalEventHandler.UPDATE_VIEWPORTS, message );
+
+                // } 
+
+                //catch( Exception x ) {} 
+                break;
+
+            case SensorSubscriber.TOUCH_EVENT:
+
                 try {
 
-                    JSONArray xyz = new JSONArray();
-                    xyz.put( ((float[])payload)[0] );
-                    xyz.put( ((float[])payload)[1] );
-                    xyz.put( ((float[])payload)[2] );
+                    MotionEvent m = (MotionEvent)payload;
 
-                    JSONObject orientation = new JSONObject();
-                    orientation.put( "event:orient", xyz );
+                    JSONObject event = new JSONObject();
+                    event.put( "action", m.getAction() );
+                    event.put( "x", m.getX() );
+                    event.put( "y", m.getY() );
+
+                    JSONObject touch = new JSONObject();
+                    touch.put( "event:touch", event );
 
                     JSONArray message = new JSONArray();
-                    message.put( orientation );
+                    message.put( touch );
 
                     client.emit( GimbalEventHandler.UPDATE_VIEWPORTS, message );
 
-                } 
+                }
 
                 catch( Exception x ) {} 
                 break;
