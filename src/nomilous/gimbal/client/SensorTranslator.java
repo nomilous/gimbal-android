@@ -49,24 +49,24 @@ public class SensorTranslator {
 
             case SensorSubscriber.ROTATION_UPDATE:
 
-                // try {
+                try {
 
-                //     JSONArray xyz = new JSONArray();
-                //     xyz.put( ((float[])payload)[0] );
-                //     xyz.put( ((float[])payload)[1] );
-                //     xyz.put( ((float[])payload)[2] );
+                    JSONArray xyz = new JSONArray();
+                    xyz.put( ((float[])payload)[0] );
+                    xyz.put( ((float[])payload)[1] );
+                    xyz.put( ((float[])payload)[2] );
 
-                //     JSONObject orientation = new JSONObject();
-                //     orientation.put( "event:orient", xyz );
+                    JSONObject orientation = new JSONObject();
+                    orientation.put( "event:orient", xyz );
 
-                //     JSONArray message = new JSONArray();
-                //     message.put( orientation );
+                    JSONArray message = new JSONArray();
+                    message.put( orientation );
 
-                //     client.emit( GimbalEventHandler.UPDATE_VIEWPORTS, message );
+                    client.emit( GimbalEventHandler.UPDATE_VIEWPORTS, message );
 
-                // } 
+                } 
 
-                //catch( Exception x ) {} 
+                catch( Exception x ) {} 
                 break;
 
             case SensorSubscriber.TOUCH_EVENT:
