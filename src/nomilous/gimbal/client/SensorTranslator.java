@@ -76,17 +76,45 @@ public class SensorTranslator {
                     MotionEvent m = (MotionEvent)payload;
 
                     JSONObject event = new JSONObject();
-                    event.put( "action", m.getAction() );
-                    event.put( "x", m.getX() );
-                    event.put( "y", m.getY() );
 
-                    JSONObject touch = new JSONObject();
-                    touch.put( "event:touch", event );
+                    int action = m.getAction() & MotionEvent.ACTION_MASK;
 
-                    JSONArray message = new JSONArray();
-                    message.put( touch );
+                    if( action == MotionEvent.ACTION_DOWN || 
+                        action == MotionEvent.ACTION_MOVE || 
+                        action == MotionEvent.ACTION_UP) {
 
-                    client.emit( GimbalEventHandler.UPDATE_VIEWPORTS, message );
+                        event.put( "action", action );
+
+                        //
+                        // for each fingertip
+                        //
+
+                        int pointerCount = m.getPointerCount();
+                        JSONObject pointers = new JSONObject();
+                        event.put( "pointers", pointers );
+
+                        for( int i = 0; i < pointerCount; i++ ) {
+
+                            JSONObject pointer = new JSONObject();
+                            
+                            pointer.put( "x", m.getX(i) );
+                            pointer.put( "y", m.getY(i) );
+                            pointer.put( "p", m.getPressure(i) );
+
+                            int pointerID = m.getPointerId(i);
+                            pointers.put( "" + pointerID, pointer );
+
+                        }
+
+                        JSONObject touch = new JSONObject();
+                        touch.put( "event:touch", event );
+
+                        JSONArray message = new JSONArray();
+                        message.put( touch );
+
+                        client.emit( GimbalEventHandler.UPDATE_VIEWPORTS, message );
+
+                    }
 
                 }
 
