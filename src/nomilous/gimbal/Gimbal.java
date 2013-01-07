@@ -22,12 +22,14 @@ public class Gimbal extends Activity
 
     private LinearLayout view;
     private TextView primary;
+    private TextView keypad;
     private TextView disconnect;
     private TextView exit;
     private OnClickListener textClickListener;
     private GimbalController gimbal;
 
     private final String SCAN_TAG = "connect viewport";
+    private final String TOGGLE_KEYPAD = "keypad";
     private final String RELEASE_VIEWPORTS = "disconnect";
     private final String EXIT = "exit";
 
@@ -52,6 +54,10 @@ public class Gimbal extends Activity
         primary = (TextView) findViewById(R.id.primary);
         primary.setText( SCAN_TAG );
         primary.setOnClickListener( textClickListener );
+
+        keypad = (TextView) findViewById(R.id.keypad);
+        keypad.setText( TOGGLE_KEYPAD );
+        keypad.setOnClickListener( textClickListener );
 
         disconnect = (TextView) findViewById(R.id.disconnect);
         disconnect.setText( RELEASE_VIEWPORTS );
@@ -172,6 +178,8 @@ public class Gimbal extends Activity
 
                 if( text.equals( SCAN_TAG ) ) scanTag(); 
 
+                else if ( text.equals( TOGGLE_KEYPAD ) ) toggleKeypad();
+
                 else if ( text.equals( RELEASE_VIEWPORTS ) ) releaseViewports(); 
 
                 else if ( text.equals( EXIT ) ) exit(); 
@@ -186,6 +194,12 @@ public class Gimbal extends Activity
         final Activity scanResultHandler = this;
         IntentIntegrator qrScan = new IntentIntegrator(scanResultHandler);
         qrScan.initiateScan();
+    }
+
+    private void toggleKeypad() {
+
+        gimbal.toggleKeypad();
+
     }
 
     private void releaseViewports() {

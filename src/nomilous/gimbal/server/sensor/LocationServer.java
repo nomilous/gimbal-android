@@ -125,8 +125,8 @@ public class LocationServer  {
         @Override
         public void onLocationChanged(Location location) {
 
-            Util.info( "LocationServer listener.onLocationChanged: " + 
-                location.getLatitude() + " " + location.getLongitude() );
+            //Util.info( "LocationServer listener.onLocationChanged: " + 
+            //    location.getLatitude() + " " + location.getLongitude() );
 
             updateLocation( location );
 
@@ -135,7 +135,7 @@ public class LocationServer  {
         @Override
         public void onProviderDisabled(String provider) {
 
-            Util.info( "LocationServer listener.onProviderDisabled: " + provider );
+            //Util.info( "LocationServer listener.onProviderDisabled: " + provider );
 
             //
             // TODO: Handle disabled Location Service
@@ -146,7 +146,7 @@ public class LocationServer  {
         @Override
         public void onProviderEnabled(String provider) {
 
-            Util.info( "LocationServer listener.onProviderEnabled: " + provider );
+            //Util.info( "LocationServer listener.onProviderEnabled: " + provider );
 
             //
             // TODO: Handle enabled Location Service
@@ -157,7 +157,7 @@ public class LocationServer  {
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
 
-            Util.info( "LocationServer listener.onStatusChanged: " + provider + " " + status );
+            //Util.info( "LocationServer listener.onStatusChanged: " + provider + " " + status );
 
             //
             // TODO: Handle whatever this is.

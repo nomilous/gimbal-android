@@ -14,6 +14,7 @@ import nomilous.gimbal.client.SensorSubscriber;
 import nomilous.gimbal.server.sensor.OrientationServer;
 import nomilous.gimbal.server.sensor.LocationServer;
 import nomilous.gimbal.server.sensor.TouchServer;
+import nomilous.gimbal.server.sensor.KeypadServer;
 
 import nomilous.Util;
 
@@ -32,6 +33,7 @@ public class GimbalController implements SensorSubscriber {
     private OrientationServer orientationServer;
     private LocationServer locationServer;
     private TouchServer touchServer;
+    private KeypadServer keypadServer;
     private SensorTranslator translator;
     
 
@@ -44,6 +46,7 @@ public class GimbalController implements SensorSubscriber {
         orientationServer = new OrientationServer(context, this);
         locationServer = new LocationServer(context, this);
         touchServer = new TouchServer(context, this, v);
+        keypadServer = new KeypadServer(context, this);
 
         translator = new SensorTranslator();
 
@@ -234,6 +237,17 @@ public class GimbalController implements SensorSubscriber {
 
     }
 
+    public void toggleKeypad() {
+
+
+        //
+        // this may not make sense...
+        // perhaps keypad turns itself off on done/enter ??
+        //
+
+        keypadServer.toggleKeypad();
+
+    }
 
     private void initializeController( String primaryViewportID ) {
 
@@ -262,6 +276,7 @@ public class GimbalController implements SensorSubscriber {
                 orientationServer.startServer();
                 locationServer.startServer();
                 touchServer.startServer();
+                keypadServer.startServer();
                 active = true;
 
             }
@@ -276,6 +291,7 @@ public class GimbalController implements SensorSubscriber {
         orientationServer.stopServer();
         locationServer.stopServer();
         touchServer.stopServer();
+        keypadServer.stopServer();
 
         active = false;
 
