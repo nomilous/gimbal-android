@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 
-public class MenuAction {
+public class MenuAction implements Touchable {
 
     public String label;
     public String description;
@@ -61,5 +61,9 @@ public class MenuAction {
         chain.params.put( label, layoutParams );
 
     }
+
+    public void pointerEvent( PointerEvent event ) {}
+    public void onPressed() {}
+    public void onReleased() {}
 
 }
