@@ -22,6 +22,7 @@ public class Gimbal extends Activity {
     private int on;
     private int off;
 
+    private RelativeLayout mainLayout;
     private TextView menuActivate;
     private RelativeLayout.LayoutParams menuActivateParams;
     private boolean menuActive = false;
@@ -39,7 +40,6 @@ public class Gimbal extends Activity {
         mainMenu.add( new MenuAction( "disconnect", "Disconnect all viewports." ) );
         mainMenu.add( new MenuAction( "exit", "Exit the app." ) );
 
-
     }
 
     @Override
@@ -48,6 +48,8 @@ public class Gimbal extends Activity {
         super.onStart();
 
         textClickListener = initTextClickListener();
+
+        mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
 
         menuActivate = (TextView) findViewById(R.id.menuActivate);
         menuActivate.setText( TOGGLE_MENU );
@@ -62,14 +64,14 @@ public class Gimbal extends Activity {
 
         if( menuActive ) {
 
-            mainMenu.show();
+            mainMenu.hide();
             menuActivate.setTextColor(off);
             menuActive = false;
             return;
 
         }
 
-        mainMenu.hide();
+        mainMenu.show( getApplicationContext(), mainLayout );
         menuActivate.setTextColor(on);
         menuActive = true;
         return;

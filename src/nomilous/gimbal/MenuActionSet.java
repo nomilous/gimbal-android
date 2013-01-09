@@ -1,18 +1,43 @@
 package nomilous.gimbal;
 import nomilous.Util;
 
+import android.content.Context;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
+import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MenuActionSet {
 
     private ArrayList<MenuAction> actions;
+    private HashMap<String,TextView> views;
+    private RelativeLayout layout;
+
 
     public MenuActionSet() {
         actions = new ArrayList<MenuAction>();
+        views = new HashMap<String,TextView>();
     }
 
-    public void show() {
+    public void show( Context context, RelativeLayout layout ) {
         Util.debug("MenuActionSet.show()");
+
+        //
+        // For each action
+        //
+        // - insert a text view with action.label into layout
+        //
+
+        for( MenuAction action : actions ) {
+
+            TextView view = new TextView( context );
+            view.setText( action.label );
+            layout.addView( view );
+
+        }
+
+
     }
 
     public void hide() {
