@@ -34,6 +34,7 @@ public class MenuActionSet {
     private RelativeLayout layout;
 
     private Config config;
+    private Chain chain;
 
     public MenuActionSet() {
 
@@ -49,50 +50,18 @@ public class MenuActionSet {
         
     }
 
-    public void show( Context context, RelativeLayout layout ) {
+    public void show( RelativeLayout layout ) {
         Util.debug("MenuActionSet.show()");
 
         //
-        // For each action
-        //
-        // - insert a text view with action.label into layout
-        // - position it
+        // Insert MenuActions along the Chain
         //
 
-        int left = 100;
-        int top = 0;
+        chain.set( layout );
 
-        for( MenuAction action : actions ) {
+        for( MenuAction action : actions )
 
-            TextView view = new TextView( context );
-            view.setText( action.label );
-            
-
-
-            int width = 100;
-            int height = 40; // TODO: ensure it fits..
-
-            LayoutParams layoutParams = new LayoutParams(width, height);
-            // TODO: span positions proportionally (pending Anchors())
-            layoutParams.setMargins(left, top += 50, 0, 0);
-            view.setLayoutParams(layoutParams);
-
-            
-            if( action.enabled ) view.setTextColor( config.enabledColour );
-            else view.setTextColor( config.disabledColour );
-
-            view.setTypeface( config.font );
-
-            layout.addView( view );
-
-            //
-            // keep reference to each each view and layout
-            //
-
-            views.put( action.label, view );
-            params.put( action.label, layoutParams );
-
-        }
+            action.render( chain.next() );
 
         //
         // Keep ref to layout for .hide()
@@ -107,10 +76,7 @@ public class MenuActionSet {
         Util.debug("MenuActionSet.hide()");
 
         //
-        // For each action
-        //
-        // - remove each associated view from the
-        //   hashmap and the layout
+        // Remove each inserted view
         //
 
         for( MenuAction action : actions ) {
@@ -151,6 +117,7 @@ public class MenuActionSet {
         actions = new ArrayList<MenuAction>();
         views = new HashMap<String,TextView>();
         params = new HashMap<String,LayoutParams>();
+        chain = new Chain( config, views, params );
     }
 
 }

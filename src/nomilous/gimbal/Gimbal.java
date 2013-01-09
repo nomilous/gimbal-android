@@ -79,7 +79,7 @@ public class Gimbal extends Activity {
 
         }
 
-        mainMenu.show( getApplicationContext(), mainLayout );
+        mainMenu.show( mainLayout );
         menuActivate.setTextColor(on);
         menuActive = true;
         return;
