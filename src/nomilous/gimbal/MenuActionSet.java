@@ -27,6 +27,7 @@ public class MenuActionSet {
         // For each action
         //
         // - insert a text view with action.label into layout
+        // - keep reference to each view
         //
 
         for( MenuAction action : actions ) {
@@ -34,14 +35,37 @@ public class MenuActionSet {
             TextView view = new TextView( context );
             view.setText( action.label );
             layout.addView( view );
+            views.put( action.label, view );
 
         }
+
+        //
+        // Keep ref to layout for .hide()
+        //
+
+        this.layout = layout;
 
 
     }
 
     public void hide() {
         Util.debug("MenuActionSet.hide()");
+
+        //
+        // For each action
+        //
+        // - remove each associated view from the
+        //   hashmap and the layout
+        //
+
+        for( MenuAction action : actions ) {
+
+            TextView view = (TextView) views.remove( action.label );
+            layout.removeView( view );
+            view = null;
+
+        }
+
     }
 
     public void add( MenuAction action ) {
@@ -64,14 +88,6 @@ public class MenuActionSet {
         }
         if( index == -1 ) return;
         actions.remove( index );
-
-        // for( MenuAction action : actions ) {
-        //     Util.debug( String.format( 
-        //         "Label: %s, Description: %s",
-        //         action.label,
-        //         action.description
-        //     ));
-        // }
 
     } 
 
