@@ -50,6 +50,23 @@ public class Gimbal extends Activity {
         menuParams.setMargins(3, -3, 0, 0);
         menu.setLayoutParams(menuParams);
 
+
+        //
+        // Test.. . (really should look into test harness)
+        //
+
+        MenuActionSet actions = new MenuActionSet();
+        actions.add( new MenuAction( "connect", "Connects a viewport" ) );
+        actions.add( new MenuAction( "disconnect", "Disconnects all viewports" ) );
+
+        MenuAction exit = new MenuAction( "exit", "Exits the app." );
+        actions.add( exit );
+
+        actions.remove( exit );
+        actions.remove( "disconnect" );
+        actions.remove( "connect" );
+
+
     }
 
     private void toggleMenu() {
