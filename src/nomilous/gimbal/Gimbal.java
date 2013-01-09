@@ -36,8 +36,10 @@ public class Gimbal extends Activity {
         on = getResources().getColor(R.color.on);
         off = getResources().getColor(R.color.off);
 
+        boolean enabled = false; 
         mainMenu.add( new MenuAction( "connect", "Connect a viewport." ) );
-        mainMenu.add( new MenuAction( "disconnect", "Disconnect all viewports." ) );
+        mainMenu.add( new MenuAction( "disconnect", "Disconnect all viewports.", enabled ) );
+        mainMenu.add( new MenuAction( "help", "Toggle tooltips." ) );
         mainMenu.add( new MenuAction( "exit", "Exit the app." ) );
 
     }
