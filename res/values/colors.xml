@@ -6,5 +6,8 @@
 
     <color name="on">#ff109910</color>
     <color name="off">#ff104410</color>
+
+    <color name="enabledAction">#ff77FF77</color>
+    <color name="disabledAction">#ff223322</color>
     
 </resources>

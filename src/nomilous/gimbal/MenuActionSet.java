@@ -12,7 +12,7 @@ import android.graphics.Typeface;
 
 public class MenuActionSet {
 
-    public class Config {
+    public static class Config {
 
         public int enabledColour = Color.WHITE;
         public int disabledColour = Color.DKGRAY;
@@ -57,7 +57,6 @@ public class MenuActionSet {
         //
         // - insert a text view with action.label into layout
         // - position it
-        // - keep reference to each view
         //
 
         int left = 100;
@@ -85,7 +84,13 @@ public class MenuActionSet {
             view.setTypeface( config.font );
 
             layout.addView( view );
+
+            //
+            // keep reference to each each view and layout
+            //
+
             views.put( action.label, view );
+            params.put( action.label, layoutParams );
 
         }
 
@@ -110,6 +115,7 @@ public class MenuActionSet {
 
         for( MenuAction action : actions ) {
 
+            params.remove( action.label );
             TextView view = (TextView) views.remove( action.label );
             layout.removeView( view );
             view = null;

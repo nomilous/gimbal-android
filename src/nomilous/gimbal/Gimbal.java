@@ -15,7 +15,7 @@ public class Gimbal extends Activity {
     private RelativeLayout view;
     private OnClickListener textClickListener;
 
-    private MenuActionSet mainMenu = new MenuActionSet();
+    private MenuActionSet mainMenu;
 
     private final String TOGGLE_MENU = "menu";
 
@@ -35,6 +35,12 @@ public class Gimbal extends Activity {
 
         on = getResources().getColor(R.color.on);
         off = getResources().getColor(R.color.off);
+
+        MenuActionSet.Config mainMenuConfig = new MenuActionSet.Config();
+        mainMenuConfig.enabledColour = getResources().getColor(R.color.enabledAction);
+        mainMenuConfig.disabledColour = getResources().getColor(R.color.disabledAction);
+
+        mainMenu = new MenuActionSet( mainMenuConfig );
 
         boolean enabled = false; 
         mainMenu.add( new MenuAction( "connect", "Connect a viewport." ) );
