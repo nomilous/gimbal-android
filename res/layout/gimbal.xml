@@ -25,7 +25,7 @@
             android:baselineAligned="false"
             android:clickable="true">
 
-            <TextView android:id="@+id/menu"
+            <TextView android:id="@+id/menuActivate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:typeface="monospace"

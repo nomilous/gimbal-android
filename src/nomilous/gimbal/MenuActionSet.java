@@ -11,6 +11,14 @@ public class MenuActionSet {
         actions = new ArrayList<MenuAction>();
     }
 
+    public void show() {
+        Util.debug("MenuActionSet.show()");
+    }
+
+    public void hide() {
+        Util.debug("MenuActionSet.hide()");
+    }
+
     public void add( MenuAction action ) {
         this.actions.add( action );
     }
@@ -32,17 +40,13 @@ public class MenuActionSet {
         if( index == -1 ) return;
         actions.remove( index );
 
-        for( MenuAction action : actions ) {
-
-            Util.debug( String.format( 
-
-                "Label: %s, Description: %s",
-                action.label,
-                action.description
-
-            ));
-
-        }
+        // for( MenuAction action : actions ) {
+        //     Util.debug( String.format( 
+        //         "Label: %s, Description: %s",
+        //         action.label,
+        //         action.description
+        //     ));
+        // }
 
     } 
 

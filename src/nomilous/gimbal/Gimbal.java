@@ -15,13 +15,15 @@ public class Gimbal extends Activity {
     private RelativeLayout view;
     private OnClickListener textClickListener;
 
+    private MenuActionSet mainMenu = new MenuActionSet();
+
     private final String TOGGLE_MENU = "menu";
 
     private int on;
     private int off;
 
-    private TextView menu;
-    private RelativeLayout.LayoutParams menuParams;
+    private TextView menuActivate;
+    private RelativeLayout.LayoutParams menuActivateParams;
     private boolean menuActive = false;
 
     @Override
@@ -33,6 +35,10 @@ public class Gimbal extends Activity {
         on = getResources().getColor(R.color.on);
         off = getResources().getColor(R.color.off);
 
+        mainMenu.add( new MenuAction( "connect", "Connect a viewport." ) );
+        mainMenu.add( new MenuAction( "disconnect", "Disconnect all viewports." ) );
+        mainMenu.add( new MenuAction( "exit", "Exit the app." ) );
+
 
     }
 
@@ -43,29 +49,12 @@ public class Gimbal extends Activity {
 
         textClickListener = initTextClickListener();
 
-        menu = (TextView) findViewById(R.id.menu);
-        menu.setText( TOGGLE_MENU );
-        menu.setOnClickListener( textClickListener );
-        menuParams = new RelativeLayout.LayoutParams(40, 100);
-        menuParams.setMargins(3, -3, 0, 0);
-        menu.setLayoutParams(menuParams);
-
-
-        //
-        // Test.. . (really should look into test harness)
-        //
-
-        MenuActionSet actions = new MenuActionSet();
-        actions.add( new MenuAction( "connect", "Connects a viewport" ) );
-        actions.add( new MenuAction( "disconnect", "Disconnects all viewports" ) );
-
-        MenuAction exit = new MenuAction( "exit", "Exits the app." );
-        actions.add( exit );
-
-        actions.remove( exit );
-        actions.remove( "disconnect" );
-        actions.remove( "connect" );
-
+        menuActivate = (TextView) findViewById(R.id.menuActivate);
+        menuActivate.setText( TOGGLE_MENU );
+        menuActivate.setOnClickListener( textClickListener );
+        menuActivateParams = new RelativeLayout.LayoutParams(40, 100);
+        menuActivateParams.setMargins(3, -3, 0, 0);
+        menuActivate.setLayoutParams(menuActivateParams);
 
     }
 
@@ -73,13 +62,15 @@ public class Gimbal extends Activity {
 
         if( menuActive ) {
 
-            menu.setTextColor(off);
+            mainMenu.show();
+            menuActivate.setTextColor(off);
             menuActive = false;
             return;
 
         }
 
-        menu.setTextColor(on);
+        mainMenu.hide();
+        menuActivate.setTextColor(on);
         menuActive = true;
         return;
 
