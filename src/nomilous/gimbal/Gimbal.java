@@ -2,36 +2,27 @@ package nomilous.gimbal;
 
 import android.app.Activity;
 import android.os.Bundle;
-
-import android.widget.LinearLayout;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.content.Intent;
 import android.widget.TextView;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-
-import nomilous.gimbal.client.GimbalController;
-import nomilous.gimbal.client.GimbalEventHandler;
 import nomilous.Util;
 
+public class Gimbal extends Activity {
 
-public class Gimbal extends Activity 
-    implements GimbalEventHandler {
-
-    private LinearLayout view;
-    private TextView primary;
-    private TextView keypad;
-    private TextView disconnect;
-    private TextView exit;
+    private RelativeLayout view;
     private OnClickListener textClickListener;
-    private GimbalController gimbal;
 
-    private final String SCAN_TAG = "connect viewport";
-    private final String TOGGLE_KEYPAD = "keypad";
-    private final String RELEASE_VIEWPORTS = "disconnect";
-    private final String EXIT = "exit";
+    private final String TOGGLE_MENU = "menu";
+
+    private int on;
+    private int off;
+
+    private TextView menu;
+    private RelativeLayout.LayoutParams menuParams;
+    private boolean menuActive = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,8 +30,9 @@ public class Gimbal extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gimbal);
 
-        view = (LinearLayout) findViewById(R.id.viewports);
-        gimbal = new GimbalController( getApplicationContext(), this, view );
+        on = getResources().getColor(R.color.on);
+        off = getResources().getColor(R.color.off);
+
 
     }
 
@@ -51,109 +43,28 @@ public class Gimbal extends Activity
 
         textClickListener = initTextClickListener();
 
-        primary = (TextView) findViewById(R.id.primary);
-        primary.setText( SCAN_TAG );
-        primary.setOnClickListener( textClickListener );
-
-        keypad = (TextView) findViewById(R.id.keypad);
-        keypad.setText( TOGGLE_KEYPAD );
-        keypad.setOnClickListener( textClickListener );
-
-        disconnect = (TextView) findViewById(R.id.disconnect);
-        disconnect.setText( RELEASE_VIEWPORTS );
-        disconnect.setOnClickListener( textClickListener );
-
-        exit = (TextView) findViewById(R.id.exit);
-        exit.setText( EXIT );
-        exit.setOnClickListener( textClickListener );
+        menu = (TextView) findViewById(R.id.menu);
+        menu.setText( TOGGLE_MENU );
+        menu.setOnClickListener( textClickListener );
+        menuParams = new RelativeLayout.LayoutParams(40, 100);
+        menuParams.setMargins(3, -3, 0, 0);
+        menu.setLayoutParams(menuParams);
 
     }
 
-    @Override
-    public void onStop() {
+    private void toggleMenu() {
 
-        //
-        // App backgrounded, home button or something
-        //
+        if( menuActive ) {
 
-        super.onStop();
-        releaseViewports();
-
-    }
-
-    @Override
-    public void onDestroy() {
-
-        super.onDestroy();
-        android.os.Debug.stopMethodTracing();  // dunno... (manual said so)
-
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-  
-        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        
-        if (scanResult != null) {
-
-            String viewportAddressParts[] = scanResult.getContents().split(" ");
-            String uri = viewportAddressParts[0];
-            String viewportID = viewportAddressParts[1];
-
-            disconnect.setText( "...attempting connect..." );
-            disconnect.setVisibility(View.VISIBLE);
-
-            gimbal.connect( uri, viewportID );
+            menu.setTextColor(off);
+            menuActive = false;
+            return;
 
         }
-  
-    }
 
-    @Override
-    public void gimbalEvent( final String event, final Object payload ) {
-
-        //
-        // explicitly run on UIthread because the 'websocket' 
-        // client making this call is on another, and so
-        // not allowed to manipulate view stuff
-        // 
-
-        runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-
-                if( event.equals( GimbalEventHandler.CONTROLLER_CONNECTED ) ) {
-
-                    //
-                    // activate disconnect menu item
-                    // 
-
-                    primary.setText("connected");
-                    disconnect.setText( RELEASE_VIEWPORTS );
-                    disconnect.setVisibility(View.VISIBLE);
-
-                } else if( event.equals( GimbalEventHandler.ASSIGN_PRIMARY_VIEWPORT ) ) {
-
-                    primary.setText("controlling viewport " + payload.toString() );
-
-                } else if( event.equals( GimbalEventHandler.DISCONNECT_OK ) ) {
-
-                    //
-                    // RE-activate scan tag menu item
-                    // 
-
-                    primary.setText( SCAN_TAG );
-                    disconnect.setVisibility(View.INVISIBLE);
-
-                } else if( event.equals("EXIT") ) {
-
-                    finish();
-
-                }
-
-            }
-
-        });
+        menu.setTextColor(on);
+        menuActive = true;
+        return;
 
     }
 
@@ -161,13 +72,13 @@ public class Gimbal extends Activity
     private OnClickListener initTextClickListener() {
         return new OnClickListener() {
             @Override
-            public void onClick(View v) { 
+            public void onClick(View v) {
 
                 String text = "";
+
                 try {
 
                     text = ((TextView)v).getText().toString();
-                    Util.info( "Clicked on textview with text: " + text );
 
                 } catch (Exception e) {
 
@@ -176,42 +87,12 @@ public class Gimbal extends Activity
 
                 }
 
-                if( text.equals( SCAN_TAG ) ) scanTag(); 
-
-                else if ( text.equals( TOGGLE_KEYPAD ) ) toggleKeypad();
-
-                else if ( text.equals( RELEASE_VIEWPORTS ) ) releaseViewports(); 
-
-                else if ( text.equals( EXIT ) ) exit(); 
+                if( text.equals( TOGGLE_MENU ) ) toggleMenu(); 
 
                 else Util.warn( "Huh?" ); 
 
             }
         };
-    }
-
-    private void scanTag() {
-        final Activity scanResultHandler = this;
-        IntentIntegrator qrScan = new IntentIntegrator(scanResultHandler);
-        qrScan.initiateScan();
-    }
-
-    private void toggleKeypad() {
-
-        gimbal.toggleKeypad();
-
-    }
-
-    private void releaseViewports() {
-
-        gimbal.disconnect();
-
-    }
-
-    private void exit() {
-
-        gimbal.destroy();
-
     }
 
 }

@@ -7,6 +7,7 @@ public interface SensorSubscriber {
     public static final int MAGNETIC_FIELD_UPDATE =  4;
     public static final int ROTATION_UPDATE       =  8;
     public static final int TOUCH_EVENT           = 16;
+    public static final int KEYPAD_EVENT          = 32;
 
     public abstract void onSensorEvent( int eventCode, Object payload );
 

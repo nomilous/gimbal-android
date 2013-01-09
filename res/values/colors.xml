@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <color name="background">#ff101510</color>
-    <color name="border">#ff107010</color>
+    <color name="background">#ff000000</color>
+    <color name="border">#ff084008</color>
     <color name="viewports">#ff101210</color>
 
-    <color name="menu">#ff109910</color>
+    <color name="on">#ff109910</color>
+    <color name="off">#ff104410</color>
     
 </resources>

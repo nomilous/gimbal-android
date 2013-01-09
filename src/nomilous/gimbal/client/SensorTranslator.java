@@ -1,5 +1,6 @@
 package nomilous.gimbal.client;
 
+import android.os.Bundle;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import com.codebutler.android_websockets.SocketIOClient;
@@ -120,6 +121,33 @@ public class SensorTranslator {
 
                 catch( Exception x ) {} 
                 break;
+
+
+            case SensorSubscriber.KEYPAD_EVENT:
+
+                try {
+
+                    Bundle keypadEvent = (Bundle)payload;
+
+                    JSONObject change = new JSONObject();
+                    change.put( "text",  keypadEvent.getCharSequence("text").toString() );
+                    change.put( "start",  keypadEvent.getInt("start") );
+                    change.put( "before",  keypadEvent.getInt("before") );
+                    change.put( "count",  keypadEvent.getInt("count") );
+
+                    JSONObject event = new JSONObject();
+                    event.put( "event:keypad", change );
+
+                    JSONArray message = new JSONArray();
+                    message.put( event );
+
+                    client.emit( GimbalEventHandler.UPDATE_VIEWPORTS, message);
+
+                }
+
+                catch( Exception x ) {} 
+                break;
+
 
         }
 

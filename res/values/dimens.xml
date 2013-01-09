@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-  <dimen name="outer_padding">8dip</dimen>
+  <dimen name="outer_padding">0dip</dimen>
   <dimen name="border_padding">1dip</dimen>
   <dimen name="menu_padding">10dip</dimen>
 </resources>

@@ -3,6 +3,7 @@ package nomilous.gimbal.client;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
+import android.widget.EditText;
 
 import java.net.URI;
 import org.json.JSONArray;
@@ -37,7 +38,7 @@ public class GimbalController implements SensorSubscriber {
     private SensorTranslator translator;
     
 
-    public GimbalController( Context context, Object handler, View v ) {
+    public GimbalController( Context context, Object handler, View v, View e ) {
 
         this.context = context;
         this.handler = (GimbalEventHandler) handler;
@@ -46,7 +47,7 @@ public class GimbalController implements SensorSubscriber {
         orientationServer = new OrientationServer(context, this);
         locationServer = new LocationServer(context, this);
         touchServer = new TouchServer(context, this, v);
-        keypadServer = new KeypadServer(context, this);
+        keypadServer = new KeypadServer(context, this, e);
 
         translator = new SensorTranslator();
 
@@ -237,15 +238,9 @@ public class GimbalController implements SensorSubscriber {
 
     }
 
-    public void toggleKeypad() {
+    public void startKeypad() {
 
-
-        //
-        // this may not make sense...
-        // perhaps keypad turns itself off on done/enter ??
-        //
-
-        keypadServer.toggleKeypad();
+        keypadServer.startKeypad();
 
     }
 
