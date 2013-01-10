@@ -7,12 +7,12 @@ public interface Touchable {
         public static final int PRESSED  = 1;
         public static final int RELEASED = 2;
 
-        public static class Position { 
-            public int x;
-            public int y;
-            public Position( int x, int y ) { this.x = x; this.y = y; }
-        }
+    }
 
+    public static class PointerPosition { 
+        public float x;
+        public float y;
+        public PointerPosition( float x, float y ) { this.x = x; this.y = y; }
     }
 
 
@@ -20,7 +20,7 @@ public interface Touchable {
     // Receive the PointerEvent (from the touch screen)
     //
 
-    public abstract void pointerEvent( PointerEvent event );
+    public abstract void pointerEvent( int event, Position position );
 
 
     //

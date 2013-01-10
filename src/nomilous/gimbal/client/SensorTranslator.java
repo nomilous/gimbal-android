@@ -72,6 +72,8 @@ public class SensorTranslator {
 
             case SensorSubscriber.TOUCH_EVENT:
 
+                // REPEATED1
+
                 try {
 
                     MotionEvent m = (MotionEvent)payload;

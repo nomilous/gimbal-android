@@ -56,6 +56,8 @@ public class Gimbal extends Activity {
         mainMenu.add( new MenuAction( "help", "Toggle tooltips." ) );
         mainMenu.add( new MenuAction( "exit", "Exit the app." ) );
 
+        ui.add( mainMenu );
+
     }
 
     @Override

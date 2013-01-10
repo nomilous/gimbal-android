@@ -4,7 +4,7 @@ import nomilous.gimbal.MenuActionSet.Config;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
-import java.util.HashMap;
+import java.util.Hashtable;
 
 
 //
@@ -15,8 +15,8 @@ public class Chain {
 
     public Config config;
     public RelativeLayout layout;
-    public HashMap<String,TextView> views;
-    public HashMap<String,LayoutParams> params;
+    public Hashtable<String,TextView> views;
+    public Hashtable<String,LayoutParams> params;
     public int left = 100;
     public int top  = 0;
 
@@ -24,8 +24,8 @@ public class Chain {
 
         
         Config config,
-        HashMap<String,TextView> views,        // maintain a list of views
-        HashMap<String,LayoutParams> params    // maintain a list of their layouts
+        Hashtable<String,TextView> views,        // maintain a list of views
+        Hashtable<String,LayoutParams> params    // maintain a list of their layouts
 
     ) {
 

@@ -6,9 +6,10 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Hashtable;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import java.util.Enumeration;
 
 public class MenuActionSet implements Touchable {
 
@@ -29,12 +30,13 @@ public class MenuActionSet implements Touchable {
     }
 
     private ArrayList<MenuAction> actions;
-    private HashMap<String,TextView> views;
-    private HashMap<String,LayoutParams> params;
+    private Hashtable<String,TextView> views;
+    private Hashtable<String,LayoutParams> params;
     private RelativeLayout layout;
 
     private Config config;
     private Chain chain;
+    private TextView current;
 
     public MenuActionSet() {
 
@@ -113,15 +115,53 @@ public class MenuActionSet implements Touchable {
 
     } 
 
-    
-    public void pointerEvent( PointerEvent event ) {}
-    public void onPressed() {}
-    public void onReleased() {}
+
+    public void pointerEvent( int event, Position position ) {
+        
+        int x = position.intX();
+        int y = position.intY();
+
+        Enumeration<String> e = views.keys();
+        while(e.hasMoreElements()) {
+
+            current = views.get(e.nextElement());
+
+            if( x < current.getLeft()   ) continue;
+            if( x > current.getRight()  ) continue;
+            if( y < current.getTop()    ) continue;
+            if( y > current.getBottom() ) continue;
+
+            switch( event ) {
+                case Touchable.PointerEvent.PRESSED:
+                    onPressed();
+                    break;
+
+                case Touchable.PointerEvent.RELEASED:
+                    onReleased();
+                    break;
+
+            }
+
+        }
+
+    }
+
+    public void onPressed() {
+
+        Util.debug("PRESSED " + current.getText().toString() );
+
+    }
+
+    public void onReleased() {
+
+        Util.debug("RELEASED " + current.getText().toString() );
+
+    }
 
     private void init() {
         actions = new ArrayList<MenuAction>();
-        views = new HashMap<String,TextView>();
-        params = new HashMap<String,LayoutParams>();
+        views = new Hashtable<String,TextView>();
+        params = new Hashtable<String,LayoutParams>();
         chain = new Chain( config, views, params );
     }
 
