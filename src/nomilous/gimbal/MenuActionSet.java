@@ -15,8 +15,9 @@ public class MenuActionSet implements Touchable {
 
     public static class Config {
 
-        public int enabledColour = Color.WHITE;
+        public int enabledColour = Color.LTGRAY;
         public int disabledColour = Color.DKGRAY;
+        public int highlightColour = Color.WHITE;
         public Typeface font = Typeface.create( Typeface.MONOSPACE, Typeface.NORMAL );
 
         // TODO: user defined font from assets()
@@ -30,6 +31,7 @@ public class MenuActionSet implements Touchable {
     }
 
     private ArrayList<MenuAction> actions;
+    private Hashtable<String,Integer> actionsIndex;
     private Hashtable<String,TextView> views;
     private Hashtable<String,LayoutParams> params;
     private RelativeLayout layout;
@@ -93,27 +95,30 @@ public class MenuActionSet implements Touchable {
     }
 
     public void add( MenuAction action ) {
-        this.actions.add( action );
+        actions.add( action );
+        actionsIndex.put( action.label, actions.size() - 1 );
     }
 
-    public void remove( MenuAction action ) {
-        remove( action.label );
-    }
+    // TODO: fix remove breaks actionsIndex
+    // 
+    // public void remove( MenuAction action ) {
+    //     remove( action.label );
+    // }
 
-    public void remove( String label ) {
-        int index = -1;
-        int i = 0;
-        for( MenuAction action : actions ) {
-            if( action.label.equals(label) ) {
-                index = i;
-                break;
-            }
-            i++;
-        }
-        if( index == -1 ) return;
-        actions.remove( index );
+    // public void remove( String label ) {
+    //     int index = -1;
+    //     int i = 0;
+    //     for( MenuAction action : actions ) {
+    //         if( action.label.equals(label) ) {
+    //             index = i;
+    //             break;
+    //         }
+    //         i++;
+    //     }
+    //     if( index == -1 ) return;
+    //     actions.remove( index );
 
-    } 
+    // } 
 
 
     public void pointerEvent( int event, Position position ) {
@@ -148,18 +153,36 @@ public class MenuActionSet implements Touchable {
 
     public void onPressed() {
 
-        Util.debug("PRESSED " + current.getText().toString() );
+        MenuAction action = getCurrent();
+
+        if( !action.enabled ) return;
+
+        current.setTextColor(config.highlightColour);
 
     }
 
     public void onReleased() {
 
-        Util.debug("RELEASED " + current.getText().toString() );
+        MenuAction action = getCurrent();
 
+        if( !action.enabled ) return;
+
+        current.setTextColor(config.enabledColour);
+
+    }
+
+
+    private MenuAction getCurrent() {
+        return actions.get( 
+            actionsIndex.get( 
+                current.getText().toString() 
+            ) 
+        );
     }
 
     private void init() {
         actions = new ArrayList<MenuAction>();
+        actionsIndex = new Hashtable<String,Integer>();
         views = new Hashtable<String,TextView>();
         params = new Hashtable<String,LayoutParams>();
         chain = new Chain( config, views, params );

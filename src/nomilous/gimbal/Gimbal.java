@@ -46,8 +46,9 @@ public class Gimbal extends Activity {
         off = getResources().getColor(R.color.off);
 
         MenuActionSet.Config mainMenuConfig = new MenuActionSet.Config();
-        mainMenuConfig.enabledColour = getResources().getColor(R.color.enabledAction);
-        mainMenuConfig.disabledColour = getResources().getColor(R.color.disabledAction);
+        mainMenuConfig.enabledColour = getResources().getColor(R.color.enabledColour);
+        mainMenuConfig.highlightColour = getResources().getColor(R.color.highlightColour);
+        mainMenuConfig.disabledColour = getResources().getColor(R.color.disabledColour);
         mainMenu = new MenuActionSet( mainMenuConfig );
 
         boolean enabled = false; 
