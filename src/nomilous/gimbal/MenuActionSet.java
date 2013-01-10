@@ -10,7 +10,7 @@ import java.util.HashMap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 
-public class MenuActionSet {
+public class MenuActionSet implements Touchable {
 
     public static class Config {
 
@@ -112,6 +112,11 @@ public class MenuActionSet {
         actions.remove( index );
 
     } 
+
+    
+    public void pointerEvent( PointerEvent event ) {}
+    public void onPressed() {}
+    public void onReleased() {}
 
     private void init() {
         actions = new ArrayList<MenuAction>();

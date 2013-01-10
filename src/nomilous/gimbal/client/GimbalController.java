@@ -11,11 +11,13 @@ import org.json.JSONObject;
 
 import com.codebutler.android_websockets.SocketIOClient;
 
+import nomilous.gimbal.client.UI;
 import nomilous.gimbal.client.SensorSubscriber;
 import nomilous.gimbal.server.sensor.OrientationServer;
 import nomilous.gimbal.server.sensor.LocationServer;
 import nomilous.gimbal.server.sensor.TouchServer;
 import nomilous.gimbal.server.sensor.KeypadServer;
+import android.widget.RelativeLayout;
 
 import nomilous.Util;
 
@@ -31,6 +33,7 @@ public class GimbalController implements SensorSubscriber {
     private boolean active = false;    // sensors are active
     private boolean exitting = false;  // set on destroy
 
+    private UI ui;
     private OrientationServer orientationServer;
     private LocationServer locationServer;
     private TouchServer touchServer;
@@ -38,20 +41,32 @@ public class GimbalController implements SensorSubscriber {
     private SensorTranslator translator;
     
 
-    public GimbalController( Context context, Object handler, View v, View e ) {
+    public GimbalController( RelativeLayout rootView, UI ui ) {
 
-        this.context = context;
-        this.handler = (GimbalEventHandler) handler;
-        this.activity = (Activity) handler;
+        this.ui      = ui;
+        this.context = rootView.getContext();
+        touchServer  = new TouchServer(context, this, rootView);
 
-        orientationServer = new OrientationServer(context, this);
-        locationServer = new LocationServer(context, this);
-        touchServer = new TouchServer(context, this, v);
-        keypadServer = new KeypadServer(context, this, e);
+        touchServer.startServer();
 
-        translator = new SensorTranslator();
 
     }
+
+    // public GimbalController( Context context, Object handler, View v, View e ) {
+
+    //     this.ui = ui;
+    //     this.context = context;
+    //     this.handler = (GimbalEventHandler) handler;
+    //     this.activity = (Activity) handler;
+
+    //     orientationServer = new OrientationServer(context, this);
+    //     locationServer = new LocationServer(context, this);
+    //     touchServer = new TouchServer(context, this, v);
+    //     keypadServer = new KeypadServer(context, this, e);
+
+    //     translator = new SensorTranslator();
+
+    // }
 
     public void connect( final String uri, final String viewportID ) {
 
@@ -234,7 +249,8 @@ public class GimbalController implements SensorSubscriber {
 
     public void onSensorEvent( int eventCode, Object payload ) {
 
-        translator.handleSensorEvent( eventCode, payload );
+        ui.onSensorEvent( eventCode, payload );
+        //translator.handleSensorEvent( eventCode, payload );
 
     }
 
@@ -270,7 +286,7 @@ public class GimbalController implements SensorSubscriber {
                 
                 orientationServer.startServer();
                 locationServer.startServer();
-                touchServer.startServer();
+                //touchServer.startServer();
                 keypadServer.startServer();
                 active = true;
 

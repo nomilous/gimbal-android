@@ -9,12 +9,16 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
 import nomilous.Util;
+import nomilous.gimbal.client.UI;
+import nomilous.gimbal.client.GimbalController;
 
 public class Gimbal extends Activity {
 
     private RelativeLayout view;
     private OnClickListener textClickListener;
 
+    private UI ui;
+    private GimbalController gimbal;
     private MenuActionSet mainMenu;
 
     private final String TOGGLE_MENU = "menu";
@@ -33,13 +37,17 @@ public class Gimbal extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gimbal);
 
+        mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
+
+        ui = new UI();
+        gimbal = new GimbalController(mainLayout, ui);
+
         on = getResources().getColor(R.color.on);
         off = getResources().getColor(R.color.off);
 
         MenuActionSet.Config mainMenuConfig = new MenuActionSet.Config();
         mainMenuConfig.enabledColour = getResources().getColor(R.color.enabledAction);
         mainMenuConfig.disabledColour = getResources().getColor(R.color.disabledAction);
-
         mainMenu = new MenuActionSet( mainMenuConfig );
 
         boolean enabled = false; 
@@ -56,8 +64,6 @@ public class Gimbal extends Activity {
         super.onStart();
 
         textClickListener = initTextClickListener();
-
-        mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
 
         menuActivate = (TextView) findViewById(R.id.menuActivate);
         menuActivate.setText( TOGGLE_MENU );
