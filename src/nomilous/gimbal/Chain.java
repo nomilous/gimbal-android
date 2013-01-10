@@ -1,5 +1,6 @@
 package nomilous.gimbal;
 import nomilous.gimbal.MenuActionSet.Config;
+import nomilous.Util;
 
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -17,8 +18,10 @@ public class Chain {
     public RelativeLayout layout;
     public Hashtable<String,TextView> views;
     public Hashtable<String,LayoutParams> params;
-    public int left = 100;
-    public int top  = 0;
+    public int left;
+    public int top;
+    private int leftSpan = 0;
+    private int topSpan = 0;
 
     public Chain( 
 
@@ -35,16 +38,40 @@ public class Chain {
 
     }
 
-    public void set( RelativeLayout layout ) {
+    public void set( RelativeLayout layout, int nodeCount ) {
 
-        top = 0;
+        left = config.chainStart.intX();
+        top  = config.chainStart.intY();
+
+        //
+        // Distance between each item in the chain.
+        // 
+        // For now the chain is a straight line but being
+        // that the point is to allow the user to position
+        // the menu to comfort - it will be desirable to
+        // enable a bezier control to curve the chain to
+        // match their thumb's reach arc.
+        //
+
+        leftSpan = (config.chainEnd.intX() - left) / (nodeCount + 1);
+        topSpan = (config.chainEnd.intY() - top) / (nodeCount + 1);
+
+        Util.debug( String.format(
+
+            "Set chain left:%d leftSpan:%d top:%d topSpan:%d ", 
+            left, leftSpan, top, topSpan
+
+        ));
+
         this.layout = layout;
 
     }
 
     public Chain next() {
 
-        top += 50;
+        left += leftSpan; 
+        top += topSpan;
+
         return this;
 
     }

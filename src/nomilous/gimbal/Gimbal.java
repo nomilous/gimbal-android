@@ -49,6 +49,14 @@ public class Gimbal extends Activity {
         mainMenuConfig.enabledColour = getResources().getColor(R.color.enabledColour);
         mainMenuConfig.highlightColour = getResources().getColor(R.color.highlightColour);
         mainMenuConfig.disabledColour = getResources().getColor(R.color.disabledColour);
+
+        //
+        // reverse the menu order per anchor points
+        // 
+
+        mainMenuConfig.chainStart = new Anchor( 50, 200 );
+        mainMenuConfig.chainEnd = new Anchor( 100, 10 );
+
         mainMenu = new MenuActionSet( mainMenuConfig );
 
         boolean enabled = false; 

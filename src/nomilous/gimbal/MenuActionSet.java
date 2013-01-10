@@ -18,6 +18,10 @@ public class MenuActionSet implements Touchable {
         public int enabledColour = Color.LTGRAY;
         public int disabledColour = Color.DKGRAY;
         public int highlightColour = Color.WHITE;
+
+        public Anchor chainStart = new Anchor( 100, 10 );
+        public Anchor chainEnd = new Anchor( 100, 300 );
+
         public Typeface font = Typeface.create( Typeface.MONOSPACE, Typeface.NORMAL );
 
         // TODO: user defined font from assets()
@@ -61,7 +65,7 @@ public class MenuActionSet implements Touchable {
         // Insert MenuActions along the Chain
         //
 
-        chain.set( layout );
+        chain.set( layout, actions.size() );
 
         for( MenuAction action : actions )
 
