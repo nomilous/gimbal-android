@@ -2,132 +2,128 @@ package nomilous.gimbal;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.TextView;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 
 import nomilous.Util;
-import nomilous.gimbal.client.UI;
-import nomilous.gimbal.client.GimbalController;
 
 public class Gimbal extends Activity {
 
-    private RelativeLayout view;
-    private OnClickListener textClickListener;
-
-    private UI ui;
-    private GimbalController gimbal;
-    private MenuActionSet mainMenu;
-
-    private final String TOGGLE_MENU = "menu";
-
-    private int on;
-    private int off;
-
-    private RelativeLayout mainLayout;
-    private TextView menuActivate;
-    private RelativeLayout.LayoutParams menuActivateParams;
-    private boolean menuActive = false;
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gimbal);
-
-        mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
-
-        ui = new UI();
-        gimbal = new GimbalController(mainLayout, ui);
-
-        on = getResources().getColor(R.color.on);
-        off = getResources().getColor(R.color.off);
-
-        MenuActionSet.Config mainMenuConfig = new MenuActionSet.Config();
-        mainMenuConfig.enabledColour = getResources().getColor(R.color.enabledColour);
-        mainMenuConfig.highlightColour = getResources().getColor(R.color.highlightColour);
-        mainMenuConfig.disabledColour = getResources().getColor(R.color.disabledColour);
-
-        //
-        // reverse the menu order per anchor points
-        // 
-
-        mainMenuConfig.chainStart = new Anchor( 50, 200 );
-        mainMenuConfig.chainEnd = new Anchor( 100, 10 );
-
-        mainMenu = new MenuActionSet( mainMenuConfig );
-
-        boolean enabled = false; 
-        mainMenu.add( new MenuAction( "connect", "Connect a viewport." ) );
-        mainMenu.add( new MenuAction( "disconnect", "Disconnect all viewports.", enabled ) );
-        mainMenu.add( new MenuAction( "help", "Toggle tooltips." ) );
-        mainMenu.add( new MenuAction( "exit", "Exit the app." ) );
-
-        ui.add( mainMenu );
-
+        Util.debug("onCreate()");
     }
 
     @Override
-    public void onStart() {
-
+    protected void onStart() {
         super.onStart();
-
-        textClickListener = initTextClickListener();
-
-        menuActivate = (TextView) findViewById(R.id.menuActivate);
-        menuActivate.setText( TOGGLE_MENU );
-        menuActivate.setOnClickListener( textClickListener );
-        menuActivateParams = new RelativeLayout.LayoutParams(40, 100);
-        menuActivateParams.setMargins(3, -3, 0, 0);
-        menuActivate.setLayoutParams(menuActivateParams);
-
+        Util.debug("onStart()");
+    }
+    
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Util.debug("onRestart()");
     }
 
-    private void toggleMenu() {
-
-        if( menuActive ) {
-
-            mainMenu.hide();
-            menuActivate.setTextColor(off);
-            menuActive = false;
-            return;
-
-        }
-
-        mainMenu.show( mainLayout );
-        menuActivate.setTextColor(on);
-        menuActive = true;
-        return;
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Util.debug("onResume()");
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Util.debug("onPause()");
+    }
 
-    private OnClickListener initTextClickListener() {
-        return new OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Util.debug("onStop()");
+    }
 
-                String text = "";
-
-                try {
-
-                    text = ((TextView)v).getText().toString();
-
-                } catch (Exception e) {
-
-                    Util.error(e.toString());
-                    return;
-
-                }
-
-                if( text.equals( TOGGLE_MENU ) ) toggleMenu(); 
-
-                else Util.warn( "Huh?" ); 
-
-            }
-        };
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Util.debug("onDestroy()");
     }
 
 }
+
+/****************************************
+
+Lifecycle: 
+
+1. First Start App (After install)
+
+    D/=====DEBUG( 6019): onCreate()
+    D/=====DEBUG( 6019): onStart()
+    D/=====DEBUG( 6019): onResume()
+
+    App in the foreground.
+
+
+2. Primary Button (hardware)
+
+    
+    D/=====DEBUG( 6019): onPause()
+    D/=====DEBUG( 6019): onStop()
+
+    App in the background? Not Visible.
+    Not listed in running in Settings/Application/Manage/Running
+
+
+3.  Start App Again
+
+        
+    D/=====DEBUG( 6019): onCreate()
+    D/=====DEBUG( 6019): onStart()
+    D/=====DEBUG( 6019): onResume()
+
+    App in the foreground.
+
+
+4.  Back button.
+
+    D/=====DEBUG( 6019): onPause()
+    D/=====DEBUG( 6019): onStop()
+    D/=====DEBUG( 6019): onDestroy()
+
+
+5.  Restart App
+
+    D/=====DEBUG( 6019): onCreate()
+    D/=====DEBUG( 6019): onStart()
+    D/=====DEBUG( 6019): onResume()
+
+    App in the foreground.
+
+6.  Navigate away (to another app)
+
+
+    D/=====DEBUG( 7782): onPause()
+    D/=====DEBUG( 7782): onStop()
+
+7.  Resume from menu
+
+    D/=====DEBUG( 7782): onRestart()
+    D/=====DEBUG( 7782): onStart()
+    D/=====DEBUG( 7782): onResume()
+
+
+8.  Navigate away, and resume with Back button
+
+
+    D/=====DEBUG( 7782): onPause()
+    D/=====DEBUG( 7782): onStop()
+
+
+    D/=====DEBUG( 7782): onRestart()
+    D/=====DEBUG( 7782): onStart()
+    D/=====DEBUG( 7782): onResume()
+
+
+
+****************************************/
