@@ -3,4 +3,4 @@
 
 ant uninstall && \
 ant installd && \
-adb shell am start -n nomilous.gimbal/.Gimbal
+adb shell am start -n nomilous.app/.MainActivity
