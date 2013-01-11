@@ -6,13 +6,14 @@ import android.widget.RelativeLayout;
 
 import nomilous.Util;
 import nomilous.gimbal.GimbalActivity;
+import nomilous.gimbal.GimbalConfig;
 
 public class MainActivity extends GimbalActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);   
+        setContentView(R.layout.main);
     }
 
 }

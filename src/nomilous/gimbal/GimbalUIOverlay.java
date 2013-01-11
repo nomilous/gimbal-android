@@ -15,17 +15,21 @@ class GimbalUIOverlay {
     private RelativeLayout overlay;
     private LayoutParams   overlayParams;
     private boolean        already = false;
+    private boolean        still   = false;
 
     GimbalUIOverlay(Object android) {
         Util.debug("CREATE");
         this.context  = (Context) android;
         this.activity = (Activity) android;
-        createOverlay();
     }
 
     public void start() {
         Util.debug("START");
-        if(!already) activity.addContentView(overlay, overlayParams);
+        if(!already) {
+            createVisualsOverlay();
+            createControlsOverlay();
+            activity.addContentView(overlay, overlayParams);
+        }
         already = true;
     }
 
@@ -49,7 +53,11 @@ class GimbalUIOverlay {
         Util.debug("DESTROY");
     }
 
-    private void createOverlay() {
+    private void createVisualsOverlay() {
+        if( GimbalConfig.VISUAL_FEEDBACK == GimbalConfig.Option.NONE ) return;
+    }
+
+    private void createControlsOverlay() {
         overlay =       new RelativeLayout(context);
         overlayParams = new LayoutParams(
             LayoutParams.FILL_PARENT, 
