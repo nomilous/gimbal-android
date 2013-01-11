@@ -14,6 +14,9 @@ public class MainActivity extends GimbalActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        GimbalConfig.VISUAL_FEEDBACK = GimbalConfig.Option.GL10;
+        
     }
 
 }

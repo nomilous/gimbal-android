@@ -1,34 +1,33 @@
 package nomilous.gimbal;
 
-import android.app.Activity;
-import android.content.Context;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.graphics.Color;
+import java.util.Hashtable;
 
 import nomilous.Util;
 
-class GimbalUIOverlay {
+class GimbalUIOverlay extends GimbalOverlay {
 
-    private Activity       activity;
-    private Context        context;
+    private boolean        already = false;
     private RelativeLayout overlay;
     private LayoutParams   overlayParams;
-    private boolean        already = false;
-    private boolean        still   = false;
+    private Hashtable      visualOverlays = new Hashtable();
 
     GimbalUIOverlay(Object android) {
-        Util.debug("CREATE");
-        this.context  = (Context) android;
-        this.activity = (Activity) android;
+        super(android);
     }
 
     public void start() {
         Util.debug("START");
         if(!already) {
+            overlayParams = new LayoutParams(
+                LayoutParams.FILL_PARENT, 
+                LayoutParams.FILL_PARENT
+            );
+            overlayParams.setMargins(0, 0, 0, 0);
             createVisualsOverlay();
             createControlsOverlay();
-            activity.addContentView(overlay, overlayParams);
         }
         already = true;
     }
@@ -55,17 +54,19 @@ class GimbalUIOverlay {
 
     private void createVisualsOverlay() {
         if( GimbalConfig.VISUAL_FEEDBACK == GimbalConfig.Option.NONE ) return;
+        if( GimbalConfig.VISUAL_FEEDBACK == GimbalConfig.Option.GL10 ) {
+            GimbalGL10Overlay visualOverlay = new GimbalGL10Overlay((Object)activity);
+            visualOverlays.put(GimbalConfig.Option.GL10, visualOverlay);
+            activity.addContentView(visualOverlay.view(), overlayParams);
+        }
+
     }
 
     private void createControlsOverlay() {
         overlay =       new RelativeLayout(context);
-        overlayParams = new LayoutParams(
-            LayoutParams.FILL_PARENT, 
-            LayoutParams.FILL_PARENT
-        );
         overlay.setBackgroundColor(Color.argb(50,255,255,255));
-        overlayParams.setMargins(0, 0, 0, 0);
         overlay.setLayoutParams(overlayParams);
+        activity.addContentView(overlay, overlayParams);
     }
 
 }

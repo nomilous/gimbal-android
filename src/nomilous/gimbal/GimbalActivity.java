@@ -3,8 +3,6 @@ package nomilous.gimbal;
 import android.app.Activity;
 import android.os.Bundle;
 
-import nomilous.gimbal.GimbalUIOverlay;
-
 public class GimbalActivity extends Activity {
 
     private GimbalUIOverlay ui;
