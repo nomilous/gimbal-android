@@ -29,7 +29,7 @@ class GimbalUIOverlay extends GimbalOverlay {
             );
             overlayParams.setMargins(0, 0, 0, 0);
             createVisualsOverlay();
-            //createControlsOverlay();
+            createControlsOverlay();
         }
         already = true;
     }
@@ -67,26 +67,10 @@ class GimbalUIOverlay extends GimbalOverlay {
     private void createVisualsOverlay() {
         if( GimbalConfig.VISUAL_FEEDBACK == GimbalConfig.Option.NONE ) return;
         if( GimbalConfig.VISUAL_FEEDBACK == GimbalConfig.Option.GL10 ) {
-            for( int i = 0; i < 10; i++ ) {
-
-
-
-                //
-                // Quick experiment:
-                //
-                // - 10 independant GL surfaces overlaid
-                // - obviously very slow (but still - im surprised its possible)
-                //
-
-
-
-                GimbalGL10Overlay visualOverlay = new GimbalGL10Overlay((Object)activity);
-                visualOverlay.rotationSpeed(1.0f + (float)i / 10 );
-                visualOverlays.put(GimbalConfig.Option.GL10 + i, visualOverlay);
-                activity.addContentView(visualOverlay.view(), overlayParams);
-            }
+            GimbalGL10Overlay visualOverlay = new GimbalGL10Overlay((Object)activity);
+            visualOverlays.put(GimbalConfig.Option.GL10, visualOverlay);
+            activity.addContentView(visualOverlay.view(), overlayParams);
         }
-
     }
 
     private void createControlsOverlay() {

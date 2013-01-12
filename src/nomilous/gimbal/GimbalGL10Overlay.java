@@ -11,7 +11,6 @@ import nomilous.Util;
 class GimbalGL10Overlay extends GimbalOverlay {
 
     private GLSurfaceView surfaceView;
-    private float speed = 1.0f;
 
     GimbalGL10Overlay(Object android) {
         super(android);
@@ -26,7 +25,9 @@ class GimbalGL10Overlay extends GimbalOverlay {
         surfaceView.setRenderer( new GLSurfaceView.Renderer() {
 
             private MeshCube cube = new MeshCube(1, 1);
-            private float angle = 0.0f;
+            private float angle1 = 0.0f;
+            private float angle2 = 0.0f;
+            private float speed = 2.0f;
 
             @Override
             public void onDrawFrame(GL10 gl) {
@@ -36,7 +37,9 @@ class GimbalGL10Overlay extends GimbalOverlay {
                 gl.glLoadIdentity();
                 gl.glTranslatef(0.0f, 0.0f, -2.0f);
                 gl.glRotatef(-90, 1.0f, 0.0f, 0.0f);
-                gl.glRotatef(angle += speed, 0.0f, 0.0f, 1.0f);
+                gl.glRotatef(angle1 += speed, 0.0f, 0.0f, 1.0f);
+                gl.glRotatef(angle1 += speed, 0.0f, 1.0f, 1.0f);
+                gl.glRotatef(angle2 -= angle1 / 100, 1.0f, 0.0f, 0.0f);
                 cube.draw(gl);
             }
                 
@@ -70,10 +73,6 @@ class GimbalGL10Overlay extends GimbalOverlay {
 
     public GLSurfaceView getView() {
         return surfaceView;
-    }
-
-    public void rotationSpeed( float speed ) {
-        this.speed = speed;
     }
 
 }
