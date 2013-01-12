@@ -4,6 +4,7 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.graphics.Color;
 import java.util.Hashtable;
+import android.opengl.GLSurfaceView;
 
 import nomilous.Util;
 
@@ -27,7 +28,7 @@ class GimbalUIOverlay extends GimbalOverlay {
             );
             overlayParams.setMargins(0, 0, 0, 0);
             createVisualsOverlay();
-            createControlsOverlay();
+            //createControlsOverlay();
         }
         already = true;
     }
@@ -38,10 +39,14 @@ class GimbalUIOverlay extends GimbalOverlay {
 
     public void resume() {
         Util.debug("RESUME");
+        GimbalGL10Overlay overlay = (GimbalGL10Overlay) visualOverlays.get(GimbalConfig.Option.GL10);
+        overlay.getView().onResume();
     }
 
     public void pause() {
         Util.debug("PAUSE");
+        GimbalGL10Overlay overlay = (GimbalGL10Overlay) visualOverlays.get(GimbalConfig.Option.GL10);
+        overlay.getView().onPause();
     }
 
     public void stop() {
