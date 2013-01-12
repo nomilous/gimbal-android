@@ -24,7 +24,7 @@ class GimbalGL10Overlay extends GimbalOverlay {
         surfaceView.setZOrderOnTop(true);
         surfaceView.setRenderer( new GLSurfaceView.Renderer() {
 
-            private MeshCube cube = new MeshCube(1, 20);
+            private MeshCube cube = new MeshCube(1, 40);
             private float angle1 = 0.0f;
             private float angle2 = 0.0f;
             private float speed = 0.02f;
@@ -35,7 +35,7 @@ class GimbalGL10Overlay extends GimbalOverlay {
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 //gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
                 gl.glLoadIdentity();
-                gl.glTranslatef(0.0f, 0.0f, -2.0f);
+                gl.glTranslatef(0.0f, 0.0f, -1.0f);
                 gl.glRotatef(-90, 1.0f, 0.0f, 0.0f);
                 gl.glRotatef(angle1 += speed, 0.0f, 0.0f, 1.0f);
                 gl.glRotatef(angle1 += speed, 0.0f, 1.0f, 1.0f);
@@ -50,7 +50,7 @@ class GimbalGL10Overlay extends GimbalOverlay {
                 gl.glViewport(0, 0, width, height);
                 gl.glMatrixMode(GL10.GL_PROJECTION);
                 gl.glLoadIdentity();
-                GLU.gluPerspective(gl, 50, aspect, 0.1f, 1000.f);
+                GLU.gluPerspective(gl, 35, aspect, 0.1f, 1000.f);
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
             }
