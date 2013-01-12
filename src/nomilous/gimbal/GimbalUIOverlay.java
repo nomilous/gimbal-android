@@ -4,6 +4,7 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.graphics.Color;
 import java.util.Hashtable;
+import java.util.Enumeration;
 import android.opengl.GLSurfaceView;
 
 import nomilous.Util;
@@ -39,14 +40,20 @@ class GimbalUIOverlay extends GimbalOverlay {
 
     public void resume() {
         Util.debug("RESUME");
-        GimbalGL10Overlay overlay = (GimbalGL10Overlay) visualOverlays.get(GimbalConfig.Option.GL10);
-        overlay.getView().onResume();
+        Enumeration<String> e = visualOverlays.keys();
+        while(e.hasMoreElements()) {
+            GimbalGL10Overlay overlay = (GimbalGL10Overlay) visualOverlays.get(e.nextElement());
+            overlay.getView().onResume();
+        }
     }
 
     public void pause() {
         Util.debug("PAUSE");
-        GimbalGL10Overlay overlay = (GimbalGL10Overlay) visualOverlays.get(GimbalConfig.Option.GL10);
-        overlay.getView().onPause();
+        Enumeration<String> e = visualOverlays.keys();
+        while(e.hasMoreElements()) {
+            GimbalGL10Overlay overlay = (GimbalGL10Overlay) visualOverlays.get(e.nextElement());
+            overlay.getView().onPause();
+        }
     }
 
     public void stop() {
@@ -60,9 +67,24 @@ class GimbalUIOverlay extends GimbalOverlay {
     private void createVisualsOverlay() {
         if( GimbalConfig.VISUAL_FEEDBACK == GimbalConfig.Option.NONE ) return;
         if( GimbalConfig.VISUAL_FEEDBACK == GimbalConfig.Option.GL10 ) {
-            GimbalGL10Overlay visualOverlay = new GimbalGL10Overlay((Object)activity);
-            visualOverlays.put(GimbalConfig.Option.GL10, visualOverlay);
-            activity.addContentView(visualOverlay.view(), overlayParams);
+            for( int i = 0; i < 10; i++ ) {
+
+
+
+                //
+                // Quick experiment:
+                //
+                // - 10 independant GL surfaces overlaid
+                // - obviously very slow (but still - im surprised its possible)
+                //
+
+
+
+                GimbalGL10Overlay visualOverlay = new GimbalGL10Overlay((Object)activity);
+                visualOverlay.rotationSpeed(1.0f + (float)i / 10 );
+                visualOverlays.put(GimbalConfig.Option.GL10 + i, visualOverlay);
+                activity.addContentView(visualOverlay.view(), overlayParams);
+            }
         }
 
     }
