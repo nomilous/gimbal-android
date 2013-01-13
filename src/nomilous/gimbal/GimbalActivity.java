@@ -8,8 +8,8 @@ public class GimbalActivity extends Activity {
     private GimbalUIOverlay ui;
   
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle incus) {
+        super.onCreate(incus);
         ui = new GimbalUIOverlay(this);
     }
 
