@@ -95,8 +95,15 @@ class GimbalUIOverlay extends GimbalOverlay {
         enable = GimbalConfig.VISUAL_FEEDBACK & GimbalConfig.Option.CAMERA;
         if( enable == GimbalConfig.Option.CAMERA ) {
             GimbalCameraOverlay visualOverlay = new GimbalCameraOverlay((Object)activity);
+
+            //
+            // CameraOverlay is not a managed child view. 
+            // Perhaps bang it back to pattern later... (it if proves important)
+            //
+
             visualOverlays.put(GimbalConfig.Option.CAMERA, visualOverlay);
             activity.addContentView(visualOverlay.view(), overlayParams);
+            visualOverlay.start();
         }
 
         enable = GimbalConfig.VISUAL_FEEDBACK & GimbalConfig.Option.GL10;

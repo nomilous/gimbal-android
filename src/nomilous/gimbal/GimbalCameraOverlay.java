@@ -24,8 +24,11 @@ class GimbalCameraOverlay extends GimbalOverlay {
     public SurfaceView view() {
         Util.debug("GimbalCameraOverlay.view()");
         cameraPreview = new CameraPreview(context);
-        if( getCamera() ) cameraPreview.loadCamera(camera); 
         return cameraPreview.getView();
+    }
+
+    public void start() {
+        if( getCamera() ) cameraPreview.loadCamera(camera);
     }
 
     //
@@ -63,23 +66,14 @@ class GimbalCameraOverlay extends GimbalOverlay {
 
         CameraPreview(Context context) {
             super(context);
-
             surfaceView = new SurfaceView(context);
-
-            // 
-            // controlling the view insertion in GimbalUIOverlay
-            // 
             //addView(surfaceView);    // hmmmmm. (Look into ViewGroup...)
+        }
 
-            //
-            // May not have the holder yet... (pending)
-            // 
-
+        public void start() {
             surfaceHolder = surfaceView.getHolder();
             surfaceHolder.addCallback(this);
             surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-
-            requestLayout();
         }
 
         public SurfaceView getView() { 
@@ -91,18 +85,25 @@ class GimbalCameraOverlay extends GimbalOverlay {
         }
 
         public void loadCamera(Camera camera) {
+            Util.debug("CameraPreview.loadCamera()");
             if( this.camera == camera ) return;
+            Util.debug("CameraPreview.loadCamera() LOADING CAMERA");
             stopPreviewAndFreeCamera();
             this.camera = camera;
             if( camera == null ) return;
 
             List<Camera.Size> sizes = camera.getParameters().getSupportedPreviewSizes();
             supportedPreviewSizes = sizes;
+            requestLayout();
 
             try {
                 camera.setPreviewDisplay(surfaceHolder);
                 camera.startPreview();
-            } catch (IOException ios) { ios.printStackTrace(); }
+                Util.debug("CameraPreview.loadCamera() PREVIEW STARTED");
+            } catch (IOException ios) { 
+                Util.debug("Failed to load camera");
+                ios.printStackTrace(); 
+            }
 
         }
 
@@ -121,6 +122,11 @@ class GimbalCameraOverlay extends GimbalOverlay {
         @Override // SurfaceHolder.Callback
         public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
             Util.debug("CameraPreview.surfaceChanged()");
+            Camera.Parameters parameters = camera.getParameters();
+            parameters.setPreviewSize(w, h);
+            requestLayout();
+            camera.setParameters(parameters);
+            camera.startPreview();
         }
 
         @Override // SurfaceHolder.Callback
