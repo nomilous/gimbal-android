@@ -15,7 +15,13 @@ public class MainActivity extends GimbalActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        GimbalConfig.VISUAL_FEEDBACK = GimbalConfig.Option.GL10;
+        //
+        // Set feature BitFlags
+        //
+
+        GimbalConfig.VISUAL_FEEDBACK  = GimbalConfig.Option.CAMERA;
+        GimbalConfig.VISUAL_FEEDBACK |= GimbalConfig.Option.GL10;
+        
         
     }
 

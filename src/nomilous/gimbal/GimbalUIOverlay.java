@@ -16,12 +16,13 @@ class GimbalUIOverlay extends GimbalOverlay {
     private LayoutParams   overlayParams;
     private Hashtable      visualOverlays = new Hashtable();
 
-    GimbalUIOverlay(Object android) {
+    GimbalUIOverlay(Object android) {  
         super(android);
+        Util.debug("CONSTRUCT GimbalUIOverlay");
     }
 
     public void start() {
-        Util.debug("START");
+        Util.debug("START GimbalUIOverlay");
         if(!already) {
             overlayParams = new LayoutParams(
                 LayoutParams.FILL_PARENT, 
@@ -42,8 +43,14 @@ class GimbalUIOverlay extends GimbalOverlay {
         Util.debug("RESUME");
         Enumeration<String> e = visualOverlays.keys();
         while(e.hasMoreElements()) {
-            GimbalGL10Overlay overlay = (GimbalGL10Overlay) visualOverlays.get(e.nextElement());
-            overlay.getView().onResume();
+            try {
+                GimbalGL10Overlay overlay = (GimbalGL10Overlay) visualOverlays.get(e.nextElement());
+                overlay.getView().onResume();
+            } catch (java.lang.ClassCastException x) {}
+            try {
+                GimbalCameraOverlay overlay = (GimbalCameraOverlay) visualOverlays.get(e.nextElement());
+                //overlay.getView().onResume();
+            } catch (java.lang.ClassCastException x) {}
         }
     }
 
@@ -51,8 +58,14 @@ class GimbalUIOverlay extends GimbalOverlay {
         Util.debug("PAUSE");
         Enumeration<String> e = visualOverlays.keys();
         while(e.hasMoreElements()) {
-            GimbalGL10Overlay overlay = (GimbalGL10Overlay) visualOverlays.get(e.nextElement());
-            overlay.getView().onPause();
+            try {
+                GimbalGL10Overlay overlay = (GimbalGL10Overlay) visualOverlays.get(e.nextElement());
+                overlay.getView().onPause();
+            } catch (java.lang.ClassCastException x) {}
+            try {
+                GimbalCameraOverlay overlay = (GimbalCameraOverlay) visualOverlays.get(e.nextElement());
+                //overlay.getView().onPause();
+            } catch (java.lang.ClassCastException x) {}
         }
     }
 
@@ -66,11 +79,22 @@ class GimbalUIOverlay extends GimbalOverlay {
 
     private void createVisualsOverlay() {
         if( GimbalConfig.VISUAL_FEEDBACK == GimbalConfig.Option.NONE ) return;
-        if( GimbalConfig.VISUAL_FEEDBACK == GimbalConfig.Option.GL10 ) {
+        int enable = 0;
+
+        enable = GimbalConfig.VISUAL_FEEDBACK & GimbalConfig.Option.CAMERA;
+        if( enable == GimbalConfig.Option.CAMERA ) {
+            GimbalCameraOverlay visualOverlay = new GimbalCameraOverlay((Object)activity);
+            visualOverlays.put(GimbalConfig.Option.CAMERA, visualOverlay);
+            activity.addContentView(visualOverlay.view(), overlayParams);
+        }
+
+        enable = GimbalConfig.VISUAL_FEEDBACK & GimbalConfig.Option.GL10;
+        if( enable == GimbalConfig.Option.GL10 ) {
             GimbalGL10Overlay visualOverlay = new GimbalGL10Overlay((Object)activity);
             visualOverlays.put(GimbalConfig.Option.GL10, visualOverlay);
             activity.addContentView(visualOverlay.view(), overlayParams);
         }
+
     }
 
     private void createControlsOverlay() {

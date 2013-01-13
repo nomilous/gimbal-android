@@ -14,6 +14,7 @@ class GimbalGL10Overlay extends GimbalOverlay {
 
     GimbalGL10Overlay(Object android) {
         super(android);
+        Util.debug("START GimbalGL10Overlay");
     }
 
     public GLSurfaceView view() {
