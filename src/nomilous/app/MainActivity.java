@@ -19,7 +19,7 @@ public class MainActivity extends GimbalActivity {
         // Set feature BitFlags
         //
 
-        GimbalConfig.VISUAL_FEEDBACK  = GimbalConfig.Option.CAMERA;
+        //GimbalConfig.VISUAL_FEEDBACK  = GimbalConfig.Option.CAMERA;
         //GimbalConfig.VISUAL_FEEDBACK |= GimbalConfig.Option.GL10;
         
         
