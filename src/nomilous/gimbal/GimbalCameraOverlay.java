@@ -1,10 +1,13 @@
 package nomilous.gimbal;
 
+import java.io.IOException;
+
 import android.content.Context;
 import android.view.ViewGroup;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 import android.hardware.Camera;
+import java.util.List;
 
 import nomilous.Util;
 
@@ -21,8 +24,7 @@ class GimbalCameraOverlay extends GimbalOverlay {
     public SurfaceView view() {
         Util.debug("GimbalCameraOverlay.view()");
         cameraPreview = new CameraPreview(context);
-        getCamera();
-        releaseCamera();
+        if( getCamera() ) cameraPreview.loadCamera(camera); 
         return cameraPreview.getView();
     }
 
@@ -45,7 +47,7 @@ class GimbalCameraOverlay extends GimbalOverlay {
 
     private void releaseCamera() {
         Util.debug("GimbalCameraOverlay.releaseCamera()");
-        cameraPreview.setCamera(null);
+        cameraPreview.loadCamera(null);
         if (camera != null) {
             camera.release();
             camera = null;
@@ -57,6 +59,7 @@ class GimbalCameraOverlay extends GimbalOverlay {
         private SurfaceView surfaceView;
         private SurfaceHolder surfaceHolder;
         private Camera camera;
+        private List<Camera.Size> supportedPreviewSizes;
 
         CameraPreview(Context context) {
             super(context);
@@ -75,6 +78,8 @@ class GimbalCameraOverlay extends GimbalOverlay {
             surfaceHolder = surfaceView.getHolder();
             surfaceHolder.addCallback(this);
             surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
+            requestLayout();
         }
 
         public SurfaceView getView() { 
@@ -85,20 +90,23 @@ class GimbalCameraOverlay extends GimbalOverlay {
             return surfaceHolder;
         }
 
-        public void setCamera(Camera camera) {
+        public void loadCamera(Camera camera) {
             if( this.camera == camera ) return;
+            stopPreviewAndFreeCamera();
+            this.camera = camera;
+            if( camera == null ) return;
 
+            List<Camera.Size> sizes = camera.getParameters().getSupportedPreviewSizes();
+            supportedPreviewSizes = sizes;
 
-
-
-            //
-            // PENDING attach camera to surfaceView
-            //
-
-
-
+            try {
+                camera.setPreviewDisplay(surfaceHolder);
+                camera.startPreview();
+            } catch (IOException ios) { ios.printStackTrace(); }
 
         }
+
+
 
         @Override // ViewGroup/../View
         protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -118,6 +126,23 @@ class GimbalCameraOverlay extends GimbalOverlay {
         @Override // SurfaceHolder.Callback
         public void surfaceDestroyed(SurfaceHolder holder) {
             Util.debug("CameraPreview.surfaceDestroyed()");
+            if( camera == null ) return;
+            stopPreviewAndFreeCamera();
+        }
+
+        private void stopPreviewAndFreeCamera() {
+            if (camera == null) return;
+
+            //
+            // stop the camera from streaming video to the surfaceView
+            //
+            camera.stopPreview(); 
+
+            //
+            // allow other apps to use the camera once again
+            //
+            camera.release();
+            camera = null;
         }
 
     }

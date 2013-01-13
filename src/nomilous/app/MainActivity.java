@@ -20,7 +20,7 @@ public class MainActivity extends GimbalActivity {
         //
 
         GimbalConfig.VISUAL_FEEDBACK  = GimbalConfig.Option.CAMERA;
-        GimbalConfig.VISUAL_FEEDBACK |= GimbalConfig.Option.GL10;
+        //GimbalConfig.VISUAL_FEEDBACK |= GimbalConfig.Option.GL10;
         
         
     }

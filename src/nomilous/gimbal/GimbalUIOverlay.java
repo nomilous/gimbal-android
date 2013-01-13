@@ -43,14 +43,23 @@ class GimbalUIOverlay extends GimbalOverlay {
         Util.debug("RESUME");
         Enumeration<String> e = visualOverlays.keys();
         while(e.hasMoreElements()) {
+
+            //
+            // getting lazy here...
+            //
+            // TODO: make an interface to 
+            //
+
             try {
-                GimbalGL10Overlay overlay = (GimbalGL10Overlay) visualOverlays.get(e.nextElement());
-                overlay.getView().onResume();
-            } catch (java.lang.ClassCastException x) {}
-            try {
-                GimbalCameraOverlay overlay = (GimbalCameraOverlay) visualOverlays.get(e.nextElement());
-                //overlay.getView().onResume();
-            } catch (java.lang.ClassCastException x) {}
+                try {
+                    GimbalGL10Overlay overlay = (GimbalGL10Overlay) visualOverlays.get(e.nextElement());
+                    overlay.getView().onResume();
+                } catch (java.lang.ClassCastException x) {}
+                try {
+                    GimbalCameraOverlay overlay = (GimbalCameraOverlay) visualOverlays.get(e.nextElement());
+                    //overlay.getView().onResume();
+                } catch (java.lang.ClassCastException x) {}
+            } catch (java.util.NoSuchElementException x) {} 
         }
     }
 
@@ -59,13 +68,15 @@ class GimbalUIOverlay extends GimbalOverlay {
         Enumeration<String> e = visualOverlays.keys();
         while(e.hasMoreElements()) {
             try {
-                GimbalGL10Overlay overlay = (GimbalGL10Overlay) visualOverlays.get(e.nextElement());
-                overlay.getView().onPause();
-            } catch (java.lang.ClassCastException x) {}
-            try {
-                GimbalCameraOverlay overlay = (GimbalCameraOverlay) visualOverlays.get(e.nextElement());
-                //overlay.getView().onPause();
-            } catch (java.lang.ClassCastException x) {}
+                try {
+                    GimbalGL10Overlay overlay = (GimbalGL10Overlay) visualOverlays.get(e.nextElement());
+                    overlay.getView().onPause();
+                } catch (java.lang.ClassCastException x) {}
+                try {
+                    GimbalCameraOverlay overlay = (GimbalCameraOverlay) visualOverlays.get(e.nextElement());
+                    //overlay.getView().onPause();
+                } catch (java.lang.ClassCastException x) {}
+            } catch (java.util.NoSuchElementException x) {} 
         }
     }
 
