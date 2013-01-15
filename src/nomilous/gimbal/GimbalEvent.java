@@ -24,14 +24,14 @@ public class GimbalEvent {
 
     public static class Publisher {
 
-        private Integer idSequence = 0;
+        private Integer beetlejuice = 0;
 
         private Hashtable<Integer,Subscriber> subscribers = 
             new Hashtable<Integer,Subscriber>();
 
-        public synchronized Integer subscribe(Subscriber subscriber) {
+        public synchronized Integer subscribe( Subscriber subscriber ) {
 
-            Integer id = idSequence++;
+            Integer id = beetlejuice++;
             subscribers.put(id, subscriber);
             return id;
 
