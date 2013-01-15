@@ -23,12 +23,17 @@ class GimbalGL10Overlay extends GimbalOverlay {
         surfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         surfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
         surfaceView.setZOrderOnTop(true);
-        surfaceView.setRenderer( new GLSurfaceView.Renderer() {
+        surfaceView.setRenderer( new GimbalGL10Renderer() {
 
             private MeshCube cube = new MeshCube(1, 40);
             private float angle1 = 0.0f;
             private float angle2 = 0.0f;
             private float speed = 0.02f;
+
+            @Override
+            public void onTouchEvent( GimbalEvent.Touch event ) {
+                Util.debug("onTouchEvent() " + event.toString());
+            }
 
             @Override
             public void onDrawFrame(GL10 gl) {

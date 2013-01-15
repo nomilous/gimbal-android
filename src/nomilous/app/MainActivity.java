@@ -12,6 +12,7 @@ public class MainActivity extends GimbalActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
@@ -20,7 +21,7 @@ public class MainActivity extends GimbalActivity {
         //
 
         //GimbalConfig.VISUAL_FEEDBACK  = GimbalConfig.Option.CAMERA;
-        //GimbalConfig.VISUAL_FEEDBACK |= GimbalConfig.Option.GL10;
+        GimbalConfig.VISUAL_FEEDBACK = GimbalConfig.Option.GL10;
         
         
     }

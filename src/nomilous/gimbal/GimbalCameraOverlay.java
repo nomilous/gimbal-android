@@ -67,7 +67,7 @@ class GimbalCameraOverlay extends GimbalOverlay {
         CameraPreview(Context context) {
             super(context);
             surfaceView = new SurfaceView(context);
-            //addView(surfaceView);    // hmmmmm. (Look into ViewGroup...)
+            addView(surfaceView);    // hmmmmm. (Look into ViewGroup...)
         }
 
         public void start() {

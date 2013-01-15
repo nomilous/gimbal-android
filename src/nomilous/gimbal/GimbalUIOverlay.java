@@ -23,6 +23,7 @@ class GimbalUIOverlay extends GimbalOverlay {
 
     public void start() {
         Util.debug("START GimbalUIOverlay");
+
         if(!already) {
             overlayParams = new LayoutParams(
                 LayoutParams.FILL_PARENT, 
@@ -101,8 +102,9 @@ class GimbalUIOverlay extends GimbalOverlay {
             // Perhaps bang it back to pattern later... (it if proves important)
             //
 
-            visualOverlays.put(GimbalConfig.Option.CAMERA, visualOverlay);
-            activity.addContentView(visualOverlay.view(), overlayParams);
+            //visualOverlays.put(GimbalConfig.Option.CAMERA, visualOverlay);
+            //activity.addContentView(visualOverlay.view(), overlayParams);
+            visualOverlay.view();
             visualOverlay.start();
         }
 
