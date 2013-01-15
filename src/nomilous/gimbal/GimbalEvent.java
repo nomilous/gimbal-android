@@ -1,5 +1,6 @@
 package nomilous.gimbal;
 
+import android.content.Context;
 import java.util.Hashtable;
 
 public class GimbalEvent {
@@ -34,6 +35,33 @@ public class GimbalEvent {
             subscribers.put(id, subscriber);
             return id;
 
+        }
+
+    }
+
+    public static class Server {
+
+        private Context context;
+        private Publisher publisher;
+        protected boolean active = false;
+
+        public Server(Context context, Publisher publisher) {
+
+            this.publisher = publisher;
+            this.context = context;
+
+        }
+
+        public void startServer() {
+            active = true;
+        }
+
+        public void stopServer() {
+            active = false;
+        }
+
+        public boolean running() {
+            return active;
         }
 
     }

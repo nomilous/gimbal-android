@@ -18,11 +18,13 @@ class GimbalUIOverlay extends GimbalOverlay {
     private LayoutParams   overlayParams;
     private Hashtable      visualOverlays = new Hashtable();
 
+    private GimbalEvent.Publisher publisher;
     private TouchServer touchServer;
 
     GimbalUIOverlay(Object android) {  
         super(android);
         Util.debug("CONSTRUCT GimbalUIOverlay");
+        publisher = new GimbalEvent.Publisher();
     }
 
     public void start() {
@@ -132,7 +134,7 @@ class GimbalUIOverlay extends GimbalOverlay {
     }
 
     private void createServers() {
-        touchServer = new TouchServer(context, (View)overlay);
+        touchServer = new TouchServer(context, publisher, (View)overlay);
     }
 
     private void startServers() {

@@ -1,18 +1,14 @@
 package nomilous.gimbal.server.sensor;
 
-import nomilous.gimbal.client.SensorSubscriber;
 import nomilous.Util;
+import nomilous.gimbal.GimbalEvent;
 
 import android.content.Context;
 import android.view.View.OnTouchListener;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class TouchServer {
-
-    private SensorSubscriber subscriber;
-    private Context context;
-    private boolean active = false;
+public class TouchServer extends GimbalEvent.Server {
 
     private OnTouchListener onTouchListener = new OnTouchListener() {
 
@@ -31,16 +27,11 @@ public class TouchServer {
 
     };
 
-    public TouchServer( Context context,  /* Object subscriber, */ View v ) { 
+    public TouchServer( Context context,  GimbalEvent.Publisher publisher, /* Object subscriber, */ View v ) { 
 
-        //this.subscriber = (SensorSubscriber) subscriber;
-        this.context = context;
+        super(context, publisher);
         v.setOnTouchListener(onTouchListener);
 
     }
-
-    public void startServer() { active = true; }
-
-    public void stopServer() { active = false; }
 
 }
