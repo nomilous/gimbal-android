@@ -22,8 +22,13 @@ public class MainActivity extends GimbalActivity {
 
         //GimbalConfig.VISUAL_FEEDBACK  = GimbalConfig.Option.CAMERA;
         GimbalConfig.VISUAL_FEEDBACK = GimbalConfig.Option.GL10;
-        
-        
+
+
+        //
+        // override the default feedback
+        // 
+        // GimbalConfig.GL10_FEEDBACK = new SomeOrOtherGLRenderer();
+            
     }
 
 }

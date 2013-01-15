@@ -119,7 +119,7 @@ class GimbalUIOverlay extends GimbalOverlay {
 
         enable = GimbalConfig.VISUAL_FEEDBACK & GimbalConfig.Option.GL10;
         if( enable == GimbalConfig.Option.GL10 ) {
-            GimbalGL10Overlay visualOverlay = new GimbalGL10Overlay((Object)activity);
+            GimbalGL10Overlay visualOverlay = new GimbalGL10Overlay(activity, GimbalConfig.GL10_FEEDBACK);
             visualOverlays.put(GimbalConfig.Option.GL10, visualOverlay);
             activity.addContentView(visualOverlay.view(), overlayParams);
         }
