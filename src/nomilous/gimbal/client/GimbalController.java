@@ -1,3 +1,4 @@
+// pending delete
 package nomilous.gimbal.client;
 
 import android.app.Activity;
@@ -45,9 +46,9 @@ public class GimbalController implements SensorSubscriber {
 
         this.ui      = ui;
         this.context = rootView.getContext();
-        touchServer  = new TouchServer(context, this, rootView);
+        //touchServer  = new TouchServer(context, this, rootView);
 
-        touchServer.startServer();
+        //touchServer.startServer();
 
 
     }

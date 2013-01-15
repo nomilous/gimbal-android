@@ -6,8 +6,10 @@ import android.graphics.Color;
 import java.util.Hashtable;
 import java.util.Enumeration;
 import android.opengl.GLSurfaceView;
+import android.view.View;
 
 import nomilous.Util;
+import nomilous.gimbal.server.sensor.TouchServer;
 
 class GimbalUIOverlay extends GimbalOverlay {
 
@@ -15,6 +17,8 @@ class GimbalUIOverlay extends GimbalOverlay {
     private RelativeLayout overlay;
     private LayoutParams   overlayParams;
     private Hashtable      visualOverlays = new Hashtable();
+
+    private TouchServer touchServer;
 
     GimbalUIOverlay(Object android) {  
         super(android);
@@ -32,6 +36,7 @@ class GimbalUIOverlay extends GimbalOverlay {
             overlayParams.setMargins(0, 0, 0, 0);
             createVisualsOverlay();
             createControlsOverlay();
+            createServers();
         }
         already = true;
     }
@@ -62,6 +67,7 @@ class GimbalUIOverlay extends GimbalOverlay {
                 } catch (java.lang.ClassCastException x) {}
             } catch (java.util.NoSuchElementException x) {} 
         }
+        startServers();
     }
 
     public void pause() {
@@ -83,6 +89,7 @@ class GimbalUIOverlay extends GimbalOverlay {
 
     public void stop() {
         Util.debug("STOP");
+        stopServers();
     }
 
     public void destroy() {
@@ -122,6 +129,18 @@ class GimbalUIOverlay extends GimbalOverlay {
         overlay.setBackgroundColor(Color.argb(50,255,255,255));
         overlay.setLayoutParams(overlayParams);
         activity.addContentView(overlay, overlayParams);
+    }
+
+    private void createServers() {
+        touchServer = new TouchServer(context, (View)overlay);
+    }
+
+    private void startServers() {
+        touchServer.startServer();
+    }
+
+    private void stopServers() {
+        touchServer.stopServer();
     }
 
 }

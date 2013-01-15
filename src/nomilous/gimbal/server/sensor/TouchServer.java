@@ -11,7 +11,7 @@ import android.view.View;
 public class TouchServer {
 
     private SensorSubscriber subscriber;
-    private Context appContext;
+    private Context context;
     private boolean active = false;
 
     private OnTouchListener onTouchListener = new OnTouchListener() {
@@ -21,7 +21,9 @@ public class TouchServer {
 
             if( !active ) return false;
 
-            subscriber.onSensorEvent( SensorSubscriber.TOUCH_EVENT, event);
+            //subscriber.onSensorEvent( SensorSubscriber.TOUCH_EVENT, event);
+
+            Util.info("onTouch " + event.toString());
 
             return true;
 
@@ -29,10 +31,10 @@ public class TouchServer {
 
     };
 
-    public TouchServer( Context appContext, Object subscriber, View v ) { 
+    public TouchServer( Context context,  /* Object subscriber, */ View v ) { 
 
-        this.subscriber = (SensorSubscriber) subscriber;
-        this.appContext = appContext;
+        //this.subscriber = (SensorSubscriber) subscriber;
+        this.context = context;
         v.setOnTouchListener(onTouchListener);
 
     }
