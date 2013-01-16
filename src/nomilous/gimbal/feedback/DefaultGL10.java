@@ -4,8 +4,6 @@ import nomilous.Util;
 import nomilous.gimbal.GimbalGL10Renderer;
 import nomilous.gimbal.GimbalEvent;
 
-import nomilous.gimbal.MeshCube;
-
 //
 // Renders touch and sensor feedback visualisation 
 // into a transluscent overlay.
@@ -24,9 +22,9 @@ public class DefaultGL10 extends GimbalGL10Renderer {
     //
     // TODO: make these sprites
     //
-    private MeshCube[] cubes = new MeshCube[8];
-    private float[] x        = new float[8];
-    private float[] y        = new float[8];
+    private Square[] squares = new Square[8];
+    private float[]  x       = new float[8];
+    private float[]  y       = new float[8];
     private int currentCount = 0;
 
 
@@ -54,7 +52,7 @@ public class DefaultGL10 extends GimbalGL10Renderer {
         for( int i = 0; i < currentCount; i++ ) {
             gl.glPushMatrix();
             gl.glTranslatef(x[i], y[i], 0f);
-            cubes[i].draw(gl);
+            squares[i].draw(gl);
             gl.glPopMatrix();
         }
 
@@ -98,7 +96,7 @@ public class DefaultGL10 extends GimbalGL10Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 
-        for( int i = 0; i < 8; i++ ) cubes[i] = new MeshCube(1,1);
+        for( int i = 0; i < 8; i++ ) squares[i] = new Square(10);
 
         gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         gl.glClearDepthf(1.0f);             
