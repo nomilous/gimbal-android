@@ -20,8 +20,17 @@ public abstract class Shape {
 
     protected FloatBuffer vertex;
 
+    protected float[] position = {
+        0.0f, 0.0f, 0.0f
+    };
+
     public Shape() {
         buildVertexBuffer();
+    }
+
+    public void position(float[] position) {
+        for(int i = 0; i < 3; i++) 
+            this.position[i] = position[i];
     }
 
     public void draw(GL10 gl) {
@@ -30,6 +39,7 @@ public abstract class Shape {
         gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertex);
         gl.glPushMatrix();
 
+        translate(gl);
         scale(gl);
 
         gl.glDrawArrays(GL10.GL_LINE_STRIP, 0, model().length / VERTEX_LENGTH);
@@ -42,6 +52,10 @@ public abstract class Shape {
         bb.order(ByteOrder.nativeOrder());
         vertex = bb.asFloatBuffer();
         vertex.put(model());
+    }
+
+    protected void translate(GL10 gl) {
+        gl.glTranslatef(position[0], position[1], position[2]);
     }
 
     //

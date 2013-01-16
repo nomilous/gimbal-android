@@ -23,23 +23,22 @@ public class DefaultGL10 extends GimbalGL10Renderer {
     // TODO: make these sprites
     //
     private Shape[] pointers = new Shape[8];
-    private float[] x        = new float[8];
-    private float[] y        = new float[8];
     private int currentCount = 0;
-
-
-
 
     @Override
     public void onTouchEvent( GimbalEvent.Touch event ) {
 
         currentCount = event.pointerCount();
 
-        for( int i = 0; i < currentCount; i++ ) {
-            x[i] = event.pointer(i).floatX();
-            y[i] = height - event.pointer(i).floatY();
-            Util.info( x[i] + " " + y[i] );
-        }
+        for( int i = 0; i < currentCount; i++ )
+
+            pointers[i].position( new float[]{
+
+                event.pointer(i).floatX(),
+                height - event.pointer(i).floatY(),
+                0.0f
+
+            });
 
     }
 
@@ -49,12 +48,9 @@ public class DefaultGL10 extends GimbalGL10Renderer {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
 
-        for( int i = 0; i < currentCount; i++ ) {
-            gl.glPushMatrix();
-            gl.glTranslatef(x[i], y[i], 0f);
+        for( int i = 0; i < currentCount; i++ )
+
             pointers[i].draw(gl);
-            gl.glPopMatrix();
-        }
 
     }
         
@@ -96,7 +92,7 @@ public class DefaultGL10 extends GimbalGL10Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 
-        for( int i = 0; i < 8; i++ ) pointers[i] = new Rectangle(50, 10);
+        for( int i = 0; i < 8; i++ ) pointers[i] = new Square(10);
 
         gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         gl.glClearDepthf(1.0f);             
