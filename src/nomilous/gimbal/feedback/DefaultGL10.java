@@ -21,21 +21,27 @@ public class DefaultGL10 extends GimbalGL10Renderer {
     private float width;
     private float height;
 
+    //
+    // TODO: make these sprites
+    //
+    private MeshCube[] cubes = new MeshCube[8];
+    private float[] x        = new float[8];
+    private float[] y        = new float[8];
+    private int currentCount = 0;
 
-    private MeshCube cube = new MeshCube(1, 1);
-    private float x = 0;
-    private float y = 0;
-
-    
 
 
 
     @Override
     public void onTouchEvent( GimbalEvent.Touch event ) {
 
-        x = event.pointer().floatX();
-        y = height - event.pointer().floatY();
-        Util.info( x + " " + y );
+        currentCount = event.pointerCount();
+
+        for( int i = 0; i < currentCount; i++ ) {
+            x[i] = event.pointer(i).floatX();
+            y[i] = height - event.pointer(i).floatY();
+            Util.info( x[i] + " " + y[i] );
+        }
 
     }
 
@@ -44,8 +50,13 @@ public class DefaultGL10 extends GimbalGL10Renderer {
 
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
-        gl.glTranslatef(x, y, 0f);
-        cube.draw(gl);
+
+        for( int i = 0; i < currentCount; i++ ) {
+            gl.glPushMatrix();
+            gl.glTranslatef(x[i], y[i], 0f);
+            cubes[i].draw(gl);
+            gl.glPopMatrix();
+        }
 
     }
         
@@ -86,6 +97,8 @@ public class DefaultGL10 extends GimbalGL10Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+
+        for( int i = 0; i < 8; i++ ) cubes[i] = new MeshCube(1,1);
 
         gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         gl.glClearDepthf(1.0f);             

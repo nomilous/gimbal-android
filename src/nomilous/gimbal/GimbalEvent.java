@@ -30,13 +30,16 @@ public class GimbalEvent {
 
         }
 
-        private int action;
-        private Position pointer;
+        private int        action;
+        private Position[] pointers;
+        private int        pointerCount;
 
-        public final int      type()    { return TOUCH; }
-        public final int      action()  { return action; }
-        public final Position pointer() { return pointer; }
-
+        public final int        type()         { return TOUCH; }
+        public final int        action()       { return action; }
+        public final int        pointerCount() { return pointerCount; }
+        public final Position   pointer()      { return pointers[0]; }
+        public final Position   pointer(int i) { return pointers[i]; }
+        public final Position[] pointers()     { return pointers; }
 
         public Touch( MotionEvent event ) {
 
@@ -45,11 +48,17 @@ public class GimbalEvent {
             //
             // TODO:
             //
-            // - expand to provide multiple pointers
             // - expand to provide pressure  
             // 
 
-            pointer = new Position( event.getX(), event.getY() );
+            pointerCount = event.getPointerCount();
+            pointers = new Position[pointerCount];
+
+            for(int i = 0; i < pointerCount; i++ ) {
+
+                pointers[i] = new Position( event.getX(i), event.getY(i) );
+
+            }
 
             switch( event.getAction() & MotionEvent.ACTION_MASK ) {
 
@@ -73,10 +82,11 @@ public class GimbalEvent {
 
             return String.format( 
 
-                "GimbalEvent.Touch action=%s, x=%f, y=%f",
+                "GimbalEvent.Touch action=%d, count=%d, x=%f, y=%f",
                 action,
-                pointer.floatX(),
-                pointer.floatY()
+                pointers.length,
+                pointers[0].floatX(),
+                pointers[0].floatY()
             );
 
         }
