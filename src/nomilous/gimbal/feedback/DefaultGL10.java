@@ -22,9 +22,9 @@ public class DefaultGL10 extends GimbalGL10Renderer {
     //
     // TODO: make these sprites
     //
-    private Square[] squares = new Square[8];
-    private float[]  x       = new float[8];
-    private float[]  y       = new float[8];
+    private Shape[] pointers = new Shape[8];
+    private float[] x        = new float[8];
+    private float[] y        = new float[8];
     private int currentCount = 0;
 
 
@@ -52,7 +52,7 @@ public class DefaultGL10 extends GimbalGL10Renderer {
         for( int i = 0; i < currentCount; i++ ) {
             gl.glPushMatrix();
             gl.glTranslatef(x[i], y[i], 0f);
-            squares[i].draw(gl);
+            pointers[i].draw(gl);
             gl.glPopMatrix();
         }
 
@@ -96,7 +96,7 @@ public class DefaultGL10 extends GimbalGL10Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 
-        for( int i = 0; i < 8; i++ ) squares[i] = new Square(10);
+        for( int i = 0; i < 8; i++ ) pointers[i] = new Rectangle(50, 10);
 
         gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         gl.glClearDepthf(1.0f);             
