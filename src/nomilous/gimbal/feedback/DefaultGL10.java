@@ -1,5 +1,6 @@
 package nomilous.gimbal.feedback;
 
+import nomilous.Util;
 import nomilous.gimbal.GimbalGL10Renderer;
 import nomilous.gimbal.GimbalEvent;
 
@@ -16,7 +17,11 @@ import android.opengl.GLU;
 public class DefaultGL10 extends GimbalGL10Renderer {
 
     @Override
-    public void onTouchEvent( GimbalEvent.Touch event ) {}
+    public void onTouchEvent( GimbalEvent.Touch event ) {
+
+        Util.info("DefaultGL10.onTouchEvent() " + event.toString() );
+
+    }
 
     @Override
     public void onDrawFrame(GL10 gl) {}
@@ -28,4 +33,3 @@ public class DefaultGL10 extends GimbalGL10Renderer {
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {}
 
 }
-

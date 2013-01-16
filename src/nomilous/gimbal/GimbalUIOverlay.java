@@ -10,6 +10,7 @@ import android.view.View;
 
 import nomilous.Util;
 import nomilous.gimbal.server.sensor.TouchServer;
+import nomilous.gimbal.GimbalEvent;
 
 class GimbalUIOverlay extends GimbalOverlay {
 
@@ -122,6 +123,7 @@ class GimbalUIOverlay extends GimbalOverlay {
             GimbalGL10Overlay visualOverlay = new GimbalGL10Overlay(activity, GimbalConfig.GL10_FEEDBACK);
             visualOverlays.put(GimbalConfig.Option.GL10, visualOverlay);
             activity.addContentView(visualOverlay.view(), overlayParams);
+            publisher.subscribe( (GimbalEvent.Subscriber) GimbalConfig.GL10_FEEDBACK);
         }
 
     }

@@ -17,9 +17,9 @@ public class TouchServer extends GimbalEvent.Server {
 
             if( !active ) return false;
 
-            //subscriber.onSensorEvent( SensorSubscriber.TOUCH_EVENT, event);
+            Util.info("OnTouchListener.onTouch()" + event.toString() );
 
-            Util.info("onTouch " + event.toString());
+            publish( (GimbalEvent.Event) new GimbalEvent.Touch( event ) );
 
             return true;
 

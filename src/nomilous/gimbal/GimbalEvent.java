@@ -1,16 +1,38 @@
 package nomilous.gimbal;
 
+import android.view.MotionEvent;
+
 import android.content.Context;
 import java.util.Hashtable;
+import java.util.Enumeration;
 
 public class GimbalEvent {
 
-    public static class Touch {
+    public static final int TOUCH = 1;
+
+    public static interface Event {
+
+        public abstract int type();
+    
+    } 
+
+    public static class Touch implements Event {
+
+        public final int type() { return TOUCH; }
+
+
+        public Touch( MotionEvent event ) {
+
+            //
+            // process touch event
+            //    
+
+        }
 
         public String toString() {
 
             return "touch";
-        
+
         }
 
     }
@@ -37,6 +59,29 @@ public class GimbalEvent {
 
         }
 
+        public synchronized void publish( Event event ) {
+               // 
+               // potential bottleneck 
+               //
+
+            Enumeration<Integer> e = subscribers.keys();
+
+            switch( event.type() ) {
+
+                case TOUCH:
+                
+                    while( e.hasMoreElements() ) (
+
+                        (Subscriber) subscribers.get( e.nextElement() )
+
+                    ).onTouchEvent( (GimbalEvent.Touch) event );
+
+                    break;
+
+            }
+
+        } 
+
     }
 
     public static class Server {
@@ -50,6 +95,10 @@ public class GimbalEvent {
             this.publisher = publisher;
             this.context = context;
 
+        }
+
+        public void publish( Event event ) {
+            publisher.publish( event );
         }
 
         public void startServer() {
