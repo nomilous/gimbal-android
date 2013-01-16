@@ -18,25 +18,33 @@ import android.opengl.GLU;
 
 public class DefaultGL10 extends GimbalGL10Renderer {
 
+    private float width;
+    private float height;
+
+
     private MeshCube cube = new MeshCube(1, 1);
+    private float x = 0;
+    private float y = 0;
+
+    
+
+
 
     @Override
     public void onTouchEvent( GimbalEvent.Touch event ) {
 
-        Util.info("DefaultGL10.onTouchEvent() " + event.toString() );
+        x = event.pointer().floatX();
+        y = height - event.pointer().floatY();
+        Util.info( x + " " + y );
 
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
+
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
-        
-
-        //
-        // 1x1 pixel cube in bottome left corner
-        //
-        gl.glTranslatef(0.5f, 0.5f, 0f);
+        gl.glTranslatef(x, y, 0f);
         cube.draw(gl);
 
     }
@@ -45,6 +53,8 @@ public class DefaultGL10 extends GimbalGL10Renderer {
     public void onSurfaceChanged(GL10 gl, int width, int height) {
 
         Util.debug("width " + width + " height " + height);
+        this.width = (float) width;
+        this.height = (float) height;
 
         //self.view.bounds.size.width
 
@@ -68,6 +78,9 @@ public class DefaultGL10 extends GimbalGL10Renderer {
         // orthographic (bottom left origin)
         // 
         gl.glOrthof(0f, width, 0f, height, -1f, 1000f);
+
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+        gl.glLoadIdentity();
 
     }
 
