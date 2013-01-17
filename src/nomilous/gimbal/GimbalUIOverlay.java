@@ -1,5 +1,10 @@
 package nomilous.gimbal;
 
+import nomilous.Util;
+import nomilous.gimbal.server.sensor.TouchServer;
+import nomilous.gimbal.GimbalEvent;
+import nomilous.gimbal.uplink.Uplink;
+
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.graphics.Color;
@@ -8,9 +13,6 @@ import java.util.Enumeration;
 import android.opengl.GLSurfaceView;
 import android.view.View;
 
-import nomilous.Util;
-import nomilous.gimbal.server.sensor.TouchServer;
-import nomilous.gimbal.GimbalEvent;
 
 class GimbalUIOverlay extends GimbalOverlay {
 
@@ -19,6 +21,7 @@ class GimbalUIOverlay extends GimbalOverlay {
     private LayoutParams   overlayParams;
     private Hashtable      visualOverlays = new Hashtable();
 
+    private Uplink uplink;
     private GimbalEvent.Publisher publisher;
     private TouchServer touchServer;
 
@@ -137,14 +140,17 @@ class GimbalUIOverlay extends GimbalOverlay {
 
     private void createServers() {
         touchServer = new TouchServer(context, publisher, (View)overlay);
+        uplink      = new Uplink(context, publisher);
     }
 
     private void startServers() {
         touchServer.startServer();
+        uplink.startServer();
     }
 
     private void stopServers() {
         touchServer.stopServer();
+        uplink.stopServer();
     }
 
 }

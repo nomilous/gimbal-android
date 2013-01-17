@@ -1,6 +1,8 @@
 package nomilous.gimbal;
 
 import nomilous.gimbal.feedback.*;
+import nomilous.gimbal.GimbalUplink;
+import nomilous.gimbal.client.*;
 
 public class GimbalConfig {
 
@@ -15,5 +17,6 @@ public class GimbalConfig {
     }
 
     public static GimbalGL10Renderer GL10_FEEDBACK = new DefaultGL10();
+    public static GimbalUplink       UPLINK        = new DefaultUplink();
 
 }
