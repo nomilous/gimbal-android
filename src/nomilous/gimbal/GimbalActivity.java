@@ -1,5 +1,6 @@
 package nomilous.gimbal;
 
+import nomilous.gimbal.overlays.GimbalUIOverlay;
 import android.app.Activity;
 import android.os.Bundle;
 

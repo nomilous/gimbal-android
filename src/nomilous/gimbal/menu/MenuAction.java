@@ -1,4 +1,4 @@
-package nomilous.gimbal;
+package nomilous.gimbal.menu;
 
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -30,7 +30,7 @@ public class MenuAction {
 
     public void render( 
 
-        Chain chain
+        MenuChain chain
 
     ) {
 

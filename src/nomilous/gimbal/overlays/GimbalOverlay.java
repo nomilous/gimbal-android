@@ -1,4 +1,4 @@
-package nomilous.gimbal;
+package nomilous.gimbal.overlays;
 
 import android.app.Activity;
 import android.content.Context;

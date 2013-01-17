@@ -1,9 +1,11 @@
-package nomilous.gimbal;
+package nomilous.gimbal.overlays;
 
 import nomilous.Util;
+import nomilous.gimbal.GimbalConfig;
 import nomilous.gimbal.server.sensor.TouchServer;
 import nomilous.gimbal.GimbalEvent;
 import nomilous.gimbal.uplink.Uplink;
+import nomilous.gimbal.menu.MenuActionGroup;
 
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -14,7 +16,7 @@ import android.opengl.GLSurfaceView;
 import android.view.View;
 
 
-class GimbalUIOverlay extends GimbalOverlay {
+public class GimbalUIOverlay extends GimbalOverlay {
 
     private boolean        already = false;
     private RelativeLayout overlay;
@@ -25,7 +27,7 @@ class GimbalUIOverlay extends GimbalOverlay {
     private GimbalEvent.Publisher publisher;
     private TouchServer touchServer;
 
-    GimbalUIOverlay(Object android) {  
+    public GimbalUIOverlay(Object android) {  
         super(android);
         Util.debug("CONSTRUCT GimbalUIOverlay");
         publisher = new GimbalEvent.Publisher();
@@ -42,6 +44,7 @@ class GimbalUIOverlay extends GimbalOverlay {
             overlayParams.setMargins(0, 0, 0, 0);
             createVisualsOverlay();
             createControlsOverlay();
+            createMenusOverlay();
             createServers();
         }
         already = true;
@@ -132,10 +135,16 @@ class GimbalUIOverlay extends GimbalOverlay {
     }
 
     private void createControlsOverlay() {
-        overlay =       new RelativeLayout(context);
+        overlay = new RelativeLayout(context);
         overlay.setBackgroundColor(Color.argb(50,255,255,255));
         overlay.setLayoutParams(overlayParams);
         activity.addContentView(overlay, overlayParams);
+    }
+
+    private void createMenusOverlay() {
+        MenuActionGroup menu = new MenuActionGroup();
+        GimbalMenuOverlay menuOverlay = new GimbalMenuOverlay(activity, menu);
+        
     }
 
     private void createServers() {

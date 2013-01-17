@@ -20,7 +20,7 @@ import android.os.Bundle;
 
 public class KeypadServer {
 
-    private SensorSubscriber subscriber;
+    //private SensorSubscriber subscriber;
     private Context appContext;
     private boolean active = false;
     private boolean on = false;
@@ -54,7 +54,7 @@ public class KeypadServer {
             keypadEvent.putInt( "before", before );
             keypadEvent.putInt( "count", count );
 
-            subscriber.onSensorEvent( SensorSubscriber.KEYPAD_EVENT, keypadEvent);
+            //subscriber.onSensorEvent( SensorSubscriber.KEYPAD_EVENT, keypadEvent);
 
             //Util.info("onTextChanged: " + s.toString() + " start:" + start + " before:" + before + " count:" + count);
 
@@ -65,7 +65,7 @@ public class KeypadServer {
 
     public KeypadServer( Context appContext, Object subscriber, View view ) { 
 
-        this.subscriber = (SensorSubscriber) subscriber;
+        //this.subscriber = (SensorSubscriber) subscriber;
         this.appContext = appContext;
         this.view = view;
 

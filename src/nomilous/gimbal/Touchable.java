@@ -1,41 +1,42 @@
+//pending delete
 package nomilous.gimbal;
 
 public interface Touchable {
 
-    public static class PointerEvent {
+    // public static class PointerEvent {
 
-        public static final int PRESSED  = 1;
-        public static final int RELEASED = 2;
+    //     public static final int PRESSED  = 1;
+    //     public static final int RELEASED = 2;
 
-    }
+    // }
 
-    public static class PointerPosition { 
-        public float x;
-        public float y;
-        public PointerPosition( float x, float y ) { this.x = x; this.y = y; }
-    }
-
-
-    //
-    // Receive the PointerEvent (from the touch screen)
-    //
-
-    public abstract void pointerEvent( int event, Position position );
+    // public static class PointerPosition { 
+    //     public float x;
+    //     public float y;
+    //     public PointerPosition( float x, float y ) { this.x = x; this.y = y; }
+    // }
 
 
-    //
-    // Fire this event if the pointer press was within the boundries of
-    // the Object implementing this interface.
-    // 
+    // //
+    // // Receive the PointerEvent (from the touch screen)
+    // //
 
-    public abstract void onPressed();
+    // public abstract void pointerEvent( int event, Position position );
 
 
-    //
-    // Sing to small pebbles if the river they're in is babbling.
-    //
+    // //
+    // // Fire this event if the pointer press was within the boundries of
+    // // the Object implementing this interface.
+    // // 
 
-    public abstract void onReleased();
+    // public abstract void onPressed();
+
+
+    // //
+    // // Sing to small pebbles if the river they're in is babbling.
+    // //
+
+    // public abstract void onReleased();
 
 }
 

@@ -10,6 +10,6 @@ public interface SensorSubscriber {
     public static final int TOUCH_EVENT           = 16;
     public static final int KEYPAD_EVENT          = 32;
 
-    public abstract void onSensorEvent( int eventCode, Object payload );
+    // public abstract void onSensorEvent( int eventCode, Object payload );
 
 }

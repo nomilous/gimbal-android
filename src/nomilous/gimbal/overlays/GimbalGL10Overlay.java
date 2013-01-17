@@ -1,11 +1,12 @@
-package nomilous.gimbal;
+package nomilous.gimbal.overlays;
+
+import nomilous.Util;
+import nomilous.gimbal.GimbalGL10Renderer;
 
 import android.opengl.GLSurfaceView;
 import android.graphics.PixelFormat;
 
-import nomilous.Util;
-
-class GimbalGL10Overlay extends GimbalOverlay {
+public class GimbalGL10Overlay extends GimbalOverlay {
 
     private GLSurfaceView surfaceView;
     private GimbalGL10Renderer renderer;

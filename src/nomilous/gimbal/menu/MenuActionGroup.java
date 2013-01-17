@@ -1,5 +1,7 @@
-package nomilous.gimbal;
+package nomilous.gimbal.menu;
+
 import nomilous.Util;
+import nomilous.gimbal.GimbalEvent;
 
 import android.content.Context;
 import android.widget.RelativeLayout;
@@ -11,7 +13,11 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import java.util.Enumeration;
 
-public class MenuActionSet implements Touchable {
+
+public class MenuActionGroup 
+
+    implements GimbalEvent.Subscriber,
+               Menu.Touchable {
 
     public static class Config {
 
@@ -19,8 +25,8 @@ public class MenuActionSet implements Touchable {
         public int disabledColour = Color.DKGRAY;
         public int highlightColour = Color.WHITE;
 
-        public Anchor chainStart = new Anchor( 100, 10 );
-        public Anchor chainEnd = new Anchor( 100, 300 );
+        public MenuAnchor chainStart = new MenuAnchor( 100, 10 );
+        public MenuAnchor chainEnd = new MenuAnchor( 100, 300 );
 
         public Typeface font = Typeface.create( Typeface.MONOSPACE, Typeface.NORMAL );
 
@@ -41,17 +47,17 @@ public class MenuActionSet implements Touchable {
     private RelativeLayout layout;
 
     private Config config;
-    private Chain chain;
+    private MenuChain chain;
     private TextView current;
 
-    public MenuActionSet() {
+    public MenuActionGroup() {
 
         config = new Config();
         init();
 
     }
 
-    public MenuActionSet( Config config ) {
+    public MenuActionGroup( Config config ) {
 
         this.config = config;
         init();
@@ -59,7 +65,7 @@ public class MenuActionSet implements Touchable {
     }
 
     public void show( RelativeLayout layout ) {
-        Util.debug("MenuActionSet.show()");
+        Util.debug("MenuActionGroup.show()");
 
         //
         // Insert MenuActions along the Chain
@@ -81,7 +87,7 @@ public class MenuActionSet implements Touchable {
     }
 
     public void hide() {
-        Util.debug("MenuActionSet.hide()");
+        Util.debug("MenuActionGroup.hide()");
 
         //
         // Remove each inserted view
@@ -124,56 +130,58 @@ public class MenuActionSet implements Touchable {
 
     // } 
 
-
-    public void pointerEvent( int event, Position position ) {
+    public void onTouchEvent( GimbalEvent.Touch event ) {}
+    // public void pointerEvent( int event, Position position ) {
         
-        int x = position.intX();
-        int y = position.intY();
+    //     int x = position.intX();
+    //     int y = position.intY();
 
-        Enumeration<String> e = views.keys();
-        while(e.hasMoreElements()) {
+    //     Enumeration<String> e = views.keys();
+    //     while(e.hasMoreElements()) {
 
-            current = views.get(e.nextElement());
+    //         current = views.get(e.nextElement());
 
-            if( x < current.getLeft()   ) continue;
-            if( x > current.getRight()  ) continue;
-            if( y < current.getTop()    ) continue;
-            if( y > current.getBottom() ) continue;
+    //         if( x < current.getLeft()   ) continue;
+    //         if( x > current.getRight()  ) continue;
+    //         if( y < current.getTop()    ) continue;
+    //         if( y > current.getBottom() ) continue;
 
-            switch( event ) {
-                case Touchable.PointerEvent.PRESSED:
-                    onPressed();
-                    break;
+    //         switch( event ) {
+    //             case Touchable.PointerEvent.PRESSED:
+    //                 onPressed();
+    //                 break;
 
-                case Touchable.PointerEvent.RELEASED:
-                    onReleased();
-                    break;
+    //             case Touchable.PointerEvent.RELEASED:
+    //                 onReleased();
+    //                 break;
 
-            }
+    //         }
 
-        }
+    //     }
 
-    }
+    // }
 
-    public void onPressed() {
+    public void onPressed() {}
+    // public void onPressed() {
 
-        MenuAction action = getCurrent();
+    //     MenuAction action = getCurrent();
 
-        if( !action.enabled ) return;
+    //     if( !action.enabled ) return;
 
-        current.setTextColor(config.highlightColour);
+    //     current.setTextColor(config.highlightColour);
 
-    }
+    // }
 
-    public void onReleased() {
+    public void onReleased() {}
+    // public void onReleased() {
 
-        MenuAction action = getCurrent();
+    //     MenuAction action = getCurrent();
 
-        if( !action.enabled ) return;
+    //     if( !action.enabled ) return;
 
-        current.setTextColor(config.enabledColour);
+    //     current.setTextColor(config.enabledColour);
 
-    }
+    // }
 
 
     private MenuAction getCurrent() {
@@ -189,7 +197,7 @@ public class MenuActionSet implements Touchable {
         actionsIndex = new Hashtable<String,Integer>();
         views = new Hashtable<String,TextView>();
         params = new Hashtable<String,LayoutParams>();
-        chain = new Chain( config, views, params );
+        chain = new MenuChain( config, views, params );
     }
 
 }

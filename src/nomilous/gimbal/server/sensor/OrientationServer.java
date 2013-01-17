@@ -85,12 +85,12 @@ public class OrientationServer  {
 
             case Sensor.TYPE_ACCELEROMETER:
                 System.arraycopy( event.values, 0, accelerationVector, 0, 3 );
-                this.subscriber.onSensorEvent( SensorSubscriber.ACCELERATION_UPDATE, accelerationVector);
+                //this.subscriber.onSensorEvent( SensorSubscriber.ACCELERATION_UPDATE, accelerationVector);
                 break;
 
             case Sensor.TYPE_MAGNETIC_FIELD:
                 System.arraycopy(event.values, 0, magneticFieldVector, 0, 3);
-                this.subscriber.onSensorEvent( SensorSubscriber.MAGNETIC_FIELD_UPDATE, magneticFieldVector);
+                //this.subscriber.onSensorEvent( SensorSubscriber.MAGNETIC_FIELD_UPDATE, magneticFieldVector);
                 break;
 
             default:
@@ -132,7 +132,7 @@ public class OrientationServer  {
 
             );
 
-            this.subscriber.onSensorEvent( SensorSubscriber.ROTATION_UPDATE, orientationVector);
+            //this.subscriber.onSensorEvent( SensorSubscriber.ROTATION_UPDATE, orientationVector);
 
         }
 

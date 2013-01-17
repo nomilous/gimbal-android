@@ -24,303 +24,303 @@ import nomilous.Util;
 
 public class GimbalController implements SensorSubscriber {
 
-    private Context context;
-    private Activity activity;
-    private GimbalEventHandler handler;
+    // private Context context;
+    // private Activity activity;
+    // private GimbalEventHandler handler;
 
-    private SocketIOClient client;
-    private boolean connected = false;
-    private boolean assigned = false;  // in control of at least 1 viewport
-    private boolean active = false;    // sensors are active
-    private boolean exitting = false;  // set on destroy
+    // private SocketIOClient client;
+    // private boolean connected = false;
+    // private boolean assigned = false;  // in control of at least 1 viewport
+    // private boolean active = false;    // sensors are active
+    // private boolean exitting = false;  // set on destroy
 
-    private UI ui;
-    private OrientationServer orientationServer;
-    private LocationServer locationServer;
-    private TouchServer touchServer;
-    private KeypadServer keypadServer;
-    private SensorTranslator translator;
+    // private UI ui;
+    // private OrientationServer orientationServer;
+    // private LocationServer locationServer;
+    // private TouchServer touchServer;
+    // private KeypadServer keypadServer;
+    // private SensorTranslator translator;
     
 
-    public GimbalController( RelativeLayout rootView, UI ui ) {
+    // public GimbalController( RelativeLayout rootView, UI ui ) {
 
-        this.ui      = ui;
-        this.context = rootView.getContext();
-        //touchServer  = new TouchServer(context, this, rootView);
+    //     this.ui      = ui;
+    //     this.context = rootView.getContext();
+    //     //touchServer  = new TouchServer(context, this, rootView);
 
-        //touchServer.startServer();
+    //     //touchServer.startServer();
 
-
-    }
-
-    // public GimbalController( Context context, Object handler, View v, View e ) {
-
-    //     this.ui = ui;
-    //     this.context = context;
-    //     this.handler = (GimbalEventHandler) handler;
-    //     this.activity = (Activity) handler;
-
-    //     orientationServer = new OrientationServer(context, this);
-    //     locationServer = new LocationServer(context, this);
-    //     touchServer = new TouchServer(context, this, v);
-    //     keypadServer = new KeypadServer(context, this, e);
-
-    //     translator = new SensorTranslator();
 
     // }
 
-    public void connect( final String uri, final String viewportID ) {
+    // // public GimbalController( Context context, Object handler, View v, View e ) {
 
-        client = new SocketIOClient(
+    // //     this.ui = ui;
+    // //     this.context = context;
+    // //     this.handler = (GimbalEventHandler) handler;
+    // //     this.activity = (Activity) handler;
 
-            URI.create( uri ),
+    // //     orientationServer = new OrientationServer(context, this);
+    // //     locationServer = new LocationServer(context, this);
+    // //     touchServer = new TouchServer(context, this, v);
+    // //     keypadServer = new KeypadServer(context, this, e);
 
-            new SocketIOClient.Handler() {
+    // //     translator = new SensorTranslator();
 
-                @Override
-                public void onConnect() { /* BROKEN */ }
+    // // }
 
-                @Override
-                public void on(String event, JSONArray payload) {
+    // public void connect( final String uri, final String viewportID ) {
 
-                    Util.info(String.format("RECEIVED %s: %s", event, payload.toString()));
+    //     client = new SocketIOClient(
 
-                    if( event.equals( GimbalEventHandler.CONTROLLER_CONNECTED ) ) {
+    //         URI.create( uri ),
 
-                        //
-                        // Have established connection to server
-                        //
+    //         new SocketIOClient.Handler() {
 
-                        connected = true;
-                        initializeController( viewportID );
+    //             @Override
+    //             public void onConnect() { /* BROKEN */ }
 
-                    } else if( event.equals( GimbalEventHandler.ASSIGN_PRIMARY_VIEWPORT ) ) {
+    //             @Override
+    //             public void on(String event, JSONArray payload) {
 
-                        //
-                        // Have got primary viewport
-                        //
+    //                 Util.info(String.format("RECEIVED %s: %s", event, payload.toString()));
 
-                        assigned = true;
-                        translator.configure( client, payload );
-                        activateSensors( handler, viewportID );
+    //                 if( event.equals( GimbalEventHandler.CONTROLLER_CONNECTED ) ) {
 
-                    } else if( event.equals( GimbalEventHandler.DISCONNECT_OK ) ) {
+    //                     //
+    //                     // Have established connection to server
+    //                     //
 
-                        //
-                        // Server has released resources associated to this controller
-                        //
+    //                     connected = true;
+    //                     initializeController( viewportID );
 
-                        assigned = false;       //
-                        connected = false;      // BUT:
-                                                //
-                                                // - The socket is still connected (See issue below)
-                                                // 
-                                                // - A new socket will be created 
-                                                //   when a call is made to connect.
-                                                //
-                        deActivateSensors();
+    //                 } else if( event.equals( GimbalEventHandler.ASSIGN_PRIMARY_VIEWPORT ) ) {
 
-                        if( exitting ) 
+    //                     //
+    //                     // Have got primary viewport
+    //                     //
 
-                            //
-                            // Notify activity (handler) can now destroy
-                            //
+    //                     assigned = true;
+    //                     translator.configure( client, payload );
+    //                     activateSensors( handler, viewportID );
 
-                            handler.gimbalEvent( "EXIT", payload );
+    //                 } else if( event.equals( GimbalEventHandler.DISCONNECT_OK ) ) {
 
+    //                     //
+    //                     // Server has released resources associated to this controller
+    //                     //
 
+    //                     assigned = false;       //
+    //                     connected = false;      // BUT:
+    //                                             //
+    //                                             // - The socket is still connected (See issue below)
+    //                                             // 
+    //                                             // - A new socket will be created 
+    //                                             //   when a call is made to connect.
+    //                                             //
+    //                     deActivateSensors();
 
+    //                     if( exitting ) 
 
+    //                         //
+    //                         // Notify activity (handler) can now destroy
+    //                         //
 
-                        // 
-                        // GRUMBLES!!!
-                        // 
-                        // Can't initiate a clean disconnect from the clientside...
-                        // 
-                        // 
-                        // E/AndroidRuntime(  530): FATAL EXCEPTION: Thread-12
-                        // E/AndroidRuntime(  530): java.lang.NullPointerException
-                        // E/AndroidRuntime(  530):    at com.codebutler.android_websockets.SocketIOClient.cleanup(SocketIOClient.java:183)
-                        // E/AndroidRuntime(  530):    at com.codebutler.android_websockets.SocketIOClient.access$000(SocketIOClient.java:22)
-                        // E/AndroidRuntime(  530):    at com.codebutler.android_websockets.SocketIOClient$2.onError(SocketIOClient.java:152)
-                        // E/AndroidRuntime(  530):    at com.codebutler.android_websockets.WebSocketClient$1.run(WebSocketClient.java:132)
-                        // E/AndroidRuntime(  530):    at java.lang.Thread.run(Thread.java:1019)
-                        //
-                        // I tried to catch that null pointer inside com.codebutler.android_websockets.WebSocketClient$1.run(WebSocketClient.java:132)
-                        // 
-                        // no luck...
-                        // 
-                        // 
-
-                        // activity.runOnUiThread(new Runnable() {
-                        //     @Override
-                        //     public void run() {
-
-
-                                // try {
-                                //     client.disconnect();
-                                // } catch( java.io.IOException e ) { }
+    //                         handler.gimbalEvent( "EXIT", payload );
 
 
 
-                        //     }
-                        // });
-
-                        // 
-                        // ask server to initiate disconnect
-                        // 
-
-                        // requestDisconnect();
-
-                        //
-                        // same problem when server disconnectes... 
-                        //
-
-                        //////// SOCKET STAYS CONNECTED...
-                        //////// DISCONNECTED ONLY ON APPLICATION LAYER
-                        //////// ie. unassociated to viewports
 
 
-                    }
+    //                     // 
+    //                     // GRUMBLES!!!
+    //                     // 
+    //                     // Can't initiate a clean disconnect from the clientside...
+    //                     // 
+    //                     // 
+    //                     // E/AndroidRuntime(  530): FATAL EXCEPTION: Thread-12
+    //                     // E/AndroidRuntime(  530): java.lang.NullPointerException
+    //                     // E/AndroidRuntime(  530):    at com.codebutler.android_websockets.SocketIOClient.cleanup(SocketIOClient.java:183)
+    //                     // E/AndroidRuntime(  530):    at com.codebutler.android_websockets.SocketIOClient.access$000(SocketIOClient.java:22)
+    //                     // E/AndroidRuntime(  530):    at com.codebutler.android_websockets.SocketIOClient$2.onError(SocketIOClient.java:152)
+    //                     // E/AndroidRuntime(  530):    at com.codebutler.android_websockets.WebSocketClient$1.run(WebSocketClient.java:132)
+    //                     // E/AndroidRuntime(  530):    at java.lang.Thread.run(Thread.java:1019)
+    //                     //
+    //                     // I tried to catch that null pointer inside com.codebutler.android_websockets.WebSocketClient$1.run(WebSocketClient.java:132)
+    //                     // 
+    //                     // no luck...
+    //                     // 
+    //                     // 
 
-                    handler.gimbalEvent( event, payload );
-
-                }
-
-                @Override
-                public void onDisconnect(int code, String reason) {}
-
-                @Override
-                public void onError(Exception error) {}
-
-            }
-
-        );
-
-        client.connect();
-
-    }
-
-    public void destroy() {
-
-        Util.info("Starting exit sequence");
-        exitting = true;
-
-        if( connected ) 
-
-            //
-            // Have a connection to viewport, disconnect
-            //
-
-            disconnect();
+    //                     // activity.runOnUiThread(new Runnable() {
+    //                     //     @Override
+    //                     //     public void run() {
 
 
-        else {
+    //                             // try {
+    //                             //     client.disconnect();
+    //                             // } catch( java.io.IOException e ) { }
 
-            deActivateSensors(); // just incase
-            handler.gimbalEvent( "EXIT", "" );
 
-        }
 
-    }
+    //                     //     }
+    //                     // });
 
-    public void disconnect() {
+    //                     // 
+    //                     // ask server to initiate disconnect
+    //                     // 
 
-        Util.info("Disconnecting controller");
+    //                     // requestDisconnect();
 
-        try {
+    //                     //
+    //                     // same problem when server disconnectes... 
+    //                     //
 
-            client.emit( "event:release:controller", new JSONArray() );
+    //                     //////// SOCKET STAYS CONNECTED...
+    //                     //////// DISCONNECTED ONLY ON APPLICATION LAYER
+    //                     //////// ie. unassociated to viewports
 
-        } 
 
-        catch( org.json.JSONException e ) {
+    //                 }
 
-            Util.error( e.toString() );
+    //                 handler.gimbalEvent( event, payload );
 
-        }
-        catch( java.lang.NullPointerException e ) {
+    //             }
 
-            Util.error( e.toString() );
+    //             @Override
+    //             public void onDisconnect(int code, String reason) {}
+
+    //             @Override
+    //             public void onError(Exception error) {}
+
+    //         }
+
+    //     );
+
+    //     client.connect();
+
+    // }
+
+    // public void destroy() {
+
+    //     Util.info("Starting exit sequence");
+    //     exitting = true;
+
+    //     if( connected ) 
+
+    //         //
+    //         // Have a connection to viewport, disconnect
+    //         //
+
+    //         disconnect();
+
+
+    //     else {
+
+    //         deActivateSensors(); // just incase
+    //         handler.gimbalEvent( "EXIT", "" );
+
+    //     }
+
+    // }
+
+    // public void disconnect() {
+
+    //     Util.info("Disconnecting controller");
+
+    //     try {
+
+    //         client.emit( "event:release:controller", new JSONArray() );
+
+    //     } 
+
+    //     catch( org.json.JSONException e ) {
+
+    //         Util.error( e.toString() );
+
+    //     }
+    //     catch( java.lang.NullPointerException e ) {
+
+    //         Util.error( e.toString() );
             
-        }
+    //     }
 
 
-    }
+    // }
 
-    public void onSensorEvent( int eventCode, Object payload ) {
+    // public void onSensorEvent( int eventCode, Object payload ) {
 
-        ui.onSensorEvent( eventCode, payload );
-        //translator.handleSensorEvent( eventCode, payload );
+    //     ui.onSensorEvent( eventCode, payload );
+    //     //translator.handleSensorEvent( eventCode, payload );
 
-    }
+    // }
 
-    public void startKeypad() {
+    // public void startKeypad() {
 
-        keypadServer.startKeypad();
+    //     keypadServer.startKeypad();
 
-    }
+    // }
 
-    private void initializeController( String primaryViewportID ) {
+    // private void initializeController( String primaryViewportID ) {
 
-        Util.info( "Register controller with primary viewport: " + primaryViewportID );
+    //     Util.info( "Register controller with primary viewport: " + primaryViewportID );
 
-        try {
+    //     try {
 
-            JSONArray message = new JSONArray();
-            message.put( primaryViewportID );
-            client.emit( "event:register:controller", message );
+    //         JSONArray message = new JSONArray();
+    //         message.put( primaryViewportID );
+    //         client.emit( "event:register:controller", message );
 
-        } 
+    //     } 
 
-        catch( org.json.JSONException e ) {}
+    //     catch( org.json.JSONException e ) {}
 
-    }
+    // }
 
-    private void activateSensors( GimbalEventHandler handler, String viewportID ) {
+    // private void activateSensors( GimbalEventHandler handler, String viewportID ) {
 
-        Util.info("Activate sensors");
+    //     Util.info("Activate sensors");
 
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+    //     activity.runOnUiThread(new Runnable() {
+    //         @Override
+    //         public void run() {
                 
-                orientationServer.startServer();
-                locationServer.startServer();
-                //touchServer.startServer();
-                keypadServer.startServer();
-                active = true;
+    //             orientationServer.startServer();
+    //             locationServer.startServer();
+    //             //touchServer.startServer();
+    //             keypadServer.startServer();
+    //             active = true;
 
-            }
-        });
+    //         }
+    //     });
 
-    }
+    // }
 
-    private void deActivateSensors() {
+    // private void deActivateSensors() {
 
-        Util.info("Terminate sensors");
+    //     Util.info("Terminate sensors");
 
-        orientationServer.stopServer();
-        locationServer.stopServer();
-        touchServer.stopServer();
-        keypadServer.stopServer();
+    //     orientationServer.stopServer();
+    //     locationServer.stopServer();
+    //     touchServer.stopServer();
+    //     keypadServer.stopServer();
 
-        active = false;
+    //     active = false;
 
-    }
+    // }
 
-    private void requestDisconnect() {
+    // private void requestDisconnect() {
 
-        // unused function
+    //     // unused function
 
-        try {
+    //     try {
 
-            client.emit( "request:socket:disconnect", new JSONArray() );
+    //         client.emit( "request:socket:disconnect", new JSONArray() );
 
-        }
+    //     }
 
-        catch( org.json.JSONException e ) {}
+    //     catch( org.json.JSONException e ) {}
 
-    }
+    // }
 
 }

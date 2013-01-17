@@ -1,4 +1,4 @@
-package nomilous.gimbal;
+package nomilous.gimbal.overlays;
 
 import java.io.IOException;
 

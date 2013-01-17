@@ -23,7 +23,7 @@ import android.location.Location;
 public class LocationServer  {
 
     private final int eventCode = SensorSubscriber.GPS_LOCATION_UPDATE;
-    private SensorSubscriber subscriber;
+    //private SensorSubscriber subscriber;
 
     private static LocationManager locationManager = null;
     private Context appContext;
@@ -31,7 +31,7 @@ public class LocationServer  {
     
     public LocationServer( Context appContext, Object subscriber ) {
 
-        this.subscriber = (SensorSubscriber) subscriber;
+        //this.subscriber = (SensorSubscriber) subscriber;
         this.appContext = appContext;
 
     }
@@ -111,12 +111,12 @@ public class LocationServer  {
 
     private void updateLocation( Location location ) {
 
-        this.subscriber.onSensorEvent( 
+        // this.subscriber.onSensorEvent( 
 
-            SensorSubscriber.GPS_LOCATION_UPDATE, 
-            location 
+        //     SensorSubscriber.GPS_LOCATION_UPDATE, 
+        //     location 
 
-        );
+        // );
 
     }
 

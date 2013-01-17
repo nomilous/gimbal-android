@@ -1,89 +1,90 @@
+//pending delete
 package nomilous.gimbal.client;
 
-import nomilous.Util;
-import nomilous.gimbal.MenuActionSet;
-import nomilous.gimbal.Touchable;
-import nomilous.gimbal.Touchable.PointerEvent;
-import nomilous.gimbal.Position;
+// import nomilous.Util;
+// import nomilous.gimbal.MenuActionSet;
+// import nomilous.gimbal.Touchable;
+// import nomilous.gimbal.Touchable.PointerEvent;
+// import nomilous.gimbal.Position;
 
-import android.view.MotionEvent;
-import java.util.ArrayList;
+// import android.view.MotionEvent;
+// import java.util.ArrayList;
 
 public class UI implements SensorSubscriber {
 
-    private ArrayList<MenuActionSet> menus = new ArrayList<MenuActionSet>();
+    // private ArrayList<MenuActionSet> menus = new ArrayList<MenuActionSet>();
 
-    public void add( MenuActionSet menuActionSet ) {
+    // public void add( MenuActionSet menuActionSet ) {
 
-        menus.add( menuActionSet );
+    //     menus.add( menuActionSet );
 
-    }
+    // }
 
-    public void onSensorEvent( int eventCode, Object payload ) {
+    // public void onSensorEvent( int eventCode, Object payload ) {
 
-        switch( eventCode ) {
+    //     switch( eventCode ) {
 
-            case SensorSubscriber.TOUCH_EVENT:
+    //         case SensorSubscriber.TOUCH_EVENT:
 
-                handleTouchEvent( (MotionEvent) payload );
-                return;
+    //             handleTouchEvent( (MotionEvent) payload );
+    //             return;
 
-        }
+    //     }
 
-        Util.debug( String.format (
+    //     Util.debug( String.format (
 
-            "SENSOR: eventCode: %s, payload: %s ",
-            eventCode,
-            payload.toString()
+    //         "SENSOR: eventCode: %s, payload: %s ",
+    //         eventCode,
+    //         payload.toString()
 
-        ));
+    //     ));
 
-    }
-
-
-    private void handleTouchEvent( MotionEvent m ) {
-
-        int action = m.getAction() & MotionEvent.ACTION_MASK;
-        int translated;
-
-        switch( action ) {
-
-            case MotionEvent.ACTION_DOWN:
-
-                translated = PointerEvent.PRESSED;
-                break;
-
-            case MotionEvent.ACTION_UP:
-                translated = PointerEvent.RELEASED;
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-
-                return;
-
-            default:
-
-                return;
+    // }
 
 
-        }
+    // private void handleTouchEvent( MotionEvent m ) {
 
-        generatePointerEvents( translated, m );
+    //     int action = m.getAction() & MotionEvent.ACTION_MASK;
+    //     int translated;
 
-    }
+    //     switch( action ) {
 
-    private void generatePointerEvents( int event, MotionEvent m ) {
+    //         case MotionEvent.ACTION_DOWN:
 
-        //
-        // only handling first pointer (for now)
-        //
+    //             translated = PointerEvent.PRESSED;
+    //             break;
 
-        Position position = new Position( m.getX(), m.getY() );
+    //         case MotionEvent.ACTION_UP:
+    //             translated = PointerEvent.RELEASED;
+    //             break;
 
-        for( MenuActionSet menu : menus )
+    //         case MotionEvent.ACTION_MOVE:
 
-            menu.pointerEvent( event, position );
+    //             return;
 
-    }
+    //         default:
+
+    //             return;
+
+
+    //     }
+
+    //     generatePointerEvents( translated, m );
+
+    // }
+
+    // private void generatePointerEvents( int event, MotionEvent m ) {
+
+    //     //
+    //     // only handling first pointer (for now)
+    //     //
+
+    //     Position position = new Position( m.getX(), m.getY() );
+
+    //     for( MenuActionSet menu : menus )
+
+    //         menu.pointerEvent( event, position );
+
+    // }
 
 }

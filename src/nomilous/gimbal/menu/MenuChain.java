@@ -1,5 +1,6 @@
-package nomilous.gimbal;
-import nomilous.gimbal.MenuActionSet.Config;
+package nomilous.gimbal.menu;
+
+import nomilous.gimbal.menu.MenuActionGroup.Config;
 import nomilous.Util;
 
 import android.widget.RelativeLayout;
@@ -12,7 +13,7 @@ import java.util.Hashtable;
 // Controls position of insertion of Views along a Path (Chain)
 //
 
-public class Chain {
+public class MenuChain {
 
     public Config config;
     public RelativeLayout layout;
@@ -23,7 +24,7 @@ public class Chain {
     private int leftSpan = 0;
     private int topSpan = 0;
 
-    public Chain( 
+    public MenuChain( 
 
         
         Config config,
@@ -40,8 +41,8 @@ public class Chain {
 
     public void set( RelativeLayout layout, int nodeCount ) {
 
-        left = config.chainStart.intX();
-        top  = config.chainStart.intY();
+        left = config.chainStart.x();
+        top  = config.chainStart.y();
 
         //
         // Distance between each item in the chain.
@@ -53,8 +54,8 @@ public class Chain {
         // match their thumb's reach arc.
         //
 
-        leftSpan = (config.chainEnd.intX() - left) / (nodeCount + 1);
-        topSpan = (config.chainEnd.intY() - top) / (nodeCount + 1);
+        leftSpan = (config.chainEnd.x() - left) / (nodeCount + 1);
+        topSpan = (config.chainEnd.y() - top) / (nodeCount + 1);
 
         Util.debug( String.format(
 
@@ -67,7 +68,7 @@ public class Chain {
 
     }
 
-    public Chain next() {
+    public MenuChain next() {
 
         left += leftSpan; 
         top += topSpan;
