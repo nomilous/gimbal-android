@@ -89,6 +89,27 @@ public class MenuActionGroup
 
     }
 
+    public void refresh() {
+        Util.debug("MenuActionGroup.refresh()");
+
+        Enumeration<String> e = views.keys();
+        while(e.hasMoreElements()) {
+
+            TextView view = views.get(e.nextElement());
+            String label = view.getText().toString();
+            Integer id = (Integer) actionsIndex.get(label);
+
+            MenuAction action = (MenuAction) actions.get(id);
+            if( action.enabled )
+                view.setTextColor(config.enabledColour);
+            else 
+                view.setTextColor(config.disabledColour);
+            
+
+        }
+
+    }
+
     public void add( MenuAction action ) {
         actions.add( action );
         actionsIndex.put( action.label, actions.size() - 1 );
@@ -162,6 +183,7 @@ public class MenuActionGroup
         MenuAction action = getCurrent();
         if( !action.enabled ) return;
         current.setTextColor(config.enabledColour);
+        //hide();
         config.selectionHandler.onMenuSelection(action);
 
     }

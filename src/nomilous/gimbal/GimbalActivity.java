@@ -1,8 +1,13 @@
 package nomilous.gimbal;
 
 import nomilous.gimbal.GimbalUIController;
+
 import android.app.Activity;
 import android.os.Bundle;
+import android.content.Intent;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 
 public class GimbalActivity extends Activity {
 
@@ -49,6 +54,18 @@ public class GimbalActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         ui.destroy();
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        IntentResult qrScanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (qrScanResult != null) {
+            String viewportAddressParts[] = qrScanResult.getContents().split(" ");
+            String uri = viewportAddressParts[0];
+            String viewportID = viewportAddressParts[1];
+
+            ui.connectViewport( uri, viewportID );
+            
+        }
     }
 
     // @Override

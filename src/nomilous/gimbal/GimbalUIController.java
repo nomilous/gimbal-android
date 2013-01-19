@@ -5,11 +5,12 @@ import nomilous.gimbal.overlays.*;
 import nomilous.gimbal.GimbalConfig;
 import nomilous.gimbal.server.sensor.TouchServer;
 import nomilous.gimbal.GimbalEvent;
-import nomilous.gimbal.uplink.GimbalUplink;
+import nomilous.gimbal.uplink.Uplink;
 import nomilous.gimbal.menu.MenuActionGroup;
 import nomilous.gimbal.menu.MenuAction;
 import nomilous.gimbal.menu.Menu;
 
+import android.app.Activity;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.graphics.Color;
@@ -18,6 +19,7 @@ import java.util.Enumeration;
 import android.opengl.GLSurfaceView;
 import android.view.View;
 import android.widget.TextView;
+import com.google.zxing.integration.android.IntentIntegrator;
 
 
 public class GimbalUIController extends GimbalOverlay {
@@ -30,6 +32,8 @@ public class GimbalUIController extends GimbalOverlay {
         public static final int EXIT                = 4; 
 
     }
+
+    private MenuActionGroup menu;
 
     private MenuAction[] menuActions = new MenuAction[] {
 
@@ -47,13 +51,16 @@ public class GimbalUIController extends GimbalOverlay {
             LayoutParams.FILL_PARENT
     );
 
+    private Uplink uplink;
+
     //private GimbalCameraOverlay cameraOverlay;
-    private GimbalGLOverlay     visualsOverlay;
+    private GimbalGLOverlay visualsOverlay;
     
 
     private GimbalEvent.Publisher publisher;
-    private GimbalUplink          uplink = GimbalConfig.UPLINK;
-    private TouchServer           touchServer;
+
+
+    private TouchServer touchServer;
 
 
     public GimbalUIController(Object android) {
@@ -61,9 +68,25 @@ public class GimbalUIController extends GimbalOverlay {
         super(android);
 
         Util.debug("CONSTRUCT GimbalUIOverlay");
+        
         publisher = new GimbalEvent.Publisher();
+        uplink = new Uplink(context, publisher);
         rootLayoutParams.setMargins(0, 0, 0, 0);
 
+    }
+
+    private void scanViewportQrCode() {
+        final Activity scanResultHandler = activity;
+        IntentIntegrator qrScan = new IntentIntegrator(scanResultHandler);
+        qrScan.initiateScan();
+    }
+
+
+    public void connectViewport(final String uri, final String viewportID) {
+        uplink.connect(uri, viewportID);
+        menuActions[0].enabled = false;
+        menuActions[1].enabled = true;
+        menu.refresh();
     }
 
 
@@ -127,7 +150,7 @@ public class GimbalUIController extends GimbalOverlay {
         Menu.Config config = new Menu.Config();
         config.selectionHandler = this;
         
-        MenuActionGroup menu = Menu.create(rootLayout, config);
+        menu = Menu.create(rootLayout, config);
 
         publisher.subscribe( (GimbalEvent.Subscriber) menu );
 
@@ -156,6 +179,7 @@ public class GimbalUIController extends GimbalOverlay {
         switch( action.code ) {
 
             case Action.CONNECT_VIEWPORT:
+                scanViewportQrCode();
                 break;
 
             case Action.DISCONNECT_VIEWPORT:

@@ -1,14 +1,13 @@
-package nomilous.gimbal.client;
+package nomilous.gimbal.uplink;
 
 import nomilous.Util;
-import nomilous.gimbal.uplink.GimbalUplink;
+import nomilous.gimbal.uplink.GimbalUplinkHandler;
 import nomilous.gimbal.GimbalEvent;
 
-import com.codebutler.android_websockets.SocketIOClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class DefaultUplink extends GimbalUplink {
+public class DefaultUplinkHandler extends GimbalUplinkHandler {
 
     @Override
     public void onConnect() {
