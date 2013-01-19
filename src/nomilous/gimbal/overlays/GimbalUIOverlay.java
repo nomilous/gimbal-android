@@ -148,12 +148,16 @@ public class GimbalUIOverlay extends GimbalOverlay {
     private void createMenu() {
 
         Menu.Config config = new Menu.Config();
-        // boolean enabled = false;
-        // menu.add( new MenuAction( "connect", "Connect a viewport." ) );
-        // menu.add( new MenuAction( "disconnect", "Disconnect all viewports.", enabled ) );
-        // menu.add( new MenuAction( "help", "Toggle tooltips." ) );
-        // menu.add( new MenuAction( "exit", "Exit the app." ) );
+        
         MenuActionGroup menu = Menu.create(overlay, config);
+
+        publisher.subscribe( (GimbalEvent.Subscriber) menu );
+
+        boolean enabled = false;
+        menu.add( new MenuAction( "connect", "Connect a viewport." ) );
+        menu.add( new MenuAction( "disconnect", "Disconnect all viewports.", enabled ) );
+        menu.add( new MenuAction( "help", "Toggle tooltips." ) );
+        menu.add( new MenuAction( "exit", "Exit the app." ) );
 
     }
 

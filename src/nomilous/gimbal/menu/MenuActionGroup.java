@@ -25,6 +25,8 @@ public class MenuActionGroup
     private Hashtable<String,LayoutParams> params;
     private RelativeLayout layout;
 
+    private boolean active = false;
+
     private Menu.Config config;
     private MenuChain chain;
     private TextView current;
@@ -62,6 +64,8 @@ public class MenuActionGroup
 
         this.layout = layout;
 
+        active = true;
+
 
     }
 
@@ -80,6 +84,8 @@ public class MenuActionGroup
             view = null;
 
         }
+
+        active = false;
 
     }
 
@@ -109,58 +115,62 @@ public class MenuActionGroup
 
     // } 
 
-    public void onTouchEvent( GimbalEvent.Touch event ) {}
-    // public void pointerEvent( int event, Position position ) {
-        
-    //     int x = position.intX();
-    //     int y = position.intY();
+    public void onTouchEvent( GimbalEvent.Touch event ) {
 
-    //     Enumeration<String> e = views.keys();
-    //     while(e.hasMoreElements()) {
+        if( !active ) return;
 
-    //         current = views.get(e.nextElement());
+        int x = event.pointer().intX();
+        int y = event.pointer().intY();
 
-    //         if( x < current.getLeft()   ) continue;
-    //         if( x > current.getRight()  ) continue;
-    //         if( y < current.getTop()    ) continue;
-    //         if( y > current.getBottom() ) continue;
+        Enumeration<String> e = views.keys();
+        while(e.hasMoreElements()) {
 
-    //         switch( event ) {
-    //             case Touchable.PointerEvent.PRESSED:
-    //                 onPressed();
-    //                 break;
+            current = views.get(e.nextElement());
 
-    //             case Touchable.PointerEvent.RELEASED:
-    //                 onReleased();
-    //                 break;
+            if( x < current.getLeft()   ) continue;
+            if( x > current.getRight()  ) continue;
+            if( y < current.getTop()    ) continue;
+            if( y > current.getBottom() ) continue;
 
-    //         }
+            switch( event.action() ) {
 
-    //     }
+                case GimbalEvent.Touch.Action.PRESS:
+                    onPressed();
+                    break;
 
-    // }
+                case GimbalEvent.Touch.Action.RELEASE:
+                    onReleased();
+                    break;
 
-    public void onPressed() {}
-    // public void onPressed() {
+            }
 
-    //     MenuAction action = getCurrent();
+        }
 
-    //     if( !action.enabled ) return;
 
-    //     current.setTextColor(config.highlightColour);
 
-    // }
 
-    public void onReleased() {}
-    // public void onReleased() {
+    }
 
-    //     MenuAction action = getCurrent();
 
-    //     if( !action.enabled ) return;
+    public void onPressed() {
 
-    //     current.setTextColor(config.enabledColour);
+        MenuAction action = getCurrent();
+        if( !action.enabled ) return;
+        current.setTextColor(config.highlightColour);
 
-    // }
+        Util.debug( "PRESSED: " + action.label );
+
+    }
+
+    public void onReleased() {
+
+        MenuAction action = getCurrent();
+        if( !action.enabled ) return;
+        current.setTextColor(config.enabledColour);
+
+        Util.debug( "RELEASED: " + action.label );
+
+    }
 
 
     private MenuAction getCurrent() {
