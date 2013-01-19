@@ -2,6 +2,7 @@ package nomilous.gimbal.overlays;
 
 import nomilous.Util;
 import nomilous.gimbal.GimbalGLRenderer;
+import nomilous.gimbal.menu.*;
 
 import android.opengl.GLSurfaceView;
 import android.graphics.PixelFormat;
@@ -29,6 +30,21 @@ public class GimbalGLOverlay extends GimbalOverlay {
     
     public GLSurfaceView getView() {
         return surfaceView;
+    }
+
+    @Override
+    public void onMenuShow(MenuActionGroup menu) {
+        renderer.onMenuShow(menu);
+    }
+
+    @Override
+    public void onMenuHide(MenuActionGroup menu) {
+        renderer.onMenuHide(menu);
+    }
+
+    @Override
+    public void onMenuSelection(MenuAction action) {
+        renderer.onMenuSelection(action);
     }
 
 }

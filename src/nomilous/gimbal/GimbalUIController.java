@@ -20,9 +20,7 @@ import android.view.View;
 import android.widget.TextView;
 
 
-public class GimbalUIController extends GimbalOverlay
-
-    implements Menu.SelectionHandler {
+public class GimbalUIController extends GimbalOverlay {
 
     private static class Action {
 
@@ -52,7 +50,7 @@ public class GimbalUIController extends GimbalOverlay
     //private GimbalCameraOverlay cameraOverlay;
     private GimbalGLOverlay     visualsOverlay;
     
-    
+
     private GimbalEvent.Publisher publisher;
     private GimbalUplink          uplink = GimbalConfig.UPLINK;
     private TouchServer           touchServer;
@@ -142,13 +140,13 @@ public class GimbalUIController extends GimbalOverlay
     }
 
     @Override
-    public void onMenuShow() {
-
+    public void onMenuShow(MenuActionGroup menu) {
+        visualsOverlay.onMenuShow(menu);
     }
 
     @Override
-    public void onMenuHide() {
-
+    public void onMenuHide(MenuActionGroup menu) {
+        visualsOverlay.onMenuHide(menu);
     }
 
 

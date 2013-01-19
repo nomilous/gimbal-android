@@ -1,9 +1,13 @@
 package nomilous.gimbal.overlays;
 
+import nomilous.gimbal.menu.Menu;
+
 import android.app.Activity;
 import android.content.Context;
 
-public class GimbalOverlay {
+public abstract class GimbalOverlay 
+
+    implements Menu.SelectionHandler {
         
     protected Activity activity;
     protected Context  context;

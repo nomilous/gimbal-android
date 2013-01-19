@@ -21,8 +21,8 @@ public class Menu {
 
     public static interface SelectionHandler {
 
-        public abstract void onMenuShow();
-        public abstract void onMenuHide();
+        public abstract void onMenuShow(MenuActionGroup menu);
+        public abstract void onMenuHide(MenuActionGroup menu);
         public abstract void onMenuSelection(MenuAction action);
 
     }
@@ -65,8 +65,9 @@ public class Menu {
         toggle.setTypeface(config.font);
         layout.addView(toggle);
 
-        final MenuActionGroup menu = new MenuActionGroup(config);
-        final RelativeLayout  menuRoot = layout;
+        final MenuActionGroup  menu = new MenuActionGroup(config);
+        final RelativeLayout   menuRoot = layout;
+        final SelectionHandler selectionHandler = config.selectionHandler;
 
         toggle.setOnClickListener( new OnClickListener() {
 
@@ -83,12 +84,14 @@ public class Menu {
                     menu.hide();
                     toggle.setTextColor(passivColor);
                     active = false;
+                    selectionHandler.onMenuHide(menu);
                     return;
                 }
 
                 menu.show(menuRoot);
                 toggle.setTextColor(activeColor);
                 active = true;
+                selectionHandler.onMenuShow(menu);
                 return;
 
             } 

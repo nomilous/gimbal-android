@@ -3,6 +3,7 @@ package nomilous.gimbal.feedback;
 import nomilous.Util;
 import nomilous.gimbal.GimbalGLRenderer;
 import nomilous.gimbal.GimbalEvent;
+import nomilous.gimbal.menu.*;
 
 //
 // Renders touch and sensor feedback visualisation 
@@ -15,6 +16,24 @@ import android.opengl.GLU;
 
 
 public class DefaultGLRenderer extends GimbalGLRenderer {
+
+    private boolean touchFeedbackEnabled = true;
+
+    @Override
+    public void onMenuShow(MenuActionGroup menu) {
+        Util.debug("DefaultGLRenderer.onMenuShow()");
+        touchFeedbackEnabled = false;
+    }
+
+    @Override
+    public void onMenuHide(MenuActionGroup menu) {
+        touchFeedbackEnabled = true;
+    }
+
+    @Override
+    public void onMenuSelection(MenuAction action) {
+
+    }
 
     private float width;
     private float height;
@@ -30,27 +49,32 @@ public class DefaultGLRenderer extends GimbalGLRenderer {
 
         currentCount = event.pointerCount();
 
-        for( int i = 0; i < currentCount; i++ )
+        if( touchFeedbackEnabled )
 
-            pointers[i].position( new float[]{
+            for( int i = 0; i < currentCount; i++ )
 
-                event.pointer(i).floatX(),
-                height - event.pointer(i).floatY(),
-                0.0f
+                pointers[i].position( new float[]{
 
-            });
+                    event.pointer(i).floatX(),
+                    height - event.pointer(i).floatY(),
+                    0.0f
+
+                });
 
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
 
+        gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
 
-        for( int i = 0; i < currentCount; i++ )
+        if( touchFeedbackEnabled )
 
-            pointers[i].draw(gl);
+            for( int i = 0; i < currentCount; i++ )
+
+                pointers[i].draw(gl);
 
     }
         

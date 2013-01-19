@@ -1,7 +1,9 @@
 package nomilous.gimbal.overlays;
 
-import java.io.IOException;
+import nomilous.Util;
+import nomilous.gimbal.menu.*;
 
+import java.io.IOException;
 import android.content.Context;
 import android.view.ViewGroup;
 import android.view.SurfaceView;
@@ -9,9 +11,11 @@ import android.view.SurfaceHolder;
 import android.hardware.Camera;
 import java.util.List;
 
-import nomilous.Util;
-
 public class GimbalCameraOverlay extends GimbalOverlay {
+
+    public void onMenuShow(MenuActionGroup menu) {}
+    public void onMenuHide(MenuActionGroup menu) {}
+    public void onMenuSelection(MenuAction action) {}
 
     private CameraPreview cameraPreview;
     private Camera camera;
