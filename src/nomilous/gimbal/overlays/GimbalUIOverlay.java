@@ -6,6 +6,8 @@ import nomilous.gimbal.server.sensor.TouchServer;
 import nomilous.gimbal.GimbalEvent;
 import nomilous.gimbal.uplink.Uplink;
 import nomilous.gimbal.menu.MenuActionGroup;
+import nomilous.gimbal.menu.MenuAction;
+import nomilous.gimbal.menu.Menu;
 
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -14,6 +16,7 @@ import java.util.Hashtable;
 import java.util.Enumeration;
 import android.opengl.GLSurfaceView;
 import android.view.View;
+import android.widget.TextView;
 
 
 public class GimbalUIOverlay extends GimbalOverlay {
@@ -23,11 +26,12 @@ public class GimbalUIOverlay extends GimbalOverlay {
     private LayoutParams   overlayParams;
     private Hashtable      visualOverlays = new Hashtable();
 
+    private TextView menuActivate;
     private Uplink uplink;
     private GimbalEvent.Publisher publisher;
     private TouchServer touchServer;
 
-    public GimbalUIOverlay(Object android) {  
+    public GimbalUIOverlay(Object android) { 
         super(android);
         Util.debug("CONSTRUCT GimbalUIOverlay");
         publisher = new GimbalEvent.Publisher();
@@ -44,7 +48,7 @@ public class GimbalUIOverlay extends GimbalOverlay {
             overlayParams.setMargins(0, 0, 0, 0);
             createVisualsOverlay();
             createControlsOverlay();
-            createMenusOverlay();
+            createMenu();
             createServers();
         }
         already = true;
@@ -141,10 +145,16 @@ public class GimbalUIOverlay extends GimbalOverlay {
         activity.addContentView(overlay, overlayParams);
     }
 
-    private void createMenusOverlay() {
-        MenuActionGroup menu = new MenuActionGroup();
-        GimbalMenuOverlay menuOverlay = new GimbalMenuOverlay(activity, menu);
-        
+    private void createMenu() {
+
+        Menu.Config config = new Menu.Config();
+        // boolean enabled = false;
+        // menu.add( new MenuAction( "connect", "Connect a viewport." ) );
+        // menu.add( new MenuAction( "disconnect", "Disconnect all viewports.", enabled ) );
+        // menu.add( new MenuAction( "help", "Toggle tooltips." ) );
+        // menu.add( new MenuAction( "exit", "Exit the app." ) );
+        MenuActionGroup menu = Menu.create(overlay, config);
+
     }
 
     private void createServers() {

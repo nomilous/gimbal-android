@@ -1,6 +1,5 @@
 package nomilous.gimbal.menu;
 
-import nomilous.gimbal.menu.MenuActionGroup.Config;
 import nomilous.Util;
 
 import android.widget.RelativeLayout;
@@ -15,7 +14,7 @@ import java.util.Hashtable;
 
 public class MenuChain {
 
-    public Config config;
+    public Menu.Config config;
     public RelativeLayout layout;
     public Hashtable<String,TextView> views;
     public Hashtable<String,LayoutParams> params;
@@ -25,9 +24,8 @@ public class MenuChain {
     private int topSpan = 0;
 
     public MenuChain( 
-
         
-        Config config,
+        Menu.Config config,
         Hashtable<String,TextView> views,        // maintain a list of views
         Hashtable<String,LayoutParams> params    // maintain a list of their layouts
 

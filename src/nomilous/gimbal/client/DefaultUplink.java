@@ -20,7 +20,7 @@ public class DefaultUplink extends GimbalUplink {
         Util.debug( String.format( 
             "RECEIVED %s: %s", 
             event, payload.toString()
-        ));
+        )); 
     }
 
     @Override

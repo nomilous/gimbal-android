@@ -9,8 +9,8 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import android.graphics.Color;
-import android.graphics.Typeface;
+//import android.graphics.Color;
+//import android.graphics.Typeface;
 import java.util.Enumeration;
 
 
@@ -19,45 +19,24 @@ public class MenuActionGroup
     implements GimbalEvent.Subscriber,
                Menu.Touchable {
 
-    public static class Config {
-
-        public int enabledColour = Color.LTGRAY;
-        public int disabledColour = Color.DKGRAY;
-        public int highlightColour = Color.WHITE;
-
-        public MenuAnchor chainStart = new MenuAnchor( 100, 10 );
-        public MenuAnchor chainEnd = new MenuAnchor( 100, 300 );
-
-        public Typeface font = Typeface.create( Typeface.MONOSPACE, Typeface.NORMAL );
-
-        // TODO: user defined font from assets()
-        //
-        // Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Kokila.ttf"); 
-        // txtyour.setTypeface(type);
-        //
-        // complexities may arrise for non-monospace fonts and the 
-        // varying width requirements for the layout.
-
-    }
-
     private ArrayList<MenuAction> actions;
     private Hashtable<String,Integer> actionsIndex;
     private Hashtable<String,TextView> views;
     private Hashtable<String,LayoutParams> params;
     private RelativeLayout layout;
 
-    private Config config;
+    private Menu.Config config;
     private MenuChain chain;
     private TextView current;
 
     public MenuActionGroup() {
 
-        config = new Config();
+        config = new Menu.Config();
         init();
 
     }
 
-    public MenuActionGroup( Config config ) {
+    public MenuActionGroup( Menu.Config config ) {
 
         this.config = config;
         init();
