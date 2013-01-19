@@ -1,7 +1,7 @@
 package nomilous.gimbal.client;
 
 import nomilous.Util;
-import nomilous.gimbal.GimbalUplink;
+import nomilous.gimbal.uplink.GimbalUplink;
 import nomilous.gimbal.GimbalEvent;
 
 import com.codebutler.android_websockets.SocketIOClient;

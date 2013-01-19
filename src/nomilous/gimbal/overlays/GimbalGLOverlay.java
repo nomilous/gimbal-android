@@ -1,24 +1,24 @@
 package nomilous.gimbal.overlays;
 
 import nomilous.Util;
-import nomilous.gimbal.GimbalGL10Renderer;
+import nomilous.gimbal.GimbalGLRenderer;
 
 import android.opengl.GLSurfaceView;
 import android.graphics.PixelFormat;
 
-public class GimbalGL10Overlay extends GimbalOverlay {
+public class GimbalGLOverlay extends GimbalOverlay {
 
     private GLSurfaceView surfaceView;
-    private GimbalGL10Renderer renderer;
+    private GimbalGLRenderer renderer;
 
-    GimbalGL10Overlay(Object android, GimbalGL10Renderer renderer) {
+    public GimbalGLOverlay(Object android, GimbalGLRenderer renderer) {
         super(android);
         this.renderer = renderer;
-        Util.debug("START GimbalGL10Overlay");
+        Util.debug("START GimbalGLOverlay");
     }
 
     public GLSurfaceView view() {
-        Util.debug("GimbalGL10Overlay.view()");
+        Util.debug("GimbalGLOverlay.view()");
         surfaceView = new GLSurfaceView(context);
         surfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         surfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);

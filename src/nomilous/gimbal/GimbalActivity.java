@@ -1,17 +1,17 @@
 package nomilous.gimbal;
 
-import nomilous.gimbal.overlays.GimbalUIOverlay;
+import nomilous.gimbal.GimbalUIController;
 import android.app.Activity;
 import android.os.Bundle;
 
 public class GimbalActivity extends Activity {
 
-    private GimbalUIOverlay ui;
+    private GimbalUIController ui;
   
     @Override
     protected void onCreate(Bundle incus) {
         super.onCreate(incus);
-        ui = new GimbalUIOverlay(this);
+        ui = new GimbalUIController(this);
     }
 
 

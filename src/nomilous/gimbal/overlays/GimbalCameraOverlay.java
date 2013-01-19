@@ -11,12 +11,12 @@ import java.util.List;
 
 import nomilous.Util;
 
-class GimbalCameraOverlay extends GimbalOverlay {
+public class GimbalCameraOverlay extends GimbalOverlay {
 
     private CameraPreview cameraPreview;
     private Camera camera;
 
-    GimbalCameraOverlay(Object android) {
+    public GimbalCameraOverlay(Object android) {
         super(android);
         Util.debug("START GimbalCameraOverlay");   
     }

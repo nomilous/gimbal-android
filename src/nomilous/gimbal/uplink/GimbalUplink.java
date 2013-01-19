@@ -1,4 +1,4 @@
-package nomilous.gimbal;
+package nomilous.gimbal.uplink;
 
 import nomilous.gimbal.GimbalEvent;
 import com.codebutler.android_websockets.SocketIOClient;

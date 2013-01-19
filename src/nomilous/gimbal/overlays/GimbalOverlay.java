@@ -3,12 +3,12 @@ package nomilous.gimbal.overlays;
 import android.app.Activity;
 import android.content.Context;
 
-class GimbalOverlay {
+public class GimbalOverlay {
         
     protected Activity activity;
     protected Context  context;
 
-    GimbalOverlay(Object android) {
+    public GimbalOverlay(Object android) {
         this.context  = (Context) android;
         this.activity = (Activity) android;
     }

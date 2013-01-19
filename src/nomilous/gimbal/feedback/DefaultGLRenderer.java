@@ -1,7 +1,7 @@
 package nomilous.gimbal.feedback;
 
 import nomilous.Util;
-import nomilous.gimbal.GimbalGL10Renderer;
+import nomilous.gimbal.GimbalGLRenderer;
 import nomilous.gimbal.GimbalEvent;
 
 //
@@ -14,7 +14,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLU;
 
 
-public class DefaultGL10 extends GimbalGL10Renderer {
+public class DefaultGLRenderer extends GimbalGLRenderer {
 
     private float width;
     private float height;
