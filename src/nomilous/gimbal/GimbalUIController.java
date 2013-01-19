@@ -49,11 +49,10 @@ public class GimbalUIController extends GimbalOverlay
             LayoutParams.FILL_PARENT
     );
 
-    private GimbalCameraOverlay cameraOverlay;
+    //private GimbalCameraOverlay cameraOverlay;
     private GimbalGLOverlay     visualsOverlay;
     
-
-
+    
     private GimbalEvent.Publisher publisher;
     private GimbalUplink          uplink = GimbalConfig.UPLINK;
     private TouchServer           touchServer;
@@ -115,9 +114,9 @@ public class GimbalUIController extends GimbalOverlay
 
     private void createVisualsOverlay() {
 
-        cameraOverlay = new GimbalCameraOverlay(activity);
-        cameraOverlay.view();
-        cameraOverlay.start();
+        // cameraOverlay = new GimbalCameraOverlay(activity);
+        // cameraOverlay.view();
+        // cameraOverlay.start();
 
         visualsOverlay = new GimbalGLOverlay(activity, GimbalConfig.GL_RENDERER);
         publisher.subscribe(GimbalConfig.GL_RENDERER);
