@@ -145,10 +145,7 @@ public class MenuActionGroup
             }
 
         }
-
-
-
-
+        
     }
 
 
@@ -158,8 +155,6 @@ public class MenuActionGroup
         if( !action.enabled ) return;
         current.setTextColor(config.highlightColour);
 
-        Util.debug( "PRESSED: " + action.label );
-
     }
 
     public void onReleased() {
@@ -167,8 +162,7 @@ public class MenuActionGroup
         MenuAction action = getCurrent();
         if( !action.enabled ) return;
         current.setTextColor(config.enabledColour);
-
-        Util.debug( "RELEASED: " + action.label );
+        config.selectionHandler.onMenuSelection(action);
 
     }
 

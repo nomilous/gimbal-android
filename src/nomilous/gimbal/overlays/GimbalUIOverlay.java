@@ -19,14 +19,33 @@ import android.view.View;
 import android.widget.TextView;
 
 
-public class GimbalUIOverlay extends GimbalOverlay {
+public class GimbalUIOverlay extends GimbalOverlay
+
+    implements Menu.SelectionHandler {
+
+    private static class Action {
+
+        public static final int CONNECT_VIEWPORT    = 1;
+        public static final int DISCONNECT_VIEWPORT = 2;
+        public static final int TOGGLE_HELP         = 3;
+        public static final int EXIT                = 4; 
+
+    }
+
+    private MenuAction[] menuActions = new MenuAction[] {
+
+        new MenuAction( Action.CONNECT_VIEWPORT, "connect", "Connect a viewport." ),
+        new MenuAction( Action.DISCONNECT_VIEWPORT, "disconnect", "Disconnect all viewports.", false ),
+        new MenuAction( Action.TOGGLE_HELP, "help", "Toggle tooltips." ),
+        new MenuAction( Action.EXIT, "exit", "Exit the app." )
+
+    };
 
     private boolean        already = false;
     private RelativeLayout overlay;
     private LayoutParams   overlayParams;
     private Hashtable      visualOverlays = new Hashtable();
 
-    private TextView menuActivate;
     private Uplink uplink;
     private GimbalEvent.Publisher publisher;
     private TouchServer touchServer;
@@ -148,16 +167,49 @@ public class GimbalUIOverlay extends GimbalOverlay {
     private void createMenu() {
 
         Menu.Config config = new Menu.Config();
+        config.selectionHandler = this;
         
         MenuActionGroup menu = Menu.create(overlay, config);
 
         publisher.subscribe( (GimbalEvent.Subscriber) menu );
 
         boolean enabled = false;
-        menu.add( new MenuAction( "connect", "Connect a viewport." ) );
-        menu.add( new MenuAction( "disconnect", "Disconnect all viewports.", enabled ) );
-        menu.add( new MenuAction( "help", "Toggle tooltips." ) );
-        menu.add( new MenuAction( "exit", "Exit the app." ) );
+
+        for( int i = 0; i < menuActions.length; i++ )
+
+            menu.add( menuActions[i] );
+
+    }
+
+    @Override
+    public void onMenuShow() {
+
+    }
+
+    @Override
+    public void onMenuHide() {
+
+    }
+
+
+    @Override
+    public void onMenuSelection( MenuAction action ) {
+
+        switch( action.code ) {
+
+            case Action.CONNECT_VIEWPORT:
+                break;
+
+            case Action.DISCONNECT_VIEWPORT:
+                break;
+
+            case Action.TOGGLE_HELP:
+                break;
+
+            case Action.EXIT:
+                break;
+
+        }
 
     }
 

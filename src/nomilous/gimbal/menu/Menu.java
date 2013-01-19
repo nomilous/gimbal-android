@@ -19,7 +19,17 @@ public class Menu {
 
     }
 
+    public static interface SelectionHandler {
+
+        public abstract void onMenuShow();
+        public abstract void onMenuHide();
+        public abstract void onMenuSelection(MenuAction action);
+
+    }
+
     public static class Config {
+
+        public SelectionHandler selectionHandler = null;
 
         public int enabledColour = Color.LTGRAY;
         public int disabledColour = Color.DKGRAY;
