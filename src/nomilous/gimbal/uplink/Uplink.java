@@ -30,6 +30,12 @@ public class Uplink extends GimbalEvent.Server
         doConnect(uri, viewportID);
     }
 
+    final public void disconnect(String viewportID) {
+        doDisconnect(viewportID);
+    }
+
+
+
     public void onStartClient(JSONArray payload) {}  // abstract later...
     final public void startClient(JSONArray payload) {
 
@@ -52,10 +58,26 @@ public class Uplink extends GimbalEvent.Server
 
     public void onRegisterController(JSONArray payload) {} // abstract later...
     final public void registerController(JSONArray payload) {
+        Util.debug(String.format(
+
+            "Uplink.registerController() with payload %s",
+            payload.toString()
+
+        ));
         onRegisterController(payload);
     }
 
 
+    public void onReleaseController(JSONArray payload) {} // abstract later...
+    final public void releaseController(JSONArray payload) {
+        Util.debug(String.format(
+
+            "Uplink.releaseController() with payload %s",
+            payload.toString()
+
+        ));
+        onReleaseController(payload);
+    }
 
 
     private JSONArray getRegisterPayload() throws org.json.JSONException {
@@ -111,6 +133,33 @@ public class Uplink extends GimbalEvent.Server
         return message;
     }
 
+    private JSONArray getReleasePayload(String viewportID) throws org.json.JSONException {
+
+        JSONObject nestedIntoJSONArray = new JSONObject();
+        nestedIntoJSONArray.put("viewport_id", viewportID);
+        nestedIntoJSONArray.put("primary_viewport", primaryViewportID);
+
+        JSONArray message = new JSONArray();
+        message.put( nestedIntoJSONArray );
+        return message;
+
+    }
+
+    private void doDisconnect(String viewportID) {
+        try {
+            JSONArray message = getReleasePayload(viewportID);
+            Util.debug(String.format( 
+
+                "SENDING %s payload:%s",
+                Protocol.RELEASE_CONTROLLER,
+                message.toString()
+
+
+            ));
+            client.emit(Protocol.RELEASE_CONTROLLER, message);
+        } catch( org.json.JSONException x ) {}
+    }
+
     private void doConnect(final String uri, final String viewportID) {
 
         final Uplink uplink = this;
@@ -145,6 +194,13 @@ public class Uplink extends GimbalEvent.Server
                     else if( event.equals(Protocol.REGISTER_CONTROLLER_OK ) ) {
 
                         uplink.registerController(payload);
+                        return;
+
+                    }
+
+                    else if( event.equals(Protocol.RELEASE_CONTROLLER_OK ) ) {
+
+                        uplink.releaseController(payload);
                         return;
 
                     }

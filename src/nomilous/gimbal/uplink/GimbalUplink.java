@@ -90,6 +90,44 @@ public class GimbalUplink {
         public abstract void onRegisterController(JSONArray payload);
 
 
+        //
+        // RELEASE_CONTROLLER
+        //
+        //  - To initiate the release of a controlled viewport
+        //
+        //  - Sends payload:
+        //
+        //     - Viewport ID         (the viewport being released)
+        //     - Primary Viewport ID (the controllers current primary viewport)
+        //
+        //       Both ID strings should be the same for the case of disconnecting
+        //       the primary viewport. 
+        // 
+        //     eg. {
+        //              "event:release:controller" : {
+        //
+        //                   "viewport_id": "NEsGCsB_K3cmrrzd3B8q",
+        //                   "primary_viewport":"NEsGCsB_K3cmrrzd3B8q",
+        //
+        //               }
+        //         }
+        //
+
+        public final String RELEASE_CONTROLLER = "event:release:controller";
+
+
+        //
+        // RELEASE_CONTROLLER_OK
+        // 
+        //  - Server reports the release succeeded
+        //    
+
+        public final String RELEASE_CONTROLLER_OK = "event:release:controller:ok";
+        public abstract void releaseController(JSONArray payload);
+        public abstract void onReleaseController(JSONArray payload);
+
+
+
     }
 
 }

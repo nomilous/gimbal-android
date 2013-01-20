@@ -5,10 +5,10 @@ import nomilous.gimbal.overlays.*;
 import nomilous.gimbal.GimbalConfig;
 import nomilous.gimbal.server.sensor.TouchServer;
 import nomilous.gimbal.GimbalEvent;
-import nomilous.gimbal.uplink.Uplink;
 import nomilous.gimbal.menu.MenuActionGroup;
 import nomilous.gimbal.menu.MenuAction;
 import nomilous.gimbal.menu.Menu;
+import nomilous.gimbal.viewports.GimbalViewport;
 
 import android.app.Activity;
 import android.widget.RelativeLayout;
@@ -22,7 +22,15 @@ import android.widget.TextView;
 import com.google.zxing.integration.android.IntentIntegrator;
 
 
-public class GimbalUIController extends GimbalOverlay {
+public class GimbalUIController extends GimbalOverlay 
+
+    implements 
+
+        GimbalViewport.EventHandler
+
+{
+
+    private String primaryViewportID;
 
     private static class Action {
 
@@ -45,13 +53,16 @@ public class GimbalUIController extends GimbalOverlay {
     };
 
 
+    private GimbalViewport.Controller viewportController;
+    @Override public void onViewportRegistered(String viewportID) {}
+    @Override public void onViewportReleased(String viewportID) {}
+
+
     private RelativeLayout rootLayout;
     private LayoutParams   rootLayoutParams = new LayoutParams(
             LayoutParams.FILL_PARENT, 
             LayoutParams.FILL_PARENT
     );
-
-    private Uplink uplink;
 
     //private GimbalCameraOverlay cameraOverlay;
     private GimbalGLOverlay visualsOverlay;
@@ -70,20 +81,22 @@ public class GimbalUIController extends GimbalOverlay {
         Util.debug("CONSTRUCT GimbalUIOverlay");
         
         publisher = new GimbalEvent.Publisher();
-        uplink = new Uplink(context, publisher);
+        viewportController = new GimbalViewport.Controller(context, publisher);
         rootLayoutParams.setMargins(0, 0, 0, 0);
 
     }
 
-    private void scanViewportQrCode() {
-        final Activity scanResultHandler = activity;
-        IntentIntegrator qrScan = new IntentIntegrator(scanResultHandler);
-        qrScan.initiateScan();
-    }
-
 
     public void connectViewport(final String uri, final String viewportID) {
-        uplink.connect(uri, viewportID);
+
+        //
+        // called on response to scanning a QR code 
+        // displayed on an available viewport
+        //
+
+        this.primaryViewportID = viewportID;
+
+        viewportController.connect(uri, viewportID);
         menuActions[0].enabled = false;
         menuActions[1].enabled = true;
         menu.refresh();
@@ -183,6 +196,7 @@ public class GimbalUIController extends GimbalOverlay {
                 break;
 
             case Action.DISCONNECT_VIEWPORT:
+                disconnectViewport(primaryViewportID);
                 break;
 
             case Action.TOGGLE_HELP:
@@ -206,5 +220,17 @@ public class GimbalUIController extends GimbalOverlay {
     private void stopServers() {
         touchServer.stopServer();
     }
+
+    private void scanViewportQrCode() {
+        final Activity scanResultHandler = activity;
+        IntentIntegrator qrScan = new IntentIntegrator(scanResultHandler);
+        qrScan.initiateScan();
+    }
+
+    private void disconnectViewport(String viewportID) {
+        viewportController.disconnect(viewportID);
+    }
+
+
 
 }
