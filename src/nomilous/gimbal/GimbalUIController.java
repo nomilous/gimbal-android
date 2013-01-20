@@ -31,7 +31,7 @@ public class GimbalUIController extends GimbalOverlay
 
 {
 
-    private String primaryViewportID;
+    private String primaryViewportID;  // TODO: remove,  (viewportController)
 
     private static class Action {
 
@@ -61,8 +61,8 @@ public class GimbalUIController extends GimbalOverlay
 
         menuActions[Action.CONNECT_VIEWPORT].enabled = false;
         menuActions[Action.DISCONNECT_VIEWPORT].enabled = true;
-        menu.refresh();
         menu.hide();
+        visualsOverlay.onMenuHide(menu);
 
     }
 
@@ -72,13 +72,6 @@ public class GimbalUIController extends GimbalOverlay
         menuActions[Action.CONNECT_VIEWPORT].enabled = true;
         menuActions[Action.DISCONNECT_VIEWPORT].enabled = false;
         menu.refresh();
-
-        Util.debug( String.format(
-
-            "GimbalUIController.onViewportReleased() for %s", 
-            viewport.toString()
-
-        ));
 
     }
 

@@ -6,7 +6,14 @@ import nomilous.gimbal.GimbalEvent;
 import nomilous.gimbal.uplink.GimbalUplink.Protocol;
 import nomilous.gimbal.uplink.*;
 
-import com.codebutler.android_websockets.SocketIOClient;
+//import com.codebutler.android_websockets.SocketIOClient;
+//import java.net.URI;
+
+import io.socket.IOAcknowledge;
+import io.socket.IOCallback;
+import io.socket.SocketIO;
+import io.socket.SocketIOException;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.WindowManager;
@@ -14,14 +21,15 @@ import android.view.Display;
 import android.graphics.Point;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import java.net.URI;
+
 
 public abstract class Uplink extends GimbalEvent.Server
 
     implements GimbalUplink.Protocol {
 
-    private SocketIOClient client;
-    private String primaryViewportID;
+    //protected SocketIOClient client;
+    protected SocketIO client;
+    private String primaryViewportID;  // TODO: move into GimbalViewport.Controller
 
     public Uplink(Context context,  GimbalEvent.Publisher publisher) {
         super(context, publisher);
@@ -29,7 +37,12 @@ public abstract class Uplink extends GimbalEvent.Server
 
     final public void connect(final String uri, final String viewportID) {
         primaryViewportID = viewportID;
-        doConnect(uri, viewportID);
+
+        try {
+            doConnect(uri, viewportID);
+        }
+
+        catch( java.net.MalformedURLException x ) {}
     }
 
     final public void disconnect(String viewportID) {
@@ -38,11 +51,11 @@ public abstract class Uplink extends GimbalEvent.Server
 
 
 
-    public abstract void onStartClient(JSONArray payload);
-    final public void startClient(JSONArray payload) {
+    public abstract void onStartClient(Object... payload);
+    final public void startClient(Object... payload) {
 
         try {
-            JSONArray message = getRegisterPayload();
+            JSONObject message = getRegisterPayload();
             Util.debug(String.format( 
 
                 "SENDING %s payload:%s",
@@ -59,12 +72,12 @@ public abstract class Uplink extends GimbalEvent.Server
 
 
     public abstract void onRegisterController(RegisterControllerOkPayload payload);
-    final public void registerController(final JSONArray payload) {
+    final public void registerController(final Object... payload) {
 
         Util.debug(String.format(
 
             "Uplink.registerController() with payload %s",
-            payload.toString()
+            payload[0].toString()
 
         ));
 
@@ -73,41 +86,32 @@ public abstract class Uplink extends GimbalEvent.Server
         ((Activity) context).runOnUiThread( new Runnable() {
 
             //
-            // com.codebutler.android_websockets.SocketIOClient null pointers exceptions
-            // here unless it is run on the main thread... 
-            // 
-            // i dunno why
-            // 
+            // Caused by: android.view.ViewRoot$CalledFromWrongThreadException: 
+            //            Only the original thread that created a view hierarchy 
+            //            can touch its views.
             //
 
             @Override
             public void run() {
-        
+
                 RegisterControllerOkPayload decoder = new RegisterControllerOkPayload();
-
-                try { 
-
-                    String json = payload.get(0).toString();
-                    PayloadContainer decoded = decoder.decode(json, RegisterControllerOkPayload.class);
-
-                    messageHandler.onRegisterController(
-
-                        (RegisterControllerOkPayload) decoded
-
-                    );
-
-                } catch(org.json.JSONException x) {}
+                PayloadContainer decoded = decoder.decode( 
+                    payload[0].toString(), 
+                    RegisterControllerOkPayload.class
+                );
+                messageHandler.onRegisterController( 
+                    (RegisterControllerOkPayload) decoded
+                );
 
             }
 
         });
-
         
     }
 
 
     public abstract void onReleaseController(ReleaseControllerOkPayload payload);
-    final public void releaseController(final JSONArray payload) {
+    final public void releaseController(final Object... payload) {
         Util.debug(String.format(
 
             "Uplink.releaseController() with payload %s",
@@ -119,34 +123,17 @@ public abstract class Uplink extends GimbalEvent.Server
 
         ((Activity) context).runOnUiThread( new Runnable() {
 
-            //
-            // com.codebutler.android_websockets.SocketIOClient null pointers exceptions
-            // here unless it is run on the main thread... 
-            // 
-            // i dunno why
-            //
-            // 
-            // gonna have to do something about this.
-            // 
-            //
-
             @Override
             public void run() {
         
                 ReleaseControllerOkPayload decoder = new ReleaseControllerOkPayload();
-
-                try { 
-
-                    String json = payload.get(0).toString();
-                    PayloadContainer decoded = decoder.decode(json, ReleaseControllerOkPayload.class);
-
-                    messageHandler.onReleaseController(
-
-                        (ReleaseControllerOkPayload) decoded
-
-                    );
-
-                } catch(org.json.JSONException x) {}
+                PayloadContainer decoded = decoder.decode( 
+                    payload[0].toString(), 
+                    ReleaseControllerOkPayload.class
+                );
+                messageHandler.onReleaseController( 
+                    (ReleaseControllerOkPayload) decoded
+                );
 
             }
 
@@ -155,7 +142,7 @@ public abstract class Uplink extends GimbalEvent.Server
     }
 
 
-    private JSONArray getRegisterPayload() throws org.json.JSONException {
+    private JSONObject getRegisterPayload() throws org.json.JSONException {
 
         //
         // com.codebutler.android_websockets.SocketIOClient insists on an
@@ -203,9 +190,9 @@ public abstract class Uplink extends GimbalEvent.Server
         nestedIntoJSONArray.put("primary_viewport", primaryViewportID);
 
 
-        JSONArray message = new JSONArray();
-        message.put( nestedIntoJSONArray );
-        return message;
+        // JSONArray message = new JSONArray();
+        // message.put( nestedIntoJSONArray );
+        return nestedIntoJSONArray;
     }
 
     private JSONArray getReleasePayload(String viewportID) throws org.json.JSONException {
@@ -235,80 +222,149 @@ public abstract class Uplink extends GimbalEvent.Server
         } catch( org.json.JSONException x ) {}
     }
 
-    private void doConnect(final String uri, final String viewportID) {
+    private void doConnect(final String uri, final String viewportID) 
+
+        throws java.net.MalformedURLException {
 
         final Uplink uplink = this;
 
-        client = new SocketIOClient(   
-            URI.create(uri),
-            new SocketIOClient.Handler() { 
+        client = new SocketIO();
+        client.connect( uri, new IOCallback() {
 
-                @Override
-                public void onConnect() {
-
-                    /* 
-                     * BROKEN
-                     * 
-                     * does not get called by com.codebutler.android_websockets.SocketIOClient
-                     * 
-                     */
-
-                    Util.debug( "\n\n\n\n\n\nCONNECT\n\n\n\n\n\n" );
-                }
-
-                @Override
-                public void on(String event, JSONArray payload) {
-
-                    if( event.equals( Protocol.CLIENT_START ) ) {
-
-                        uplink.startClient(payload);
-                        return;
-
-                    }
-
-                    else if( event.equals(Protocol.REGISTER_CONTROLLER_OK ) ) {
-
-                        uplink.registerController(payload);
-                        return;
-
-                    }
-
-                    else if( event.equals(Protocol.RELEASE_CONTROLLER_OK ) ) {
-
-                        uplink.releaseController(payload);
-                        return;
-
-                    }
-
-                    Util.debug( String.format( 
-                        "\n\n\nRECEIVED UNHANDLED %s: %s\n\n\n", 
-                        event, payload.toString()
-                    )); 
-
-                }
-
-
-
-                @Override
-                public void onDisconnect(int code, String reason) {
-                    Util.debug( String.format( 
-                        "DISCONNECT %s: %s", 
-                        code, reason
-                    ));
-                }
-
-
-                @Override
-                public void onError(Exception error) {
-                    Util.debug( String.format( 
-                        "ERROR %s", error.toString()
-                    ));
-                }
-
+            @Override
+            public void onError(SocketIOException socketIOException) {
+                Util.debug("an Error occured");
+                socketIOException.printStackTrace();
             }
 
-        );
-        client.connect();
+            @Override
+            public void on(String event, IOAcknowledge ack, Object... payload) {
+
+
+                if( event.equals( Protocol.CLIENT_START ) ) {
+
+                    uplink.startClient(payload);
+                    return;
+
+                }
+
+                else if( event.equals(Protocol.REGISTER_CONTROLLER_OK ) ) {
+
+                    uplink.registerController(payload);
+                    return;
+
+                }
+
+                else if( event.equals(Protocol.RELEASE_CONTROLLER_OK ) ) {
+
+                    uplink.releaseController(payload);
+                    return;
+
+                }
+
+                Util.debug("Server triggered event '" + event + "'");
+            }
+
+            @Override
+            public void onMessage(String data, IOAcknowledge ack) {
+                Util.debug("Server said: " + data);
+            }
+
+            @Override
+            public void onMessage(JSONObject json, IOAcknowledge ack) {
+                try {
+                    Util.debug("Server said:" + json.toString(2));
+                } catch (org.json.JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onConnect() {
+                Util.debug("Connection established");
+            }
+
+            @Override
+            public void onDisconnect() {
+                Util.debug("Connection terminated.");
+            }
+
+
+
+        });
+
+        active = true;
+
+        // client = new SocketIOClient(   
+        //     URI.create(uri),
+        //     new SocketIOClient.Handler() { 
+
+        //         @Override
+        //         public void onConnect() {
+
+        //             /* 
+        //              * BROKEN
+        //              * 
+        //              * does not get called by com.codebutler.android_websockets.SocketIOClient
+        //              * 
+        //              */
+
+        //             Util.debug( "\n\n\n\n\n\nCONNECT\n\n\n\n\n\n" );
+        //         }
+
+        //         @Override
+        //         public void on(String event, JSONArray payload) {
+
+        //             if( event.equals( Protocol.CLIENT_START ) ) {
+
+        //                 uplink.startClient(payload);
+        //                 return;
+
+        //             }
+
+        //             else if( event.equals(Protocol.REGISTER_CONTROLLER_OK ) ) {
+
+        //                 uplink.registerController(payload);
+        //                 return;
+
+        //             }
+
+        //             else if( event.equals(Protocol.RELEASE_CONTROLLER_OK ) ) {
+
+        //                 uplink.releaseController(payload);
+        //                 return;
+
+        //             }
+
+        //             Util.debug( String.format( 
+        //                 "\n\n\nRECEIVED UNHANDLED %s: %s\n\n\n", 
+        //                 event, payload.toString()
+        //             )); 
+
+        //         }
+
+
+
+        //         @Override
+        //         public void onDisconnect(int code, String reason) {
+        //             Util.debug( String.format( 
+        //                 "DISCONNECT %s: %s", 
+        //                 code, reason
+        //             ));
+        //         }
+
+
+        //         @Override
+        //         public void onError(Exception error) {
+        //             Util.debug( String.format( 
+        //                 "ERROR %s", error.toString()
+        //             ));
+        //         }
+
+        //     }
+
+        // );
+        // client.connect();
     }
 
 }

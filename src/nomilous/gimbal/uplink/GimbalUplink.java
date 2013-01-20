@@ -32,8 +32,8 @@ public class GimbalUplink {
         //
 
         public final String CLIENT_START = "event:client:start";
-        public abstract void startClient(JSONArray payload);
-        public abstract void onStartClient(JSONArray payload);
+        public abstract void startClient(Object... payload);
+        public abstract void onStartClient(Object... payload);
 
 
         
@@ -112,7 +112,7 @@ public class GimbalUplink {
         //
 
         public final String REGISTER_CONTROLLER_OK = "event:register:controller:ok";
-        public abstract void registerController(JSONArray payload);
+        public abstract void registerController(Object... payload);
         public abstract void onRegisterController(RegisterControllerOkPayload payload);
 
 
@@ -149,7 +149,7 @@ public class GimbalUplink {
         //    
 
         public final String RELEASE_CONTROLLER_OK = "event:release:controller:ok";
-        public abstract void releaseController(JSONArray payload);
+        public abstract void releaseController(Object... payload);
         public abstract void onReleaseController(ReleaseControllerOkPayload payload);
 
 

@@ -6,7 +6,9 @@ import nomilous.gimbal.uplink.*;
 
 
 import android.content.Context;
-import org.json.JSONArray;
+import org.json.JSONArray;    // grrrrr.
+import com.google.gson.Gson;
+
 
 public class GimbalViewport {
 
@@ -47,7 +49,9 @@ public class GimbalViewport {
     }
 
 
-    public static class Controller extends Uplink {
+    public static class Controller extends Uplink 
+
+        implements GimbalEvent.Subscriber {
 
         public static class Config {
 
@@ -55,17 +59,30 @@ public class GimbalViewport {
 
         }
 
+        private Gson gson;
         private EventHandler eventHandler;
 
         public Controller(Context context,  GimbalEvent.Publisher publisher, EventHandler eventHandler) {
             super(context, publisher);
             this.eventHandler = eventHandler;
+            gson = new Gson();
+            publisher.subscribe(this);
+        }
+
+        @Override
+        public void onTouchEvent( GimbalEvent.Touch event ) {
+
+            String json = gson.toJson(event);
+            Util.debug( "Pending send to server... " + json );
+
+            if( running() )
+                client.send("mooo");
+
         }
 
 
-
         @Override
-        public void onStartClient(JSONArray payload) {
+        public void onStartClient(Object... payload) {
 
 
         }
@@ -83,7 +100,6 @@ public class GimbalViewport {
             for( int i = 0; i < payload.viewports.length; i++ )
 
                 eventHandler.onViewportReleased( payload.viewports[i] );
-
 
         }
 
