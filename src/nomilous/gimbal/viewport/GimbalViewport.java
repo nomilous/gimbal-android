@@ -27,6 +27,14 @@ public class GimbalViewport {
             return id;
         }
 
+        public String toString() {
+            return String.format(
+                "GimbalViewport.Viewport id:%s, primary:%s", 
+                id,
+                primary
+            );
+        }
+
     }
 
 
@@ -70,7 +78,11 @@ public class GimbalViewport {
         }
 
         @Override
-        public void onReleaseController(JSONArray payload) {
+        public void onReleaseController( ReleaseControllerOkPayload payload ) {
+
+            for( int i = 0; i < payload.viewports.length; i++ )
+
+                eventHandler.onViewportReleased( payload.viewports[i] );
 
 
         }

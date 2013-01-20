@@ -150,7 +150,7 @@ public class GimbalUplink {
 
         public final String RELEASE_CONTROLLER_OK = "event:release:controller:ok";
         public abstract void releaseController(JSONArray payload);
-        public abstract void onReleaseController(JSONArray payload);
+        public abstract void onReleaseController(ReleaseControllerOkPayload payload);
 
 
 

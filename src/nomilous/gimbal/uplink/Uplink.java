@@ -4,8 +4,7 @@ import nomilous.Util;
 import nomilous.gimbal.GimbalConfig;
 import nomilous.gimbal.GimbalEvent;
 import nomilous.gimbal.uplink.GimbalUplink.Protocol;
-import nomilous.gimbal.uplink.PayloadContainer;
-import nomilous.gimbal.uplink.RegisterControllerOkPayload;
+import nomilous.gimbal.uplink.*;
 
 import com.codebutler.android_websockets.SocketIOClient;
 import android.app.Activity;
@@ -71,7 +70,6 @@ public abstract class Uplink extends GimbalEvent.Server
 
         final Uplink messageHandler = this;
 
-
         ((Activity) context).runOnUiThread( new Runnable() {
 
             //
@@ -108,15 +106,52 @@ public abstract class Uplink extends GimbalEvent.Server
     }
 
 
-    public abstract void onReleaseController(JSONArray payload);
-    final public void releaseController(JSONArray payload) {
+    public abstract void onReleaseController(ReleaseControllerOkPayload payload);
+    final public void releaseController(final JSONArray payload) {
         Util.debug(String.format(
 
             "Uplink.releaseController() with payload %s",
             payload.toString()
 
         ));
-        onReleaseController(payload);
+
+        final Uplink messageHandler = this;
+
+        ((Activity) context).runOnUiThread( new Runnable() {
+
+            //
+            // com.codebutler.android_websockets.SocketIOClient null pointers exceptions
+            // here unless it is run on the main thread... 
+            // 
+            // i dunno why
+            //
+            // 
+            // gonna have to do something about this.
+            // 
+            //
+
+            @Override
+            public void run() {
+        
+                ReleaseControllerOkPayload decoder = new ReleaseControllerOkPayload();
+
+                try { 
+
+                    String json = payload.get(0).toString();
+                    PayloadContainer decoded = decoder.decode(json, ReleaseControllerOkPayload.class);
+
+                    messageHandler.onReleaseController(
+
+                        (ReleaseControllerOkPayload) decoded
+
+                    );
+
+                } catch(org.json.JSONException x) {}
+
+            }
+
+        });
+
     }
 
 

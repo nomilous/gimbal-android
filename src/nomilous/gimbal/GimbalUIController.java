@@ -66,7 +66,21 @@ public class GimbalUIController extends GimbalOverlay
 
     }
 
-    @Override public void onViewportReleased(Viewport viewport) {}
+    @Override 
+    public void onViewportReleased(Viewport viewport) {
+
+        menuActions[Action.CONNECT_VIEWPORT].enabled = true;
+        menuActions[Action.DISCONNECT_VIEWPORT].enabled = false;
+        menu.refresh();
+
+        Util.debug( String.format(
+
+            "GimbalUIController.onViewportReleased() for %s", 
+            viewport.toString()
+
+        ));
+
+    }
 
 
     private RelativeLayout rootLayout;
