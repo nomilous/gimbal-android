@@ -2,7 +2,8 @@ package nomilous.gimbal.viewport;
 
 import nomilous.Util;
 import nomilous.gimbal.GimbalEvent;
-import nomilous.gimbal.uplink.Uplink;
+import nomilous.gimbal.uplink.*;
+
 
 import android.content.Context;
 import org.json.JSONArray;
@@ -20,6 +21,10 @@ public class GimbalViewport {
 
         public void setPrimary(boolean primary) {
             this.primary = primary;
+        }
+
+        public String getId() {
+            return id;
         }
 
     }
@@ -58,8 +63,14 @@ public class GimbalViewport {
         }
 
         @Override
-        public void onRegisterController(JSONArray payload) {
+        public void onRegisterController( RegisterControllerOkPayload payload ) {
 
+            Util.debug(String.format(
+
+                "GimbalViewport.Controller.onRegisterController() with decoded payload: %s",
+                payload.toString()
+
+            ));
 
         }
 

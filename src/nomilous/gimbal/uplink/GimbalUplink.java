@@ -113,7 +113,7 @@ public class GimbalUplink {
 
         public final String REGISTER_CONTROLLER_OK = "event:register:controller:ok";
         public abstract void registerController(JSONArray payload);
-        public abstract void onRegisterController(JSONArray payload);
+        public abstract void onRegisterController(RegisterControllerOkPayload payload);
 
 
         //

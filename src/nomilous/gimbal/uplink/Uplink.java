@@ -4,8 +4,11 @@ import nomilous.Util;
 import nomilous.gimbal.GimbalConfig;
 import nomilous.gimbal.GimbalEvent;
 import nomilous.gimbal.uplink.GimbalUplink.Protocol;
+import nomilous.gimbal.uplink.PayloadContainer;
+import nomilous.gimbal.uplink.RegisterControllerOkPayload;
 
 import com.codebutler.android_websockets.SocketIOClient;
+import android.app.Activity;
 import android.content.Context;
 import android.view.WindowManager;
 import android.view.Display;
@@ -56,15 +59,52 @@ public abstract class Uplink extends GimbalEvent.Server
     }
 
 
-    public abstract void onRegisterController(JSONArray payload);
-    final public void registerController(JSONArray payload) {
+    public abstract void onRegisterController(RegisterControllerOkPayload payload);
+    final public void registerController(final JSONArray payload) {
+
         Util.debug(String.format(
 
             "Uplink.registerController() with payload %s",
             payload.toString()
 
         ));
-        onRegisterController(payload);
+
+        final Uplink messageHandler = this;
+
+
+        ((Activity) context).runOnUiThread( new Runnable() {
+
+            //
+            // com.codebutler.android_websockets.SocketIOClient null pointers exceptions
+            // here unless it is run on the main thread... 
+            // 
+            // i dunno why
+            // 
+            //
+
+            @Override
+            public void run() {
+        
+                RegisterControllerOkPayload decoder = new RegisterControllerOkPayload();
+
+                try { 
+
+                    String json = payload.get(0).toString();
+                    PayloadContainer decoded = decoder.decode(json);
+
+                    messageHandler.onRegisterController(
+
+                        (RegisterControllerOkPayload) decoded
+
+                    );
+
+                } catch(org.json.JSONException x) {}
+
+            }
+
+        });
+
+        
     }
 
 
