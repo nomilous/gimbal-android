@@ -14,7 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.net.URI;
 
-public class Uplink extends GimbalEvent.Server
+public abstract class Uplink extends GimbalEvent.Server
 
     implements GimbalUplink.Protocol {
 
@@ -36,7 +36,7 @@ public class Uplink extends GimbalEvent.Server
 
 
 
-    public void onStartClient(JSONArray payload) {}  // abstract later...
+    public abstract void onStartClient(JSONArray payload);
     final public void startClient(JSONArray payload) {
 
         try {
@@ -56,7 +56,7 @@ public class Uplink extends GimbalEvent.Server
     }
 
 
-    public void onRegisterController(JSONArray payload) {} // abstract later...
+    public abstract void onRegisterController(JSONArray payload);
     final public void registerController(JSONArray payload) {
         Util.debug(String.format(
 
@@ -68,7 +68,7 @@ public class Uplink extends GimbalEvent.Server
     }
 
 
-    public void onReleaseController(JSONArray payload) {} // abstract later...
+    public abstract void onReleaseController(JSONArray payload);
     final public void releaseController(JSONArray payload) {
         Util.debug(String.format(
 

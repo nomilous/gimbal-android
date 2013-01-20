@@ -5,6 +5,7 @@ import nomilous.gimbal.GimbalEvent;
 import nomilous.gimbal.uplink.Uplink;
 
 import android.content.Context;
+import org.json.JSONArray;
 
 public class GimbalViewport {
 
@@ -19,6 +20,26 @@ public class GimbalViewport {
 
         public Controller(Context context,  GimbalEvent.Publisher publisher) {
             super(context, publisher);
+        }
+
+
+
+        @Override
+        public void onStartClient(JSONArray payload) {
+
+
+        }
+
+        @Override
+        public void onRegisterController(JSONArray payload) {
+
+
+        }
+
+        @Override
+        public void onReleaseController(JSONArray payload) {
+
+
         }
 
     }
