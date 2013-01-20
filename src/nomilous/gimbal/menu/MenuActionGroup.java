@@ -9,6 +9,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import android.view.View;
 //import android.graphics.Color;
 //import android.graphics.Typeface;
 import java.util.Enumeration;
@@ -30,6 +31,7 @@ public class MenuActionGroup
     private Menu.Config config;
     private MenuChain chain;
     private TextView current;
+    private TextView toggle;
 
     public MenuActionGroup() {
 
@@ -43,6 +45,15 @@ public class MenuActionGroup
         this.config = config;
         init();
         
+    }
+
+    public boolean active() {
+        return active;
+    }
+
+    public void setToggle(TextView toggle) {
+        this.toggle = toggle;
+        toggle.setTextColor(config.enabledColour);
     }
 
     public void show( RelativeLayout layout ) {
@@ -64,6 +75,8 @@ public class MenuActionGroup
 
         this.layout = layout;
 
+        if( toggle != null ) toggle.setTextColor(config.highlightColour);
+
         active = true;
 
 
@@ -84,6 +97,8 @@ public class MenuActionGroup
             view = null;
 
         }
+
+        if( toggle != null ) toggle.setTextColor(config.enabledColour);
 
         active = false;
 

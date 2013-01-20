@@ -65,12 +65,7 @@ public class GimbalViewport {
         @Override
         public void onRegisterController( RegisterControllerOkPayload payload ) {
 
-            Util.debug(String.format(
-
-                "GimbalViewport.Controller.onRegisterController() with decoded payload: %s",
-                payload.toString()
-
-            ));
+            eventHandler.onViewportRegistered( payload.viewport );
 
         }
 

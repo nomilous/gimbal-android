@@ -90,7 +90,7 @@ public abstract class Uplink extends GimbalEvent.Server
                 try { 
 
                     String json = payload.get(0).toString();
-                    PayloadContainer decoded = decoder.decode(json);
+                    PayloadContainer decoded = decoder.decode(json, RegisterControllerOkPayload.class);
 
                     messageHandler.onRegisterController(
 

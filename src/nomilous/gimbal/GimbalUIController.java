@@ -35,10 +35,10 @@ public class GimbalUIController extends GimbalOverlay
 
     private static class Action {
 
-        public static final int CONNECT_VIEWPORT    = 1;
-        public static final int DISCONNECT_VIEWPORT = 2;
-        public static final int TOGGLE_HELP         = 3;
-        public static final int EXIT                = 4; 
+        public static final int CONNECT_VIEWPORT    = 0;
+        public static final int DISCONNECT_VIEWPORT = 1;
+        public static final int TOGGLE_HELP         = 2;
+        public static final int EXIT                = 3; 
 
     }
 
@@ -55,7 +55,17 @@ public class GimbalUIController extends GimbalOverlay
 
 
     private GimbalViewport.Controller viewportController;
-    @Override public void onViewportRegistered(Viewport viewport) {}
+
+    @Override 
+    public void onViewportRegistered(Viewport viewport) {
+
+        menuActions[Action.CONNECT_VIEWPORT].enabled = false;
+        menuActions[Action.DISCONNECT_VIEWPORT].enabled = true;
+        menu.refresh();
+        menu.hide();
+
+    }
+
     @Override public void onViewportReleased(Viewport viewport) {}
 
 
@@ -98,9 +108,7 @@ public class GimbalUIController extends GimbalOverlay
         this.primaryViewportID = viewportID;
 
         viewportController.connect(uri, viewportID);
-        menuActions[0].enabled = false;
-        menuActions[1].enabled = true;
-        menu.refresh();
+        
     }
 
 

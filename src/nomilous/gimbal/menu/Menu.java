@@ -69,29 +69,27 @@ public class Menu {
         final RelativeLayout   menuRoot = layout;
         final SelectionHandler selectionHandler = config.selectionHandler;
 
+        menu.setToggle(toggle);
+
         toggle.setOnClickListener( new OnClickListener() {
 
             //
             // Toggle menu onClick
             //
 
-            private boolean active = false; // menu is not visible
+            //private boolean active = false; // menu is not visible
 
             @Override
             public void onClick(View v) {
 
-                if( active ) {
+                if( menu.active() ) {
                     menu.hide();
-                    toggle.setTextColor(passivColor);
-                    active = false;
-                    selectionHandler.onMenuHide(menu);
+                    selectionHandler.onMenuHide(menu); // may not need this.
                     return;
                 }
 
                 menu.show(menuRoot);
-                toggle.setTextColor(activeColor);
-                active = true;
-                selectionHandler.onMenuShow(menu);
+                selectionHandler.onMenuShow(menu); // may not need this.
                 return;
 
             } 
