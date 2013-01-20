@@ -54,7 +54,16 @@ public class GimbalUplink {
         //            "event:register:controller" : [{  <-------------- TODO: is this array really necessary?
         //
         //                 "primary_viewport":"NEsGCsB_K3cmrrzd3B8q",
-        //                 "input_cube":[640,400,0]
+        //                 "input_cube":[640,400,0]     <-------------- NOTE: XYZ, 
+        //
+        //                                                                    width,height,depth 
+        //
+        //                                                                    Has no units.
+        // 
+        //                                                                    Used to generate a scaling factor for
+        //                                                                    upsampling input to suit the frustum 
+        //                                                                    size of the viewport being controlled.
+        //                                                                    
         //
         //             }]
         //        }
