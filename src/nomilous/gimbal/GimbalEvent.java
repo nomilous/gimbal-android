@@ -142,8 +142,8 @@ public class GimbalEvent {
 
     public static class Server {
 
-        private Context context;
-        private Publisher publisher;
+        protected Context context;
+        protected Publisher publisher;
         protected boolean active = false;
 
         public Server(Context context, Publisher publisher) {

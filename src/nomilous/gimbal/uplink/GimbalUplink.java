@@ -39,6 +39,8 @@ public class GimbalUplink {
         //  - As response to START_CLIENT
         // 
         //  - Sends payload:
+        //  
+        //       - Primary Viewport ID
         // 
         //       - XYZ Dimensions of gesture sensitive region 
         //         of tablet/phone/kinect/unknown_future_thing
@@ -47,7 +49,15 @@ public class GimbalUplink {
         //  
         //       - (PLACEHOLDER) Supported controller modes
         //
-        //       
+        //
+        //    eg. { 
+        //            "event:register:controller" : [{  <-------------- TODO: is this array really necessary?
+        //
+        //                 "primary_viewport":"NEsGCsB_K3cmrrzd3B8q",
+        //                 "input_cube":[640,400,0]
+        //
+        //             }]
+        //        }
         // 
 
         public final String REGISTER_CONTROLLER = "event:register:controller";
@@ -60,6 +70,10 @@ public class GimbalUplink {
         // REGISTER_CONTROLLER_OK (handshake complete)
         //
         //  - Server authorizes this controler to proceed.
+        //
+        //  - Receives payload: 
+        // 
+        //        - (PLACEHOLDER) 
         //
 
         public final String REGISTER_CONTROLLER_OK = "event:register:controller:ok";

@@ -7,6 +7,9 @@ import nomilous.gimbal.uplink.GimbalUplink.Protocol;
 
 import com.codebutler.android_websockets.SocketIOClient;
 import android.content.Context;
+import android.view.WindowManager;
+import android.view.Display;
+import android.graphics.Point;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.net.URI;
@@ -31,9 +34,16 @@ public class Uplink extends GimbalEvent.Server
     final public void startClient(JSONArray payload) {
 
         try {
-            client.emit( Protocol.REGISTER_CONTROLLER, 
-                getRegisterPayload()
-            );
+            JSONArray message = getRegisterPayload();
+            Util.debug(String.format( 
+
+                "SENDING %s payload:%s",
+                Protocol.REGISTER_CONTROLLER,
+                message.toString()
+
+
+            ));
+            client.emit(Protocol.REGISTER_CONTROLLER, message);
         } catch( org.json.JSONException x ) {}
 
         onStartClient(payload);
@@ -48,9 +58,56 @@ public class Uplink extends GimbalEvent.Server
 
 
 
-    private JSONArray getRegisterPayload() {
+    private JSONArray getRegisterPayload() throws org.json.JSONException {
+
+        //
+        // com.codebutler.android_websockets.SocketIOClient insists on an
+        // org.json.JSONArray as payload for emit
+        // 
+        // TODO: find or make a marriage between socket.io and google.gson
+        //       for android... 
+        //     
+        //
+
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+
+        int width  = 0;
+        int height = 0;
+        int depth  = 0;  // touch screens are quite shallow
+
+        try {
+
+            Point size = new Point();
+            display.getSize(size);
+            width  = size.x;
+            height = size.y;
+
+        } catch( java.lang.NoSuchMethodError x ) {
+
+            //
+            // targeting ICS, but running on Gingerbread
+            // 
+            // fallback
+            //
+
+            width  = display.getWidth();
+            height = display.getHeight();
+
+        }
+
+        JSONArray inputCube = new JSONArray();
+        inputCube.put(width);
+        inputCube.put(height);
+        inputCube.put(depth);
+
+        JSONObject nestedIntoJSONArray = new JSONObject();
+        nestedIntoJSONArray.put("input_cube", inputCube);
+        nestedIntoJSONArray.put("primary_viewport", primaryViewportID);
+
+
         JSONArray message = new JSONArray();
-        message.put( primaryViewportID );
+        message.put( nestedIntoJSONArray );
         return message;
     }
 
@@ -85,12 +142,12 @@ public class Uplink extends GimbalEvent.Server
 
                     }
 
-                    // else if( event.equals(Protocol.REGISTER_CONTROLLER_OK ) ) {
+                    else if( event.equals(Protocol.REGISTER_CONTROLLER_OK ) ) {
 
-                    //     uplink.registerController(payload);
-                    //     return;
+                        uplink.registerController(payload);
+                        return;
 
-                    // }
+                    }
 
                     Util.debug( String.format( 
                         "\n\n\nRECEIVED UNHANDLED %s: %s\n\n\n", 
