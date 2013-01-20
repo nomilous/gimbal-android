@@ -51,7 +51,7 @@ public class GimbalUplink {
         //
         //
         //    eg. { 
-        //            "event:register:controller" : [{  <-------------- TODO: is this array really necessary?
+        //            "event:register:controller" : { 
         //
         //                 "primary_viewport":"NEsGCsB_K3cmrrzd3B8q",
         //                 "input_cube":[640,400,0]     <-------------- NOTE: XYZ, 
@@ -65,7 +65,7 @@ public class GimbalUplink {
         //                                                                    size of the viewport being controlled.
         //                                                                    
         //
-        //             }]
+        //             }
         //        }
         // 
 
