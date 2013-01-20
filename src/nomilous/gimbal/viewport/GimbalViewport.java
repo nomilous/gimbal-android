@@ -1,4 +1,4 @@
-package nomilous.gimbal.viewports;
+package nomilous.gimbal.viewport;
 
 import nomilous.Util;
 import nomilous.gimbal.GimbalEvent;
@@ -9,17 +9,44 @@ import org.json.JSONArray;
 
 public class GimbalViewport {
 
-    public static interface EventHandler {
+    public static class Viewport {
 
-        public abstract void onViewportRegistered(String viewportID);
-        public abstract void onViewportReleased(String viewportID);
+        private String id;
+        private boolean primary = false;
+
+        public Viewport(String id) {
+            this.id = id;
+        }
+
+        public void setPrimary(boolean primary) {
+            this.primary = primary;
+        }
 
     }
 
+
+
+    public static interface EventHandler {
+
+        public abstract void onViewportRegistered(Viewport viewport);
+        public abstract void onViewportReleased(Viewport viewport);
+
+    }
+
+
     public static class Controller extends Uplink {
 
-        public Controller(Context context,  GimbalEvent.Publisher publisher) {
+        public static class Config {
+
+            public String pending;
+
+        }
+
+        private EventHandler eventHandler;
+
+        public Controller(Context context,  GimbalEvent.Publisher publisher, EventHandler eventHandler) {
             super(context, publisher);
+            this.eventHandler = eventHandler;
         }
 
 

@@ -8,7 +8,8 @@ import nomilous.gimbal.GimbalEvent;
 import nomilous.gimbal.menu.MenuActionGroup;
 import nomilous.gimbal.menu.MenuAction;
 import nomilous.gimbal.menu.Menu;
-import nomilous.gimbal.viewports.GimbalViewport;
+import nomilous.gimbal.viewport.GimbalViewport;
+import nomilous.gimbal.viewport.GimbalViewport.Viewport;
 
 import android.app.Activity;
 import android.widget.RelativeLayout;
@@ -54,8 +55,8 @@ public class GimbalUIController extends GimbalOverlay
 
 
     private GimbalViewport.Controller viewportController;
-    @Override public void onViewportRegistered(String viewportID) {}
-    @Override public void onViewportReleased(String viewportID) {}
+    @Override public void onViewportRegistered(Viewport viewport) {}
+    @Override public void onViewportReleased(Viewport viewport) {}
 
 
     private RelativeLayout rootLayout;
@@ -81,7 +82,7 @@ public class GimbalUIController extends GimbalOverlay
         Util.debug("CONSTRUCT GimbalUIOverlay");
         
         publisher = new GimbalEvent.Publisher();
-        viewportController = new GimbalViewport.Controller(context, publisher);
+        viewportController = new GimbalViewport.Controller(context, publisher, this);
         rootLayoutParams.setMargins(0, 0, 0, 0);
 
     }

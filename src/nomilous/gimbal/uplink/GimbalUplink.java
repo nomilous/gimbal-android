@@ -7,6 +7,10 @@ public class GimbalUplink {
 
     public static interface Protocol {
 
+        public static class Payload {
+
+        }
+
         /*
          *
          * TODO: Replace 'string' event codes with ints known to
@@ -82,7 +86,29 @@ public class GimbalUplink {
         //
         //  - Receives payload: 
         // 
-        //        - (PLACEHOLDER) 
+        //        - The Viewport now being controlled
+        //        - Configuration for the controller
+        // 
+        //    eg. {
+        // 
+        //          "event:register:controller:ok": {
+        //            
+        //                "viewport": {
+        //                   
+        //                    "id" : "NEsGCsB_K3cmrrzd3B8q",
+        //                    "primary" : true
+        //                
+        //                },
+        //               
+        //                "config": {
+        // 
+        //                    "pending": "pending"
+        //              
+        //                }
+        //        
+        //          }
+        //     
+        //    }
         //
 
         public final String REGISTER_CONTROLLER_OK = "event:register:controller:ok";
