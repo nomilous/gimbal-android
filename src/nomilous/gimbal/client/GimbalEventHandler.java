@@ -1,3 +1,5 @@
+//pending delete
+
 package nomilous.gimbal.client;
 
 public interface GimbalEventHandler {
