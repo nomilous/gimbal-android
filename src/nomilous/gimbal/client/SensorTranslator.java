@@ -4,7 +4,6 @@ package nomilous.gimbal.client;
 import android.os.Bundle;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import com.codebutler.android_websockets.SocketIOClient;
 
 import android.view.MotionEvent;
 

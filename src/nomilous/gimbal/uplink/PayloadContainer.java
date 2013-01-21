@@ -1,26 +1,27 @@
 package nomilous.gimbal.uplink;
 
+import nomilous.Util;
+
 import com.google.gson.Gson;
 
-interface Decodable {
 
-    //public abstract Payload decode(String json);   // ...later
+public class PayloadContainer {
 
-    public abstract PayloadContainer decode(String json, Class klass);
+        public static PayloadContainer decodeJSON(String json, Class klass) {
 
-}
-
-public abstract class PayloadContainer
-
-    implements Decodable {
-
-        private Gson gson = new Gson();
-
-        public PayloadContainer decode(String json, Class klass) {
-            
+            Gson gson = new Gson();
             PayloadContainer payload = (PayloadContainer) gson.fromJson(json, klass);
             return payload;
 
+        }
+
+        public static String encodeJSON(PayloadContainer payload) {
+
+            Gson gson = new Gson();
+            String json = gson.toJson(payload);
+            Util.debug("SEND:" + json);
+
+            return json;
         }
 
     }

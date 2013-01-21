@@ -5,10 +5,9 @@ import nomilous.gimbal.GimbalConfig;
 import nomilous.gimbal.GimbalEvent;
 import nomilous.gimbal.uplink.GimbalUplink.Protocol;
 import nomilous.gimbal.uplink.*;
+import nomilous.gimbal.viewport.GimbalViewport.Viewport;
 
-//import com.codebutler.android_websockets.SocketIOClient;
-//import java.net.URI;
-
+//https://github.com/Gottox/socket.io-java-client
 import io.socket.IOAcknowledge;
 import io.socket.IOCallback;
 import io.socket.SocketIO;
@@ -27,7 +26,6 @@ public abstract class Uplink extends GimbalEvent.Server
 
     implements GimbalUplink.Protocol {
 
-    //protected SocketIOClient client;
     protected SocketIO client;
     private String primaryViewportID;  // TODO: move into GimbalViewport.Controller
 
@@ -55,19 +53,29 @@ public abstract class Uplink extends GimbalEvent.Server
     final public void startClient(Object... payload) {
 
         try {
-            JSONObject message = getRegisterPayload();
-            Util.debug(String.format( 
 
-                "SENDING %s payload:%s",
-                Protocol.REGISTER_CONTROLLER,
-                message.toString()
+            RegisterControllerPayload message = getRegisterPayload();
 
+            //
+            // Extraneous... toString... to JSONObject,,, back down to string on 
+            //               the send inside SocketIO
+            // 
+            //               TODO: make plan... 
+            // 
 
-            ));
-            client.emit(Protocol.REGISTER_CONTROLLER, message);
+            JSONObject jsonObject = new JSONObject(RegisterControllerPayload.encodeJSON(message));
+
+            client.emit(
+
+                Protocol.REGISTER_CONTROLLER, 
+                jsonObject
+
+            );
+
         } catch( org.json.JSONException x ) {}
 
         onStartClient(payload);
+
     }
 
 
@@ -82,6 +90,11 @@ public abstract class Uplink extends GimbalEvent.Server
         ));
 
         final Uplink messageHandler = this;
+        //RegisterControllerOkPayload decoder = new RegisterControllerOkPayload();
+        final PayloadContainer decoded = RegisterControllerOkPayload.decodeJSON( 
+            payload[0].toString(), 
+            RegisterControllerOkPayload.class
+        );
 
         ((Activity) context).runOnUiThread( new Runnable() {
 
@@ -92,13 +105,7 @@ public abstract class Uplink extends GimbalEvent.Server
             //
 
             @Override
-            public void run() {
-
-                RegisterControllerOkPayload decoder = new RegisterControllerOkPayload();
-                PayloadContainer decoded = decoder.decode( 
-                    payload[0].toString(), 
-                    RegisterControllerOkPayload.class
-                );
+            public void run() {  
                 messageHandler.onRegisterController( 
                     (RegisterControllerOkPayload) decoded
                 );
@@ -120,17 +127,16 @@ public abstract class Uplink extends GimbalEvent.Server
         ));
 
         final Uplink messageHandler = this;
+        //ReleaseControllerOkPayload decoder = new ReleaseControllerOkPayload();
+        final PayloadContainer decoded = ReleaseControllerOkPayload.decodeJSON( 
+            payload[0].toString(), 
+            ReleaseControllerOkPayload.class
+        );
 
         ((Activity) context).runOnUiThread( new Runnable() {
 
             @Override
             public void run() {
-        
-                ReleaseControllerOkPayload decoder = new ReleaseControllerOkPayload();
-                PayloadContainer decoded = decoder.decode( 
-                    payload[0].toString(), 
-                    ReleaseControllerOkPayload.class
-                );
                 messageHandler.onReleaseController( 
                     (ReleaseControllerOkPayload) decoded
                 );
@@ -142,23 +148,13 @@ public abstract class Uplink extends GimbalEvent.Server
     }
 
 
-    private JSONObject getRegisterPayload() throws org.json.JSONException {
-
-        //
-        // com.codebutler.android_websockets.SocketIOClient insists on an
-        // org.json.JSONArray as payload for emit
-        // 
-        // TODO: find or make a marriage between socket.io and google.gson
-        //       for android... 
-        //     
-        //
+    private RegisterControllerPayload getRegisterPayload() {
 
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
 
         int width  = 0;
         int height = 0;
-        int depth  = 0;  // touch screens are quite shallow
 
         try {
 
@@ -180,19 +176,11 @@ public abstract class Uplink extends GimbalEvent.Server
 
         }
 
-        JSONArray inputCube = new JSONArray();
-        inputCube.put(width);
-        inputCube.put(height);
-        inputCube.put(depth);
+        return new RegisterControllerPayload(
+            new Viewport(primaryViewportID, true),
+            width, height
+        );
 
-        JSONObject nestedIntoJSONArray = new JSONObject();
-        nestedIntoJSONArray.put("input_cube", inputCube);
-        nestedIntoJSONArray.put("primary_viewport", primaryViewportID);
-
-
-        // JSONArray message = new JSONArray();
-        // message.put( nestedIntoJSONArray );
-        return nestedIntoJSONArray;
     }
 
     private JSONArray getReleasePayload(String viewportID) throws org.json.JSONException {
@@ -295,76 +283,6 @@ public abstract class Uplink extends GimbalEvent.Server
 
         active = true;
 
-        // client = new SocketIOClient(   
-        //     URI.create(uri),
-        //     new SocketIOClient.Handler() { 
-
-        //         @Override
-        //         public void onConnect() {
-
-        //             /* 
-        //              * BROKEN
-        //              * 
-        //              * does not get called by com.codebutler.android_websockets.SocketIOClient
-        //              * 
-        //              */
-
-        //             Util.debug( "\n\n\n\n\n\nCONNECT\n\n\n\n\n\n" );
-        //         }
-
-        //         @Override
-        //         public void on(String event, JSONArray payload) {
-
-        //             if( event.equals( Protocol.CLIENT_START ) ) {
-
-        //                 uplink.startClient(payload);
-        //                 return;
-
-        //             }
-
-        //             else if( event.equals(Protocol.REGISTER_CONTROLLER_OK ) ) {
-
-        //                 uplink.registerController(payload);
-        //                 return;
-
-        //             }
-
-        //             else if( event.equals(Protocol.RELEASE_CONTROLLER_OK ) ) {
-
-        //                 uplink.releaseController(payload);
-        //                 return;
-
-        //             }
-
-        //             Util.debug( String.format( 
-        //                 "\n\n\nRECEIVED UNHANDLED %s: %s\n\n\n", 
-        //                 event, payload.toString()
-        //             )); 
-
-        //         }
-
-
-
-        //         @Override
-        //         public void onDisconnect(int code, String reason) {
-        //             Util.debug( String.format( 
-        //                 "DISCONNECT %s: %s", 
-        //                 code, reason
-        //             ));
-        //         }
-
-
-        //         @Override
-        //         public void onError(Exception error) {
-        //             Util.debug( String.format( 
-        //                 "ERROR %s", error.toString()
-        //             ));
-        //         }
-
-        //     }
-
-        // );
-        // client.connect();
     }
 
 }

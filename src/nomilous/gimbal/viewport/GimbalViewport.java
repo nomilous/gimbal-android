@@ -21,6 +21,11 @@ public class GimbalViewport {
             this.id = id;
         }
 
+        public Viewport(String id, boolean primary) {
+            this.id = id;
+            this.primary = primary;
+        }
+
         public void setPrimary(boolean primary) {
             this.primary = primary;
         }
@@ -38,8 +43,6 @@ public class GimbalViewport {
         }
 
     }
-
-
 
     public static interface EventHandler {
 

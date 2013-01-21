@@ -10,7 +10,6 @@ import java.net.URI;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.codebutler.android_websockets.SocketIOClient;
 
 import nomilous.gimbal.client.UI;
 import nomilous.gimbal.client.SensorSubscriber;
