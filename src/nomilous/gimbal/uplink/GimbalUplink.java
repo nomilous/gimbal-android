@@ -57,7 +57,10 @@ public class GimbalUplink {
         //    eg. { 
         //            "event:register:controller" : { 
         //
-        //                 "primary_viewport":"NEsGCsB_K3cmrrzd3B8q",
+        //                 "viewport": {
+        //                     "id": NEsGCsB_K3cmrrzd3B8q",
+        //                     "primary": true
+        //                 },
         //                 "input_cube":[640,400,0]     <-------------- NOTE: XYZ, 
         //
         //                                                                    width,height,depth 
@@ -119,23 +122,13 @@ public class GimbalUplink {
         //
         // RELEASE_CONTROLLER
         //
-        //  - To initiate the release of a controlled viewport
+        //  - To initiate the disconnection of all controlled viewports and
+        //    releases the controller
         //
-        //  - Sends payload:
-        //
-        //     - Viewport ID         (the viewport being released)
-        //     - Primary Viewport ID (the controllers current primary viewport)
-        //
-        //       Both ID strings should be the same for the case of disconnecting
-        //       the primary viewport. 
+        //  - Sends no payloadpayload:
         // 
         //     eg. {
-        //              "event:release:controller" : {
-        //
-        //                   "viewport_id": "NEsGCsB_K3cmrrzd3B8q",
-        //                   "primary_viewport":"NEsGCsB_K3cmrrzd3B8q",
-        //
-        //               }
+        //              "event:release:controller" : {}
         //         }
         //
 

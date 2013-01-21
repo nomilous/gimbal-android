@@ -90,7 +90,6 @@ public abstract class Uplink extends GimbalEvent.Server
         ));
 
         final Uplink messageHandler = this;
-        //RegisterControllerOkPayload decoder = new RegisterControllerOkPayload();
         final PayloadContainer decoded = RegisterControllerOkPayload.decodeJSON( 
             payload[0].toString(), 
             RegisterControllerOkPayload.class
@@ -122,12 +121,11 @@ public abstract class Uplink extends GimbalEvent.Server
         Util.debug(String.format(
 
             "Uplink.releaseController() with payload %s",
-            payload.toString()
+            payload[0].toString()
 
         ));
 
         final Uplink messageHandler = this;
-        //ReleaseControllerOkPayload decoder = new ReleaseControllerOkPayload();
         final PayloadContainer decoded = ReleaseControllerOkPayload.decodeJSON( 
             payload[0].toString(), 
             ReleaseControllerOkPayload.class
@@ -183,31 +181,10 @@ public abstract class Uplink extends GimbalEvent.Server
 
     }
 
-    private JSONArray getReleasePayload(String viewportID) throws org.json.JSONException {
-
-        JSONObject nestedIntoJSONArray = new JSONObject();
-        nestedIntoJSONArray.put("viewport_id", viewportID);
-        nestedIntoJSONArray.put("primary_viewport", primaryViewportID);
-
-        JSONArray message = new JSONArray();
-        message.put( nestedIntoJSONArray );
-        return message;
-
-    }
-
     private void doDisconnect(String viewportID) {
-        try {
-            JSONArray message = getReleasePayload(viewportID);
-            Util.debug(String.format( 
 
-                "SENDING %s payload:%s",
-                Protocol.RELEASE_CONTROLLER,
-                message.toString()
+        client.emit(Protocol.RELEASE_CONTROLLER, new JSONObject());
 
-
-            ));
-            client.emit(Protocol.RELEASE_CONTROLLER, message);
-        } catch( org.json.JSONException x ) {}
     }
 
     private void doConnect(final String uri, final String viewportID) 
@@ -276,8 +253,6 @@ public abstract class Uplink extends GimbalEvent.Server
             public void onDisconnect() {
                 Util.debug("Connection terminated.");
             }
-
-
 
         });
 
