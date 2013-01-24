@@ -1,9 +1,12 @@
 package nomilous.gimbal.uplink;
 
 import nomilous.gimbal.viewport.GimbalViewport;
+import io.socket.IOArg;
 
-public final class ReleaseControllerOkPayload extends PayloadContainer {
+public final class ReleaseControllerOkPayload 
 
-    public GimbalViewport.Viewport[] viewports;
+    implements IOArg {
 
-}
+        public GimbalViewport.Viewport[] viewports;
+
+    }

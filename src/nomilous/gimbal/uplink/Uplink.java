@@ -26,7 +26,7 @@ public abstract class Uplink extends GimbalEvent.Server
 
     implements GimbalUplink.Protocol {
 
-    protected SocketIO client;
+    protected final SocketIO socket = new SocketIO();;
     private String primaryViewportID;  // TODO: move into GimbalViewport.Controller
 
     public Uplink(Context context,  GimbalEvent.Publisher publisher) {
@@ -53,7 +53,7 @@ public abstract class Uplink extends GimbalEvent.Server
     final public void startClient(Object... payload) {
 
         RegisterControllerPayload message = getRegisterPayload();
-        client.emit( Protocol.REGISTER_CONTROLLER, message );
+        socket.emit( Protocol.REGISTER_CONTROLLER, message );
         onStartClient(payload);
 
     }
@@ -164,7 +164,7 @@ public abstract class Uplink extends GimbalEvent.Server
 
     private void doDisconnect(String viewportID) {
 
-        client.emit(Protocol.RELEASE_CONTROLLER, new JSONObject());
+        socket.emit(Protocol.RELEASE_CONTROLLER, new JSONObject());
 
     }
 
@@ -174,8 +174,7 @@ public abstract class Uplink extends GimbalEvent.Server
 
         final Uplink uplink = this;
 
-        client = new SocketIO();
-        client.connect( uri, new IOCallback() {
+        socket.connect( uri, new IOCallback() {
 
             @Override
             public void onError(SocketIOException socketIOException) {

@@ -4,9 +4,7 @@ import nomilous.Util;
 import nomilous.gimbal.GimbalEvent;
 import nomilous.gimbal.uplink.*;
 
-
 import android.content.Context;
-import com.google.gson.Gson;
 
 
 public class GimbalViewport {
@@ -53,7 +51,12 @@ public class GimbalViewport {
 
     public static class Controller extends Uplink 
 
-        implements GimbalEvent.Subscriber {
+        implements
+
+            GimbalEvent.Subscriber,
+            GimbalUplink.Protocol 
+
+    {
 
         public static class Config {
 
@@ -61,8 +64,8 @@ public class GimbalViewport {
 
         }
 
-        private Gson gson;
         private EventHandler eventHandler;
+
 
         public Controller(Context context,  GimbalEvent.Publisher publisher, EventHandler eventHandler) {
             super(context, publisher);
@@ -74,11 +77,7 @@ public class GimbalViewport {
         @Override
         public void onTouchEvent( GimbalEvent.Touch event ) {
 
-            String json = gson.toJson(event);
-            Util.debug( "Pending send to server... " + json );
-
-            if( running() )
-                client.send("mooo");
+            Util.debug( "Pending send to server... " + event.toString() );
 
         }
 

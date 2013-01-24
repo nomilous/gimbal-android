@@ -1,12 +1,62 @@
 package nomilous.gimbal.uplink;
 
+
 public class GimbalUplink {
 
-    public static interface Protocol {
 
-        public static class Payload {
+    public static final class Event {
+
+
+
+        public static final String CLIENT_START = "event:client:start";
+        public static final class ClientStart implements IOArg {
+
+            // no payload
 
         }
+
+
+
+        public static final String REGISTER_CONTROLLER = "event:register:controller";
+        public static final class RegisterController implements IOArg {
+
+            public int[] input_cube;
+            public GimbalViewport.Viewport viewport;
+
+        }
+
+
+
+        public static final String REGISTER_CONTROLLER_OK = "event:register:controller:ok";
+        public static final class RegisterControllerOk implements IOArg {
+
+            public GimbalViewport.Viewport viewport;
+            public GimbalViewport.Controller.Config config;
+
+        }
+
+
+
+        public static final String RELEASE_CONTROLLER = "event:release:controller";
+        public static final class RegisterController implements IOArg {
+
+            // no payload 
+
+        }
+
+
+
+        public static final String RELEASE_CONTROLLER_OK = "event:release:controller:ok";
+        public static final class ReleaseControllerOk implements IOArg {
+
+            public GimbalViewport.Viewport[] viewports;
+
+        }
+        
+
+    }
+
+    public static interface Protocol {
 
         /*
          *
@@ -28,9 +78,9 @@ public class GimbalUplink {
         //               
         //
 
-        public final String CLIENT_START = "event:client:start";
-        public abstract void startClient(Object... payload);
-        public abstract void onStartClient(Object... payload);
+        // public final String CLIENT_START = "event:client:start";
+        // public abstract void startClient(Object... payload);
+        // public abstract void onStartClient(Object... payload);
 
 
         
@@ -73,7 +123,7 @@ public class GimbalUplink {
         //        }
         // 
 
-        public final String REGISTER_CONTROLLER = "event:register:controller";
+        
 
 
 
@@ -111,9 +161,9 @@ public class GimbalUplink {
         //    }
         //
 
-        public final String REGISTER_CONTROLLER_OK = "event:register:controller:ok";
-        public abstract void registerController(Object... payload);
-        public abstract void onRegisterController(RegisterControllerOkPayload payload);
+        
+        // public abstract void registerController(Object... payload);
+        // public abstract void onRegisterController(RegisterControllerOkPayload payload);
 
 
         //
@@ -129,7 +179,7 @@ public class GimbalUplink {
         //         }
         //
 
-        public final String RELEASE_CONTROLLER = "event:release:controller";
+        
 
 
         //
@@ -138,9 +188,9 @@ public class GimbalUplink {
         //  - Server reports the release succeeded
         //    
 
-        public final String RELEASE_CONTROLLER_OK = "event:release:controller:ok";
-        public abstract void releaseController(Object... payload);
-        public abstract void onReleaseController(ReleaseControllerOkPayload payload);
+        
+        // public abstract void releaseController(Object... payload);
+        // public abstract void onReleaseController(ReleaseControllerOkPayload payload);
 
 
 
