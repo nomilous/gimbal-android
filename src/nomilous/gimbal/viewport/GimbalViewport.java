@@ -54,7 +54,7 @@ public class GimbalViewport {
         implements
 
             GimbalEvent.Subscriber,
-            GimbalUplink.Protocol 
+            GimbalUplink.Handler
 
     {
 

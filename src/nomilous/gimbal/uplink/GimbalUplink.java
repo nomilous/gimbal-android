@@ -52,147 +52,44 @@ public class GimbalUplink {
             public GimbalViewport.Viewport[] viewports;
 
         }
-        
+
 
     }
 
-    public static interface Protocol {
+    public interface Handler {
 
-        /*
-         *
-         * TODO: Replace 'string' event codes with ints known to
-         *       both sides of the connection.
-         * 
-         * TODO: Replace with binary over raw socket (where possible).
-         * 
-         */
+        boolean onClientStart( Event.ClientStart payload );
+        Event.RegisterController getRegisterControllerPayload();
 
+    }
 
-        //
-        // START_CLIENT (handshake)
-        //  
-        //  - This event initiates the application layer handshake.
-        // 
-        //  - It is sent by the server immediately after the
-        //    socket connection is established.
-        //               
-        //
+    public static void assign( final IOSocket socket, final Handler handler ) {
 
-        // public final String CLIENT_START = "event:client:start";
-        // public abstract void startClient(Object... payload);
-        // public abstract void onStartClient(Object... payload);
+        socket.when( 
 
+            Event.CLIENT_START, Event.ClientStart.class 
 
-        
-        //
-        // REGISTER_CONTROLLER (handshake response)
-        // 
-        //  - As response to START_CLIENT
-        // 
-        //  - Sends payload:
-        //  
-        //       - Primary Viewport ID
-        // 
-        //       - XYZ Dimensions of gesture sensitive region 
-        //         of tablet/phone/kinect/unknown_future_thing
-        //
-        //       - (PLACEHOLDER) Authentication
-        //  
-        //       - (PLACEHOLDER) Supported controller modes
-        //
-        //
-        //    eg. { 
-        //            "event:register:controller" : { 
-        //
-        //                 "viewport": {
-        //                     "id": NEsGCsB_K3cmrrzd3B8q",
-        //                     "primary": true
-        //                 },
-        //                 "input_cube":[640,400,0]     <-------------- NOTE: XYZ, 
-        //
-        //                                                                    width,height,depth 
-        //
-        //                                                                    Has no units.
-        // 
-        //                                                                    Used to generate a scaling factor for
-        //                                                                    upsampling input to suit the frustum 
-        //                                                                    size of the viewport being controlled.
-        //                                                                    
-        //
-        //             }
-        //        }
-        // 
+        ).then(  
 
-        
+            new IOEvent.Handler() {
+
+                @Override public void handle( String event, IOAcknowledge ack, Object... args ) {
+
+                    if( handler.onClientStart( (ClientStart) args[0] ) ) 
+
+                        socket.emit( 
+
+                            Event.REGISTER_CONTROLLER, 
+                            handler.getRegisterControllerPayload()
+
+                        );
 
 
+                }
 
-        
-        
-        //
-        // REGISTER_CONTROLLER_OK (handshake complete)
-        //
-        //  - Server authorizes this controler to proceed.
-        //
-        //  - Receives payload: 
-        // 
-        //        - The Viewport now being controlled
-        //        - Configuration for the controller
-        // 
-        //    eg. {
-        // 
-        //          "event:register:controller:ok": {
-        //            
-        //                "viewport": {
-        //                   
-        //                    "id" : "NEsGCsB_K3cmrrzd3B8q",
-        //                    "primary" : true
-        //                
-        //                },
-        //               
-        //                "config": {
-        // 
-        //                    "pending": "pending"
-        //              
-        //                }
-        //        
-        //          }
-        //     
-        //    }
-        //
+            }
 
-        
-        // public abstract void registerController(Object... payload);
-        // public abstract void onRegisterController(RegisterControllerOkPayload payload);
-
-
-        //
-        // RELEASE_CONTROLLER
-        //
-        //  - To initiate the disconnection of all controlled viewports and
-        //    releases the controller
-        //
-        //  - Sends no payloadpayload:
-        // 
-        //     eg. {
-        //              "event:release:controller" : {}
-        //         }
-        //
-
-        
-
-
-        //
-        // RELEASE_CONTROLLER_OK
-        // 
-        //  - Server reports the release succeeded
-        //    
-
-        
-        // public abstract void releaseController(Object... payload);
-        // public abstract void onReleaseController(ReleaseControllerOkPayload payload);
-
-
+        );
 
     }
 
