@@ -3,9 +3,10 @@ package nomilous.gimbal.uplink;
 import nomilous.Util;
 
 import com.google.gson.Gson;
+import io.socket.IOArg;
 
 
-public class PayloadContainer {
+public class PayloadContainer extends IOArg {
 
         public static PayloadContainer decodeJSON(String json, Class klass) {
 

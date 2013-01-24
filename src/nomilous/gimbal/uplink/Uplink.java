@@ -52,28 +52,8 @@ public abstract class Uplink extends GimbalEvent.Server
     public abstract void onStartClient(Object... payload);
     final public void startClient(Object... payload) {
 
-        try {
-
-            RegisterControllerPayload message = getRegisterPayload();
-
-            //
-            // Extraneous... toString... to JSONObject,,, back down to string on 
-            //               the send inside SocketIO
-            // 
-            //               TODO: make plan... 
-            // 
-
-            JSONObject jsonObject = new JSONObject(RegisterControllerPayload.encodeJSON(message));
-
-            client.emit(
-
-                Protocol.REGISTER_CONTROLLER, 
-                jsonObject
-
-            );
-
-        } catch( org.json.JSONException x ) {}
-
+        RegisterControllerPayload message = getRegisterPayload();
+        client.emit( Protocol.REGISTER_CONTROLLER, message );
         onStartClient(payload);
 
     }
@@ -90,6 +70,7 @@ public abstract class Uplink extends GimbalEvent.Server
         ));
 
         final Uplink messageHandler = this;
+        //RegisterControllerOkPayload decoder = new RegisterControllerOkPayload();
         final PayloadContainer decoded = RegisterControllerOkPayload.decodeJSON( 
             payload[0].toString(), 
             RegisterControllerOkPayload.class

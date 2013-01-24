@@ -1,8 +1,5 @@
 package nomilous.gimbal.uplink;
 
-import org.json.JSONArray;
-//import org.json.JSONObject;
-
 public class GimbalUplink {
 
     public static interface Protocol {
