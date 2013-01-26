@@ -4,8 +4,11 @@ import nomilous.Util;
 import nomilous.gimbal.GimbalConfig;
 import nomilous.gimbal.GimbalEvent;
 //import nomilous.gimbal.uplink.GimbalUplink.Protocol;
-import nomilous.gimbal.uplink.*;
-import nomilous.gimbal.viewport.GimbalViewport.Viewport;
+//import nomilous.gimbal.uplink.*;
+
+import nomilous.gimbal.viewport.ViewportEventHandler;
+import nomilous.gimbal.viewport.ViewportController;
+import nomilous.gimbal.viewport.Viewport;
 
 //https://github.com/Gottox/socket.io-java-client
 import io.socket.IOAcknowledge;

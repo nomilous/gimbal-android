@@ -1,6 +1,8 @@
 package nomilous.gimbal.uplink;
 
-import nomilous.gimbal.viewport.GimbalViewport;
+import nomilous.gimbal.viewport.ViewportEventHandler;
+import nomilous.gimbal.viewport.ViewportController;
+import nomilous.gimbal.viewport.Viewport;
 
 import io.socket.SocketIO;
 import io.socket.IOAcknowledge;
@@ -28,7 +30,7 @@ public class GimbalUplink {
         public static final class RegisterController implements IOArg {
 
             public int[] input_cube;
-            public GimbalViewport.Viewport viewport;
+            public Viewport viewport;
 
         }
 
@@ -37,8 +39,8 @@ public class GimbalUplink {
         public static final String REGISTER_CONTROLLER_OK = "event:register:controller:ok";
         public static final class RegisterControllerOk implements IOArg {
 
-            public GimbalViewport.Viewport viewport;
-            public GimbalViewport.Controller.Config config;
+            public Viewport viewport;
+            public ViewportController.Config config;
 
         }
 
@@ -56,10 +58,9 @@ public class GimbalUplink {
         public static final String RELEASE_CONTROLLER_OK = "event:release:controller:ok";
         public static final class ReleaseControllerOk implements IOArg {
 
-            public GimbalViewport.Viewport[] viewports;
+            public Viewport[] viewports;
 
         }
-
 
     }
 
