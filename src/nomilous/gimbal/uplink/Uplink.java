@@ -27,7 +27,7 @@ public abstract class Uplink extends GimbalEvent.Server
     implements GimbalUplink.Handler {
 
     protected final SocketIO socket = new SocketIO();;
-    private String primaryViewportID;  // TODO: move into GimbalViewport.Controller
+    protected String primaryViewportID;  // TODO: move into GimbalViewport.Controller
 
     public Uplink(Context context,  GimbalEvent.Publisher publisher) {
         super(context, publisher);

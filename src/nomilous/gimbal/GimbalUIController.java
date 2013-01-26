@@ -36,14 +36,15 @@ public class GimbalUIController extends GimbalOverlay
 
 {
 
-    private String primaryViewportID;  // TODO: remove,  (viewportController)
+    //private String primaryViewportID;  // TODO: remove,  (viewportController)
 
     private static class Action {
 
-        public static final int CONNECT_VIEWPORT    = 0;
-        public static final int DISCONNECT_VIEWPORT = 1;
-        public static final int TOGGLE_HELP         = 2;
-        public static final int EXIT                = 3; 
+        public static final int CONNECT_VIEWPORT      = 0;
+        public static final int DISCONNECT_VIEWPORT   = 1;
+        public static final int DISCONNECT_CONTROLLER = 2;
+        public static final int TOGGLE_HELP           = 3;
+        public static final int EXIT                  = 4; 
 
     }
 
@@ -51,8 +52,9 @@ public class GimbalUIController extends GimbalOverlay
 
     private MenuAction[] menuActions = new MenuAction[] {
 
-        new MenuAction( Action.CONNECT_VIEWPORT, "connect", "Connect a viewport." ),
-        new MenuAction( Action.DISCONNECT_VIEWPORT, "disconnect", "Disconnect all viewports.", false ),
+        new MenuAction( Action.CONNECT_VIEWPORT, "connect viewport", "Connect a viewport." ),
+        new MenuAction( Action.DISCONNECT_VIEWPORT, "disconnect viewport", "Disconnect a viewport.", false ),
+        new MenuAction( Action.DISCONNECT_CONTROLLER, "disconnect all", "Disconnect all viewports.", false ),
         new MenuAction( Action.TOGGLE_HELP, "help", "Toggle tooltips." ),
         new MenuAction( Action.EXIT, "exit", "Exit the app." )
 
@@ -91,7 +93,7 @@ public class GimbalUIController extends GimbalOverlay
     public void onViewportRegistered(Viewport viewport) {
 
         menuActions[Action.CONNECT_VIEWPORT].enabled = false;
-        menuActions[Action.DISCONNECT_VIEWPORT].enabled = true;
+        menuActions[Action.DISCONNECT_CONTROLLER].enabled = true;
         menu.hide();
         visualsOverlay.onMenuHide(menu);
 
@@ -101,7 +103,7 @@ public class GimbalUIController extends GimbalOverlay
     public void onViewportReleased(Viewport viewport) {
 
         menuActions[Action.CONNECT_VIEWPORT].enabled = true;
-        menuActions[Action.DISCONNECT_VIEWPORT].enabled = false;
+        menuActions[Action.DISCONNECT_CONTROLLER].enabled = false;
         menu.refresh();
 
     }
@@ -143,7 +145,7 @@ public class GimbalUIController extends GimbalOverlay
         // displayed on an available viewport
         //
 
-        this.primaryViewportID = viewportID;
+        // this.primaryViewportID = viewportID;
 
         viewportController.connect(uri, viewportID);
         
@@ -243,7 +245,11 @@ public class GimbalUIController extends GimbalOverlay
                 break;
 
             case Action.DISCONNECT_VIEWPORT:
-                disconnectViewport(primaryViewportID);
+                //disconnectViewport(primaryViewportID);
+                break;
+
+            case Action.DISCONNECT_CONTROLLER:
+                viewportController.disconnectAll();
                 break;
 
             case Action.TOGGLE_HELP:
@@ -274,10 +280,10 @@ public class GimbalUIController extends GimbalOverlay
         qrScan.initiateScan();
     }
 
+    // does not belong here
     private void disconnectViewport(String viewportID) {
         viewportController.disconnect(viewportID);
     }
-
 
 
 }

@@ -68,6 +68,8 @@ public class GimbalUplink {
 
         boolean onClientStart( Event.ClientStart payload );
         Event.RegisterController getRegisterControllerPayload();
+        
+        void disconnectAll();
 
     }
 

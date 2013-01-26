@@ -37,7 +37,7 @@ public class MenuAction {
         TextView view = new TextView( chain.layout.getContext() );
         view.setText( label );
 
-        int width = 100;
+        int width = 200; // TODO: ensure it fits..
         int height = 40; // TODO: ensure it fits..
 
         LayoutParams layoutParams = new LayoutParams(width, height);
