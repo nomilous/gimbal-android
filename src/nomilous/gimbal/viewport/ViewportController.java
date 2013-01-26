@@ -33,6 +33,7 @@ public class ViewportController extends Uplink
         super(context, publisher);
         this.viewportEventHandler = viewportEventHandler;
         publisher.subscribe(this);
+        GimbalUplink.bindProtocol(socket, this);
     }
 
     @Override

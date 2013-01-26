@@ -3,6 +3,7 @@ package nomilous.gimbal.uplink;
 import nomilous.gimbal.viewport.ViewportEventHandler;
 import nomilous.gimbal.viewport.ViewportController;
 import nomilous.gimbal.viewport.Viewport;
+import nomilous.Util;
 
 import io.socket.SocketIO;
 import io.socket.IOAcknowledge;
@@ -68,12 +69,11 @@ public class GimbalUplink {
 
         boolean onClientStart( Event.ClientStart payload );
         Event.RegisterController getRegisterControllerPayload();
-        
         void disconnectAll();
 
     }
 
-    public static void assign( final SocketIO socket, final Handler handler ) {
+    public static void bindProtocol( final SocketIO socket, final Handler handler ) {
 
         socket.when( 
 
@@ -94,6 +94,7 @@ public class GimbalUplink {
 
                         );
 
+/*                  />                                                         */
 
                 }
 

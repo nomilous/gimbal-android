@@ -130,7 +130,7 @@ public abstract class Uplink extends GimbalEvent.Server
 
     }
 
-    private void doConnect(final String uri, final String viewportID) 
+    private void doConnect(final String uri, final String viewportID)
 
         throws java.net.MalformedURLException {
 
