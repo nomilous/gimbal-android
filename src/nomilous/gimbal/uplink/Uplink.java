@@ -3,7 +3,7 @@ package nomilous.gimbal.uplink;
 import nomilous.Util;
 import nomilous.gimbal.GimbalConfig;
 import nomilous.gimbal.GimbalEvent;
-import nomilous.gimbal.uplink.GimbalUplink.Protocol;
+//import nomilous.gimbal.uplink.GimbalUplink.Protocol;
 import nomilous.gimbal.uplink.*;
 import nomilous.gimbal.viewport.GimbalViewport.Viewport;
 
@@ -24,7 +24,7 @@ import org.json.JSONObject;
 
 public abstract class Uplink extends GimbalEvent.Server
 
-    implements GimbalUplink.Protocol {
+    implements GimbalUplink.Handler {
 
     protected final SocketIO socket = new SocketIO();;
     private String primaryViewportID;  // TODO: move into GimbalViewport.Controller
@@ -49,122 +49,120 @@ public abstract class Uplink extends GimbalEvent.Server
 
 
 
-    public abstract void onStartClient(Object... payload);
-    final public void startClient(Object... payload) {
-
-        RegisterControllerPayload message = getRegisterPayload();
-        socket.emit( Protocol.REGISTER_CONTROLLER, message );
-        onStartClient(payload);
-
-    }
+    //public abstract void onStartClient(Object... payload);
+    // final public void startClient(Object... payload) {
+    //     RegisterControllerPayload message = getRegisterPayload();
+    //     socket.emit( Protocol.REGISTER_CONTROLLER, message );
+    //     onStartClient(payload);
+    // }
 
 
-    public abstract void onRegisterController(RegisterControllerOkPayload payload);
-    final public void registerController(final Object... payload) {
+    // public abstract void onRegisterController(RegisterControllerOkPayload payload);
+    // final public void registerController(final Object... payload) {
 
-        Util.debug(String.format(
+    //     Util.debug(String.format(
 
-            "Uplink.registerController() with payload %s",
-            payload[0].toString()
+    //         "Uplink.registerController() with payload %s",
+    //         payload[0].toString()
 
-        ));
+    //     ));
 
-        final Uplink messageHandler = this;
-        //RegisterControllerOkPayload decoder = new RegisterControllerOkPayload();
-        final PayloadContainer decoded = RegisterControllerOkPayload.decodeJSON( 
-            payload[0].toString(), 
-            RegisterControllerOkPayload.class
-        );
+    //     final Uplink messageHandler = this;
+    //     //RegisterControllerOkPayload decoder = new RegisterControllerOkPayload();
+    //     final PayloadContainer decoded = RegisterControllerOkPayload.decodeJSON( 
+    //         payload[0].toString(), 
+    //         RegisterControllerOkPayload.class
+    //     );
 
-        ((Activity) context).runOnUiThread( new Runnable() {
+    //     ((Activity) context).runOnUiThread( new Runnable() {
 
-            //
-            // Caused by: android.view.ViewRoot$CalledFromWrongThreadException: 
-            //            Only the original thread that created a view hierarchy 
-            //            can touch its views.
-            //
+    //         //
+    //         // Caused by: android.view.ViewRoot$CalledFromWrongThreadException: 
+    //         //            Only the original thread that created a view hierarchy 
+    //         //            can touch its views.
+    //         //
 
-            @Override
-            public void run() {  
-                messageHandler.onRegisterController( 
-                    (RegisterControllerOkPayload) decoded
-                );
+    //         @Override
+    //         public void run() {  
+    //             messageHandler.onRegisterController( 
+    //                 (RegisterControllerOkPayload) decoded
+    //             );
 
-            }
+    //         }
 
-        });
+    //     });
         
-    }
+    // }
 
 
-    public abstract void onReleaseController(ReleaseControllerOkPayload payload);
-    final public void releaseController(final Object... payload) {
-        Util.debug(String.format(
+    // public abstract void onReleaseController(ReleaseControllerOkPayload payload);
+    // final public void releaseController(final Object... payload) {
+    //     Util.debug(String.format(
 
-            "Uplink.releaseController() with payload %s",
-            payload[0].toString()
+    //         "Uplink.releaseController() with payload %s",
+    //         payload[0].toString()
 
-        ));
+    //     ));
 
-        final Uplink messageHandler = this;
-        final PayloadContainer decoded = ReleaseControllerOkPayload.decodeJSON( 
-            payload[0].toString(), 
-            ReleaseControllerOkPayload.class
-        );
+    //     final Uplink messageHandler = this;
+    //     final PayloadContainer decoded = ReleaseControllerOkPayload.decodeJSON( 
+    //         payload[0].toString(), 
+    //         ReleaseControllerOkPayload.class
+    //     );
 
-        ((Activity) context).runOnUiThread( new Runnable() {
+    //     ((Activity) context).runOnUiThread( new Runnable() {
 
-            @Override
-            public void run() {
-                messageHandler.onReleaseController( 
-                    (ReleaseControllerOkPayload) decoded
-                );
+    //         @Override
+    //         public void run() {
+    //             messageHandler.onReleaseController( 
+    //                 (ReleaseControllerOkPayload) decoded
+    //             );
 
-            }
+    //         }
 
-        });
+    //     });
 
-    }
+    // }
 
 
-    private RegisterControllerPayload getRegisterPayload() {
+    // private RegisterControllerPayload getRegisterPayload() {
 
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
+    //     WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+    //     Display display = wm.getDefaultDisplay();
 
-        int width  = 0;
-        int height = 0;
+    //     int width  = 0;
+    //     int height = 0;
 
-        try {
+    //     try {
 
-            Point size = new Point();
-            display.getSize(size);
-            width  = size.x;
-            height = size.y;
+    //         Point size = new Point();
+    //         display.getSize(size);
+    //         width  = size.x;
+    //         height = size.y;
 
-        } catch( java.lang.NoSuchMethodError x ) {
+    //     } catch( java.lang.NoSuchMethodError x ) {
 
-            //
-            // targeting ICS, but running on Gingerbread
-            // 
-            // fallback
-            //
+    //         //
+    //         // targeting ICS, but running on Gingerbread
+    //         // 
+    //         // fallback
+    //         //
 
-            width  = display.getWidth();
-            height = display.getHeight();
+    //         width  = display.getWidth();
+    //         height = display.getHeight();
 
-        }
+    //     }
 
-        return new RegisterControllerPayload(
-            new Viewport(primaryViewportID, true),
-            width, height
-        );
+    //     return new RegisterControllerPayload(
+    //         new Viewport(primaryViewportID, true),
+    //         width, height
+    //     );
 
-    }
+    // }
 
     private void doDisconnect(String viewportID) {
 
-        socket.emit(Protocol.RELEASE_CONTROLLER, new JSONObject());
+        //socket.emit(Protocol.RELEASE_CONTROLLER, new JSONObject());
 
     }
 
@@ -184,45 +182,13 @@ public abstract class Uplink extends GimbalEvent.Server
 
             @Override
             public void on(String event, IOAcknowledge ack, Object... payload) {
-
-
-                if( event.equals( Protocol.CLIENT_START ) ) {
-
-                    uplink.startClient(payload);
-                    return;
-
-                }
-
-                else if( event.equals(Protocol.REGISTER_CONTROLLER_OK ) ) {
-
-                    uplink.registerController(payload);
-                    return;
-
-                }
-
-                else if( event.equals(Protocol.RELEASE_CONTROLLER_OK ) ) {
-
-                    uplink.releaseController(payload);
-                    return;
-
-                }
-
                 Util.debug("Server triggered event '" + event + "'");
             }
 
-            @Override
-            public void onMessage(String data, IOAcknowledge ack) {
-                Util.debug("Server said: " + data);
-            }
+            @Override public void onMessage(String data, IOAcknowledge ack) {}
 
             @Override
-            public void onMessage(JSONObject json, IOAcknowledge ack) {
-                try {
-                    Util.debug("Server said:" + json.toString(2));
-                } catch (org.json.JSONException e) {
-                    e.printStackTrace();
-                }
-            }
+            public void onMessage(JSONObject json, IOAcknowledge ack) {}
 
             @Override
             public void onConnect() {

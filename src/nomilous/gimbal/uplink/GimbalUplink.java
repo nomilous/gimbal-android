@@ -1,5 +1,12 @@
 package nomilous.gimbal.uplink;
 
+import nomilous.gimbal.viewport.GimbalViewport;
+
+import io.socket.SocketIO;
+import io.socket.IOAcknowledge;
+import io.socket.IOEvent;
+import io.socket.IOArg;
+
 
 public class GimbalUplink {
 
@@ -38,7 +45,7 @@ public class GimbalUplink {
 
 
         public static final String RELEASE_CONTROLLER = "event:release:controller";
-        public static final class RegisterController implements IOArg {
+        public static final class ReleaseController implements IOArg {
 
             // no payload 
 
@@ -63,7 +70,7 @@ public class GimbalUplink {
 
     }
 
-    public static void assign( final IOSocket socket, final Handler handler ) {
+    public static void assign( final SocketIO socket, final Handler handler ) {
 
         socket.when( 
 
@@ -75,7 +82,7 @@ public class GimbalUplink {
 
                 @Override public void handle( String event, IOAcknowledge ack, Object... args ) {
 
-                    if( handler.onClientStart( (ClientStart) args[0] ) ) 
+                    if( handler.onClientStart( (Event.ClientStart) args[0] ) ) 
 
                         socket.emit( 
 

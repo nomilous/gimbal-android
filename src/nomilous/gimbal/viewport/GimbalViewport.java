@@ -2,6 +2,7 @@ package nomilous.gimbal.viewport;
 
 import nomilous.Util;
 import nomilous.gimbal.GimbalEvent;
+import nomilous.gimbal.uplink.GimbalUplink.Event;
 import nomilous.gimbal.uplink.*;
 
 import android.content.Context;
@@ -70,7 +71,6 @@ public class GimbalViewport {
         public Controller(Context context,  GimbalEvent.Publisher publisher, EventHandler eventHandler) {
             super(context, publisher);
             this.eventHandler = eventHandler;
-            gson = new Gson();
             publisher.subscribe(this);
         }
 
@@ -82,26 +82,36 @@ public class GimbalViewport {
         }
 
 
+        // @Override
+        // public void onStartClient(Object... payload) {
+
+
+        // }
+
+        // @Override
+        // public void onRegisterController( RegisterControllerOkPayload payload ) {
+
+        //     eventHandler.onViewportRegistered( payload.viewport );
+
+        // }
+
+        // @Override
+        // public void onReleaseController( ReleaseControllerOkPayload payload ) {
+
+        //     for( int i = 0; i < payload.viewports.length; i++ )
+
+        //         eventHandler.onViewportReleased( payload.viewports[i] );
+
+        // }
+
         @Override
-        public void onStartClient(Object... payload) {
-
-
+        public boolean onClientStart( Event.ClientStart payload ) {
+            return false;
         }
 
         @Override
-        public void onRegisterController( RegisterControllerOkPayload payload ) {
-
-            eventHandler.onViewportRegistered( payload.viewport );
-
-        }
-
-        @Override
-        public void onReleaseController( ReleaseControllerOkPayload payload ) {
-
-            for( int i = 0; i < payload.viewports.length; i++ )
-
-                eventHandler.onViewportReleased( payload.viewports[i] );
-
+        public Event.RegisterController getRegisterControllerPayload() {
+            return new Event.RegisterController();
         }
 
     }
