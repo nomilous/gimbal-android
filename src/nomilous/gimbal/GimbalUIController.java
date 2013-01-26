@@ -13,14 +13,18 @@ import nomilous.gimbal.viewport.ViewportController;
 import nomilous.gimbal.viewport.Viewport;
 
 import android.app.Activity;
+import android.content.Context;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.graphics.Color;
+import android.graphics.Point;
 import java.util.Hashtable;
 import java.util.Enumeration;
 import android.opengl.GLSurfaceView;
 import android.view.View;
 import android.widget.TextView;
+import android.view.WindowManager;
+import android.view.Display;
 import com.google.zxing.integration.android.IntentIntegrator;
 
 
@@ -56,6 +60,32 @@ public class GimbalUIController extends GimbalOverlay
 
 
     private ViewportController viewportController;
+
+    @Override
+    public int[] getInputCube() {
+
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+
+        int width  = 0;
+        int height = 0;
+
+        try {
+
+            Point size = new Point();
+            display.getSize(size);
+            width  = size.x;
+            height = size.y;
+
+        } catch( java.lang.NoSuchMethodError x ) {
+
+            width  = display.getWidth();
+            height = display.getHeight();
+
+        }
+
+        return new int[] {width, height, 0};
+    }
 
     @Override 
     public void onViewportRegistered(Viewport viewport) {

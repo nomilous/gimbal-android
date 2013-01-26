@@ -18,9 +18,6 @@ import io.socket.SocketIOException;
 
 import android.app.Activity;
 import android.content.Context;
-import android.view.WindowManager;
-import android.view.Display;
-import android.graphics.Point;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -124,42 +121,6 @@ public abstract class Uplink extends GimbalEvent.Server
     //         }
 
     //     });
-
-    // }
-
-
-    // private RegisterControllerPayload getRegisterPayload() {
-
-    //     WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-    //     Display display = wm.getDefaultDisplay();
-
-    //     int width  = 0;
-    //     int height = 0;
-
-    //     try {
-
-    //         Point size = new Point();
-    //         display.getSize(size);
-    //         width  = size.x;
-    //         height = size.y;
-
-    //     } catch( java.lang.NoSuchMethodError x ) {
-
-    //         //
-    //         // targeting ICS, but running on Gingerbread
-    //         // 
-    //         // fallback
-    //         //
-
-    //         width  = display.getWidth();
-    //         height = display.getHeight();
-
-    //     }
-
-    //     return new RegisterControllerPayload(
-    //         new Viewport(primaryViewportID, true),
-    //         width, height
-    //     );
 
     // }
 

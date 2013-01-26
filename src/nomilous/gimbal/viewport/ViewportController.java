@@ -64,12 +64,14 @@ public class ViewportController extends Uplink
 
     @Override
     public boolean onClientStart( Event.ClientStart payload ) {
-        return false;
+        return true;
     }
 
     @Override
     public Event.RegisterController getRegisterControllerPayload() {
-        return new Event.RegisterController();
+        Event.RegisterController payload = new Event.RegisterController();
+        payload.input_cube = viewportEventHandler.getInputCube();
+        return payload;
     }
 
 }
