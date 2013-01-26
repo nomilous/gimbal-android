@@ -33,7 +33,7 @@ public class ViewportController extends Uplink
         super(context, publisher);
         this.viewportEventHandler = viewportEventHandler;
         publisher.subscribe(this);
-        GimbalUplink.bindProtocol(socket, this);
+        GimbalUplink.bindProtocol(socket, this, context);
     }
 
     @Override
@@ -55,12 +55,13 @@ public class ViewportController extends Uplink
 
     // }
 
-    // @Override
-    // public void onRegisterController( RegisterControllerOkPayload payload ) {
+    @Override
+    public boolean onRegisterController( Event.RegisterControllerOk payload ) {
 
-    //     eventHandler.onViewportRegistered( payload.viewport );
+        viewportEventHandler.onViewportRegistered( (Viewport) payload.viewport );
+        return true;
 
-    // }
+    }
 
     // @Override
     // public void onReleaseController( ReleaseControllerOkPayload payload ) {
@@ -71,16 +72,13 @@ public class ViewportController extends Uplink
 
     // }
 
+
     @Override
     public boolean onClientStart( Event.ClientStart payload ) {
-
         viewports.put( 
-
             primaryViewportID, 
             new Viewport(primaryViewportID, true)
-
         );
-
         return true;
     }
 

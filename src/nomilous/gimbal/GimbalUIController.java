@@ -90,13 +90,13 @@ public class GimbalUIController extends GimbalOverlay
     }
 
     @Override 
-    public void onViewportRegistered(Viewport viewport) {
+    public void onViewportRegistered( Viewport viewport ) {
 
         menuActions[Action.CONNECT_VIEWPORT].enabled = false;
         menuActions[Action.DISCONNECT_CONTROLLER].enabled = true;
         menu.hide();
         visualsOverlay.onMenuHide(menu);
-
+        
     }
 
     @Override 

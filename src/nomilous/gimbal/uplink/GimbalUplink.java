@@ -5,6 +5,8 @@ import nomilous.gimbal.viewport.ViewportController;
 import nomilous.gimbal.viewport.Viewport;
 import nomilous.Util;
 
+import android.app.Activity;
+import android.content.Context;
 import io.socket.SocketIO;
 import io.socket.IOAcknowledge;
 import io.socket.IOEvent;
@@ -68,12 +70,21 @@ public class GimbalUplink {
     public interface Handler {
 
         boolean onClientStart( Event.ClientStart payload );
+        boolean onRegisterController( Event.RegisterControllerOk payload );
         Event.RegisterController getRegisterControllerPayload();
         void disconnectAll();
 
     }
-
-    public static void bindProtocol( final SocketIO socket, final Handler handler ) {
+                                                                                   /* 
+                                                                                    * 
+                                                                                    * final context!
+                                                                                    * 
+                                                                                    * sounds like a bug waiting to happen
+                                                                                    *
+                                                                                    * also sounds like a song.
+                                                                                    * 
+                                                                                    */  
+    public static void bindProtocol( final SocketIO socket, final Handler handler, final Context context ) {
 
         socket.when( 
 
@@ -95,6 +106,42 @@ public class GimbalUplink {
                         );
 
 /*                  />                                                         */
+
+                }
+
+            }
+
+        );
+
+        socket.when( 
+
+            Event.REGISTER_CONTROLLER_OK, Event.RegisterControllerOk.class
+
+        ).then( 
+
+            new IOEvent.Handler() {
+
+                @Override public void handle( String event, IOAcknowledge ack, final Object... args ) {
+
+                    //
+                    // this callback touches the ui View 
+                    // (must therefore run on the main thread) 
+                    //
+
+                    ((Activity) context).runOnUiThread( new Runnable() {
+
+                        @Override
+                        public void run() {
+
+                            handler.onRegisterController( 
+
+                                (Event.RegisterControllerOk) args[0] 
+
+                            );
+
+                        }
+
+                    });
 
                 }
 
