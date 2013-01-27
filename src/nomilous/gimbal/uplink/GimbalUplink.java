@@ -22,47 +22,48 @@ public class GimbalUplink {
 
         public static final String CLIENT_START = "event:client:start";
         public static final class ClientStart implements IOArg {
-
             // no payload
-
         }
 
 
 
         public static final String REGISTER_CONTROLLER = "event:register:controller";
         public static final class RegisterController implements IOArg {
-
             public int[] input_cube;
             public Viewport viewport;
-
         }
 
 
 
         public static final String REGISTER_CONTROLLER_OK = "event:register:controller:ok";
         public static final class RegisterControllerOk implements IOArg {
-
             public Viewport viewport;
             public ViewportController.Config config;
-
         }
 
 
 
         public static final String RELEASE_CONTROLLER = "event:release:controller";
         public static final class ReleaseController implements IOArg {
-
             // no payload 
-
         }
 
 
 
         public static final String RELEASE_CONTROLLER_OK = "event:release:controller:ok";
         public static final class ReleaseControllerOk implements IOArg {
-
             public Viewport[] viewports;
+        }
 
+        public static final String VIEWPORT_BROADCAST = "event:viewport:broadcast";
+        public static final String TOUCH = "event:touch";
+        public static final class ViewportBroadcast implements IOArg {
+            public String code;
+            public Object event;
+            public ViewportBroadcast(String code, Object event) {
+                this.code = code;
+                this.event = event;
+            }
         }
 
     }
@@ -73,8 +74,6 @@ public class GimbalUplink {
         void onRegisterControllerOk( Event.RegisterControllerOk payload );
         void doDisconnectAll();
         void onReleaseControllerOk( Event.ReleaseControllerOk payload );
-
-
 
     }
                                                                                    /* 

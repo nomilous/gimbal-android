@@ -38,7 +38,14 @@ public class ViewportController extends Uplink
     @Override
     public void onTouchEvent( GimbalEvent.Touch event ) {
 
-        Util.debug( "Pending send to server... " + event.toString() );
+        if( !running() ) return;
+
+        socket.emit( 
+
+            Event.VIEWPORT_BROADCAST,
+            new Event.ViewportBroadcast( Event.TOUCH, event) 
+
+        );
 
     }
 
@@ -46,6 +53,8 @@ public class ViewportController extends Uplink
     public void onRegisterControllerOk( Event.RegisterControllerOk payload ) {
 
         viewportEventHandler.onViewportRegistered( (Viewport) payload.viewport );
+
+        active = true;
 
     }
 
@@ -55,6 +64,8 @@ public class ViewportController extends Uplink
         for( int i = 0; i < payload.viewports.length; i++ )
 
             viewportEventHandler.onViewportReleased( payload.viewports[i] );
+
+        active = false;
 
     }
 

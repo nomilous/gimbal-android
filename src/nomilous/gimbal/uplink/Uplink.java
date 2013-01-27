@@ -90,8 +90,6 @@ public abstract class Uplink extends GimbalEvent.Server
 
         });
 
-        active = true;
-
     }
 
 }
