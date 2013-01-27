@@ -33,12 +33,6 @@ public class ViewportController extends Uplink
         super(context, publisher);
         this.viewportEventHandler = viewportEventHandler;
         publisher.subscribe(this);
-        GimbalUplink.bindProtocol(socket, this, context);
-    }
-
-    @Override
-    public void disconnectAll() {
-
     }
 
     @Override
@@ -48,41 +42,33 @@ public class ViewportController extends Uplink
 
     }
 
-
-    // @Override
-    // public void onStartClient(Object... payload) {
-
-
-    // }
-
     @Override
-    public boolean onRegisterController( Event.RegisterControllerOk payload ) {
+    public void onRegisterControllerOk( Event.RegisterControllerOk payload ) {
 
         viewportEventHandler.onViewportRegistered( (Viewport) payload.viewport );
-        return true;
 
     }
 
-    // @Override
-    // public void onReleaseController( ReleaseControllerOkPayload payload ) {
+    @Override
+    public void onReleaseControllerOk( Event.ReleaseControllerOk payload ) {
 
-    //     for( int i = 0; i < payload.viewports.length; i++ )
+        for( int i = 0; i < payload.viewports.length; i++ )
 
-    //         eventHandler.onViewportReleased( payload.viewports[i] );
+            viewportEventHandler.onViewportReleased( payload.viewports[i] );
 
-    // }
+    }
 
 
     @Override
-    public boolean onClientStart( Event.ClientStart payload ) {
+    public Event.RegisterController doClientStart( Event.ClientStart payload ) {
         viewports.put( 
             primaryViewportID, 
             new Viewport(primaryViewportID, true)
         );
-        return true;
+        return getRegisterControllerPayload();
     }
 
-    @Override
+
     public Event.RegisterController getRegisterControllerPayload() {
         Event.RegisterController payload = new Event.RegisterController();
         payload.input_cube = viewportEventHandler.getInputCube();

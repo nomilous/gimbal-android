@@ -69,10 +69,12 @@ public class GimbalUplink {
 
     public interface Handler {
 
-        boolean onClientStart( Event.ClientStart payload );
-        boolean onRegisterController( Event.RegisterControllerOk payload );
-        Event.RegisterController getRegisterControllerPayload();
-        void disconnectAll();
+        Event.RegisterController doClientStart( Event.ClientStart payload );
+        void onRegisterControllerOk( Event.RegisterControllerOk payload );
+        void doDisconnectAll();
+        void onReleaseControllerOk( Event.ReleaseControllerOk payload );
+
+
 
     }
                                                                                    /* 
@@ -96,16 +98,12 @@ public class GimbalUplink {
 
                 @Override public void handle( String event, IOAcknowledge ack, Object... args ) {
 
-                    if( handler.onClientStart( (Event.ClientStart) args[0] ) ) 
+                    socket.emit(
 
-                        socket.emit( 
+                        Event.REGISTER_CONTROLLER, 
+                        handler.doClientStart( (Event.ClientStart) args[0] ) 
 
-                            Event.REGISTER_CONTROLLER, 
-                            handler.getRegisterControllerPayload()
-
-                        );
-
-/*                  />                                                         */
+                    );
 
                 }
 
@@ -133,9 +131,40 @@ public class GimbalUplink {
                         @Override
                         public void run() {
 
-                            handler.onRegisterController( 
+                            handler.onRegisterControllerOk( 
 
                                 (Event.RegisterControllerOk) args[0] 
+
+                            );
+
+                        }
+
+                    });
+
+                }
+
+            }
+
+        );
+
+        socket.when(
+
+            Event.RELEASE_CONTROLLER_OK, Event.ReleaseControllerOk.class
+
+        ).then(
+
+            new IOEvent.Handler() {
+
+                @Override public void handle( String event, IOAcknowledge ack, final Object... args ) {
+
+                    ((Activity) context).runOnUiThread( new Runnable() {
+
+                        @Override
+                        public void run() {
+
+                            handler.onReleaseControllerOk( 
+
+                                (Event.ReleaseControllerOk) args[0] 
 
                             );
 

@@ -96,7 +96,7 @@ public class GimbalUIController extends GimbalOverlay
         menuActions[Action.DISCONNECT_CONTROLLER].enabled = true;
         menu.hide();
         visualsOverlay.onMenuHide(menu);
-        
+
     }
 
     @Override 
@@ -245,11 +245,10 @@ public class GimbalUIController extends GimbalOverlay
                 break;
 
             case Action.DISCONNECT_VIEWPORT:
-                //disconnectViewport(primaryViewportID);
                 break;
 
             case Action.DISCONNECT_CONTROLLER:
-                viewportController.disconnectAll();
+                viewportController.doDisconnectAll();
                 break;
 
             case Action.TOGGLE_HELP:
@@ -279,11 +278,5 @@ public class GimbalUIController extends GimbalOverlay
         IntentIntegrator qrScan = new IntentIntegrator(scanResultHandler);
         qrScan.initiateScan();
     }
-
-    // does not belong here
-    private void disconnectViewport(String viewportID) {
-        viewportController.disconnect(viewportID);
-    }
-
 
 }
